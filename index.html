@@ -94,6 +94,12 @@ body.big .city-btn{font-size:2rem;min-height:84px}
 .center{justify-content:center;align-items:center;text-align:center}
 .part .teal:disabled{background:var(--card);color:var(--ink);border-color:var(--ink);cursor:default}
 .part .dock .teal{width:100%}
+.wide{width:100%;min-height:60px}
+.part .teal.wide{width:100%}
+.row.picked{border-color:var(--teal);border-width:3px;background:#efe6d4}
+.mini.put{border-color:var(--teal);border-width:3px}
+.hintbox{flex:0 0 auto;display:flex;flex-direction:column;gap:6px;background:var(--card);border:3px solid var(--teal);border-radius:20px;padding:10px;color:var(--ink)}
+.hintbox img{width:100%;height:110px;object-fit:cover;object-position:center 65%;border-radius:14px;border:2px solid var(--line)}
 body.big .ask{font-size:2.4rem}
 body.big .line{font-size:2rem}
 body.big .kicker,body.big .where,body.big .mini{font-size:1.25rem}
@@ -374,6 +380,11 @@ bank:[
 ["A presto!","See you soon!","torino-hotel"]
 ]}
 };
+P2DATA.roma.suggest=["Sono a Roma.","Vedo il Colosseo.","Sono vicino alla Fontana di Trevi.","Ecco il Vaticano.","È bellissimo.","Mi sono perso.","Voglio ritornare all'hotel.","Sono all'hotel. A presto!"];
+P2DATA.napoli.suggest=["Sono a Napoli.","Vedo il mare.","Vedo il Vesuvio.","Ecco la pizza Margherita.","Mi sono perso.","Voglio ritornare all'hotel.","Sono all'hotel.","A presto!"];
+P2DATA.firenze.suggest=["Sono a Firenze.","Vedo il Duomo.","È enorme.","Ecco il Ponte Vecchio.","Mi sono perso.","Voglio ritornare all'hotel.","Sono all'hotel.","A presto!"];
+P2DATA.venezia.suggest=["Sono a Venezia.","Vedo il Canal Grande.","Ecco il Ponte di Rialto.","Il ponte è bello.","Mi sono perso.","Voglio ritornare all'hotel.","Sono all'hotel.","A presto!"];
+P2DATA.torino.suggest=["Sono a Torino.","Vedo il Museo Egizio.","È famoso.","Vedo i portici.","Mi sono perso.","Voglio ritornare all'hotel.","Sono all'hotel.","A presto!"];
 var ALT={};
 CITIES.forEach(function(c){ c.stops.forEach(function(s){ ALT[s.img]=s.alt; }); });
 var p2=null;
@@ -400,7 +411,8 @@ function startPart2(){
   do{ order=shuffle(range(city.stops.length)); }while(order[0]===0||order.every(function(v,i){ return v===i; }));
   p2={step:0,data:P2DATA[city.id],order:order,solved:false,checked:false,
     match:shuffle([0,1,2]),matchOk:false,matchWrong:-1,
-    b:0,fills:[],wrong:null,gender:"perso",walk:[],play:0,msg:"",last:-1};
+    b:0,fills:[],wrong:null,gender:"perso",walk:[],play:0,msg:"",last:-1,
+    pick:null,hint:null,hinted:[],tip:null};
   p2Render();
 }
 function head(n,askIt,askEn){
@@ -413,12 +425,23 @@ function dock(backLabel,nextLabel,nextOff){
     '<button type="button" class="teal" id="p2next"'+(nextOff?' disabled':'')+'>'+nextLabel+'</button></div>';
 }
 function moves(kind,pos,extra){
+  var a=' data-kind="'+kind+'" data-pos="'+pos+'"';
+  if(p2.pick!==null){
+    if(p2.pick===pos) return '<div class="moves"><button type="button" class="mini" data-act="cancel"'+a+'>Annulla</button></div>';
+    return '<div class="moves"><button type="button" class="mini put" data-act="put"'+a+'>⤵ Metti qui</button></div>';
+  }
   return '<div class="moves">'+
-    '<button type="button" class="mini" data-act="up" data-kind="'+kind+'" data-pos="'+pos+'" aria-label="Move up">↑ Su</button>'+
-    '<button type="button" class="mini" data-act="down" data-kind="'+kind+'" data-pos="'+pos+'" aria-label="Move down">↓ Giù</button>'+
-    (extra||'')+
-    '<button type="button" class="mini drag" data-drag="'+kind+'" data-pos="'+pos+'" aria-label="Drag">↕ Trascina</button></div>';
+    '<button type="button" class="mini" data-act="up"'+a+' aria-label="Move up">↑ Su</button>'+
+    '<button type="button" class="mini" data-act="down"'+a+' aria-label="Move down">↓ Giù</button>'+
+    '<button type="button" class="mini" data-act="pick"'+a+' aria-label="Move this line">Sposta</button>'+
+    (extra||'')+'</div>';
 }
+function hintBox(n,total,s){
+  return '<div class="hintbox" role="status"><p class="where">'+n+'</p>'+
+    (s.img?'<img src="'+s.img+'" alt="'+esc(s.alt)+'">':'')+
+    '<p class="line" lang="it">'+esc(s.it)+'</p><p class="en" lang="en">'+esc(s.en)+'</p>'+(total||'')+'</div>';
+}
+function rowClass(pos,ok){ return 'row'+(ok?' ok':'')+(p2.pick===pos?' picked':''); }
 
 function p2Render(){
   view.ontouchstart=null; view.ontouchend=null;
@@ -434,12 +457,17 @@ function p2Render(){
   }else if(p2.step===1){
     var rows=p2.order.map(function(si,pos){
       var s=city.stops[si];
-      return '<div class="row'+(p2.checked&&si===pos?' ok':'')+'" data-row>'+
+      return '<div class="'+rowClass(pos,si===pos&&(p2.checked||p2.hinted.indexOf(pos)>=0))+'" data-row>'+
+        '<p class="num">'+(pos+1)+'.</p>'+
         '<img src="'+s.img+'" alt="'+esc(s.alt)+'"><p class="line" lang="it">'+esc(s.it)+'</p><p class="en" lang="en">'+esc(s.en)+'</p>'+
         moves("order",pos)+'</div>';
     }).join("");
-    html='<div class="part">'+head(1,"Metti in ordine.","Put the walk back in order. Drag, or tap Su and Giù.")+
-      '<div class="scroll"><div class="zone" id="orderList">'+rows+'</div></div>'+
+    var hs=p2.hint!==null?city.stops[p2.hint]:null;
+    html='<div class="part">'+head(1,"Metti in ordine.","Tap Su or Giù. Or tap Sposta, then Metti qui. Stuck? Tap Aiuto.")+
+      '<div class="scroll">'+
+      (p2.solved?'':'<button type="button" class="plain wide" id="hintBtn">Aiuto · Hint</button>')+
+      (hs?hintBox("Riga "+(p2.hint+1)+" di "+city.stops.length,"",{it:hs.it,en:hs.en}):'')+
+      '<div class="zone" id="orderList">'+rows+'</div></div>'+
       dock("Indietro",p2.solved?"Avanti":"Controlla",false)+'</div>';
   }else if(p2.step===2){
     var opts=p2.match.map(function(k){
@@ -465,17 +493,22 @@ function p2Render(){
     var n=p2.walk.length;
     var walkRows=p2.walk.map(function(bi,pos){
       var s=d.bank[bi];
-      return '<div class="row" data-row>'+photo(s[2],"")+'<p class="line" lang="it">'+(pos+1)+'. '+esc(lost(s[0]))+'</p><p class="en" lang="en">'+esc(s[1])+'</p>'+
-        moves("walk",pos,'<button type="button" class="mini" data-act="remove" data-pos="'+pos+'" aria-label="Remove">✕ Togli</button>')+'</div>';
-    }).join("")||'<p class="tap">Trascina qui le frasi.<br><span class="en" lang="en">Drag sentences here, or tap Aggiungi.</span></p>';
+      return '<div class="'+rowClass(pos,false)+'" data-row>'+photo(s[2],"")+'<p class="line" lang="it">'+(pos+1)+'. '+esc(lost(s[0]))+'</p><p class="en" lang="en">'+esc(s[1])+'</p>'+
+        moves("walk",pos,'<button type="button" class="mini" data-act="remove" data-kind="walk" data-pos="'+pos+'" aria-label="Remove">✕ Togli</button>')+'</div>';
+    }).join("")||'<p class="tap">Tocca Aggiungi sotto.<br><span class="en" lang="en">Tap Aggiungi below to add a sentence.</span></p>';
     var bankRows=d.bank.map(function(s,bi){
       if(p2.walk.indexOf(bi)>=0) return "";
       return '<div class="row">'+photo(s[2],"")+'<p class="line" lang="it">'+esc(lost(s[0]))+'</p><p class="en" lang="en">'+esc(s[1])+'</p>'+
-        '<div class="moves"><button type="button" class="mini" data-add="'+bi+'">+ Aggiungi</button>'+
-        '<button type="button" class="mini drag" data-drag="bank" data-pos="'+bi+'" aria-label="Drag">↕ Trascina</button></div></div>';
+        '<div class="moves"><button type="button" class="mini" data-add="'+bi+'">+ Aggiungi</button></div></div>';
     }).join("");
-    html='<div class="part">'+head(4,"La tua passeggiata.","Pick 6 to 8 sentences. Then put them in order.")+
-      '<div class="scroll"><p class="num">'+n+' / 6–8</p><div class="zone" id="walkList">'+walkRows+'</div>'+
+    var tip="";
+    if(p2.tip!==null){
+      var t=d.bank[p2.tip];
+      tip=hintBox("Prova questa frase.",'<button type="button" class="teal wide" id="tipAdd">+ Aggiungi</button>',{it:lost(t[0]),en:t[1],img:src(t[2]),alt:ALT[src(t[2])]||""});
+    }
+    html='<div class="part">'+head(4,"La tua passeggiata.","Tap Aggiungi for 6 to 8 sentences. Stuck? Tap Aiuto.")+
+      '<div class="scroll"><button type="button" class="plain wide" id="tipBtn">Aiuto · Hint</button>'+tip+
+      '<p class="num">'+n+' / 6–8</p><div class="zone" id="walkList">'+walkRows+'</div>'+
       '<p class="label">Frasi</p><div class="zone" id="bankList">'+bankRows+'</div></div>'+
       dock("Indietro","Guarda",n<6||n>8)+'</div>';
   }else if(p2.step===5){
@@ -501,7 +534,7 @@ function p2Render(){
   p2Bind();
 }
 
-function go(step){ hush(); p2.step=step; p2.msg=""; p2Render(); }
+function go(step){ hush(); p2.step=step; p2.msg=""; p2.pick=null; p2.hint=null; p2.tip=null; p2Render(); }
 function p2Back(){
   if(p2.step===0){ index=city.stops.length-1; open=false; render(); return; }
   if(p2.step===3&&p2.b>0){ p2.b--; p2.msg=""; p2Render(); return; }
