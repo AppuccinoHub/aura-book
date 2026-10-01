@@ -570,7 +570,10 @@ function p2Bind(){
     b.onclick=function(){
       var pos=Number(b.getAttribute("data-pos")), act=b.getAttribute("data-act");
       var arr=b.getAttribute("data-kind")==="order"?p2.order:p2.walk;
-      if(act==="remove"){ p2.walk.splice(pos,1); }
+      if(act==="pick"){ p2.pick=pos; p2.msg="Ora tocca Metti qui. · Now tap Metti qui where it goes."; p2Render(); return; }
+      if(act==="cancel"){ p2.pick=null; p2.msg=""; p2Render(); return; }
+      if(act==="put"){ var item=arr.splice(p2.pick,1)[0]; arr.splice(pos,0,item); }
+      else if(act==="remove"){ p2.walk.splice(pos,1); }
       else if(act==="up"){ if(pos>0) moveItem(arr,pos,pos-1); }
       else if(pos<arr.length-1){ moveItem(arr,pos,pos+2); }
       afterChange();
@@ -579,6 +582,12 @@ function p2Bind(){
   view.querySelectorAll("[data-add]").forEach(function(b){
     b.onclick=function(){ addToWalk(Number(b.getAttribute("data-add")),p2.walk.length); };
   });
+  var hintBtn=document.getElementById("hintBtn");
+  if(hintBtn) hintBtn.onclick=orderHint;
+  var tipBtn=document.getElementById("tipBtn");
+  if(tipBtn) tipBtn.onclick=walkTip;
+  var tipAdd=document.getElementById("tipAdd");
+  if(tipAdd) tipAdd.onclick=function(){ var bi=p2.tip; p2.tip=null; addToWalk(bi,tipSpot(bi)); };
   view.querySelectorAll("[data-match]").forEach(function(b){
     b.onclick=function(){
       var k=Number(b.getAttribute("data-match"));
@@ -596,73 +605,43 @@ function p2Bind(){
       p2Render();
     };
   });
-  view.querySelectorAll("[data-drag]").forEach(function(h){
-    var kind=h.getAttribute("data-drag"), pos=Number(h.getAttribute("data-pos"));
-    var label=h.closest(".row").querySelector(".line").textContent;
-    dragFrom(h,label,function(x,y){
-      if(kind==="order"){ moveItem(p2.order,pos,dropIndex(document.getElementById("orderList"),y)); afterChange(); return; }
-      var walkEl=document.getElementById("walkList");
-      if(kind==="bank"){ if(inside(walkEl,x,y)) addToWalk(pos,dropIndex(walkEl,y)); return; }
-      if(inside(walkEl,x,y)) moveItem(p2.walk,pos,dropIndex(walkEl,y));
-      else if(inside(document.getElementById("bankList"),x,y)) p2.walk.splice(pos,1);
-      afterChange();
-    });
-  });
 }
-function afterChange(){ p2.checked=false; p2.msg=""; p2Render(); }
+function afterChange(){
+  p2.checked=false; p2.pick=null; p2.msg="";
+  if(p2.step===1&&p2.order.every(function(v,i){ return v===i; })){ p2.solved=true; p2.hint=null; p2.msg="Perfetto! All in order. Tap Avanti."; }
+  p2Render();
+}
+function orderHint(){
+  var pos=p2.order.findIndex(function(v,i){ return v!==i; });
+  if(pos<0){ afterChange(); return; }
+  p2.order.splice(p2.order.indexOf(pos),1);
+  p2.order.splice(pos,0,pos);
+  if(p2.hinted.indexOf(pos)<0) p2.hinted.push(pos);
+  afterChange();
+  if(!p2.solved){ p2.hint=pos; p2.msg="Riga "+(pos+1)+" è al suo posto. · Line "+(pos+1)+" is now in place."; p2Render(); }
+  say(city.stops[pos].it);
+}
+function suggested(){
+  var bank=p2.data.bank;
+  return p2.data.suggest.map(function(it){ return bank.findIndex(function(s){ return s[0]===it; }); });
+}
+function walkTip(){
+  if(p2.walk.length>=8){ p2.tip=null; p2.msg="Basta così! Tap Guarda."; p2Render(); return; }
+  var next=suggested().find(function(bi){ return p2.walk.indexOf(bi)<0; });
+  if(next===undefined) next=p2.data.bank.findIndex(function(s,bi){ return p2.walk.indexOf(bi)<0; });
+  p2.tip=next<0?null:next;
+  p2.msg=p2.walk.length>=6?"La passeggiata è pronta. You can tap Guarda now.":"";
+  p2Render();
+}
+function tipSpot(bi){
+  var sug=suggested(), rank=sug.indexOf(bi), at=0;
+  if(rank<0) return p2.walk.length;
+  p2.walk.forEach(function(w,i){ var r=sug.indexOf(w); if(r>=0&&r<rank) at=i+1; });
+  return at;
+}
 function addToWalk(bi,at){
   if(p2.walk.length>=8){ p2.msg="Basta così: 8 is the most."; p2Render(); return; }
-  p2.walk.splice(at,0,bi); p2.msg=""; p2Render();
-}
-function inside(el,x,y){
-  var r=el.getBoundingClientRect();
-  return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;
-}
-function dropIndex(list,y){
-  var rows=list.querySelectorAll("[data-row]");
-  for(var i=0;i<rows.length;i++){
-    var r=rows[i].getBoundingClientRect();
-    if(y<r.top+r.height/2) return i;
-  }
-  return rows.length;
-}
-function dragFrom(handle,label,onEnd){
-  handle.addEventListener("pointerdown",function(e){
-    if(e.button>0) return;
-    var sx=e.clientX, sy=e.clientY, ghost=null, moved=false, sc=view.querySelector(".scroll");
-    var row=handle.closest(".row");
-    handle.setPointerCapture(e.pointerId);
-    function move(ev){
-      if(!moved&&Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)<10) return;
-      if(!moved){
-        moved=true; row.classList.add("dragging");
-        ghost=document.createElement("div"); ghost.className="drag-ghost"; ghost.textContent=label;
-        document.body.appendChild(ghost);
-      }
-      ghost.style.left=Math.min(ev.clientX+12,window.innerWidth-200)+"px";
-      ghost.style.top=(ev.clientY-24)+"px";
-      if(sc){
-        var r=sc.getBoundingClientRect();
-        if(ev.clientY<r.top+50) sc.scrollTop-=14;
-        else if(ev.clientY>r.bottom-50) sc.scrollTop+=14;
-      }
-      var z=document.getElementById("walkList");
-      if(z) z.classList.toggle("over",inside(z,ev.clientX,ev.clientY));
-    }
-    function done(ev,ok){
-      handle.removeEventListener("pointermove",move);
-      handle.removeEventListener("pointerup",up);
-      handle.removeEventListener("pointercancel",cancel);
-      if(ghost) ghost.remove();
-      row.classList.remove("dragging");
-      if(moved&&ok) onEnd(ev.clientX,ev.clientY);
-    }
-    function up(ev){ done(ev,true); }
-    function cancel(ev){ done(ev,false); }
-    handle.addEventListener("pointermove",move);
-    handle.addEventListener("pointerup",up);
-    handle.addEventListener("pointercancel",cancel);
-  });
+  p2.walk.splice(at,0,bi); p2.pick=null; p2.msg=""; p2Render();
 }
 home();
 </script>
