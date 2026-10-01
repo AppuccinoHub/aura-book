@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f6f1e6">
 <title>Aura Book</title>
-<!-- Daylight photos, Wikimedia Commons, saved locally:
-Roma Colosseum: File:20160425 125 Roma - Colosseum (26120178914).jpg
-Napoli, Gulf of Naples and Vesuvius: File:05 2023 Napoli ITA Golfo di Napoli Vesuvio - photo Paolo Villa FO231785.jpg
-Firenze, Santa Maria del Fiore: File:Florence Cathedral & Giotto's Bell Tower Sep 2017 (1).jpg
-Venezia, Grand Canal: File:Grand Canal (15272025058).jpg
-Torino, Mole Antonelliana: File:2026-06-10-Mole-Antonelliana.jpg
-Monte di Procida, seen from Procida: File:Monte di procida.jpg
+<!-- Bright daylight photos saved locally from Wikimedia Commons:
+Roma: File:Trevi Fountain - Roma.jpg; File:Fontana dei Quattro Fiumi (Piazza Navona) September 2015-1.jpg; File:Fontana della Barcaccia in Rome, Italy, July 2011.jpg
+Napoli: File:Margherita Originale.JPG; File:Naples spaccanapoli.JPG; File:Pizzeria Da Michele, Napoli.jpg
+Firenze: File:Florence Cathedral & Giotto's Bell Tower Sep 2017 (1).jpg; File:Façade cathédrale Florence.jpg; File:Cathédrale Santa Maria del Fiore (Florence).jpg
+Venezia: File:Grand Canal (15272025058).jpg; File:Panorama of Canal Grande and Ponte di Rialto, Venice - September 2017.jpg; File:Canal Grande from the Accademia bridge.jpg
+Torino: File:Museo Egizio e Galleria sabauda, Torino.jpg; File:Museo Egizio (Torino) 01.jpg; File:Torino, Museo egizio (006).jpg
+Monte di Procida: Sue's local photos (monte-di-procida.jpg and monte-di-procida-2.jpg)
 -->
 
 <style>
@@ -112,7 +112,16 @@ h1{font-size:clamp(2.2rem,9vw,3rem);line-height:1.45;font-weight:900;color:var(-
 }
 .postcard.open{border-color:var(--teal)}
 .city-photo{width:100%;display:block;object-fit:cover;border-radius:16px;border:2px solid var(--line);pointer-events:auto}
-.postcard .city-photo{flex:1 1 auto;min-height:180px;max-height:48%;width:100%;height:48%}
+.photo-gallery{width:100%;display:flex;flex-direction:column;gap:6px}
+.gallery-main{width:100%;aspect-ratio:16/10;display:block;object-fit:cover;border-radius:16px;border:2px solid var(--line);pointer-events:auto}
+.photo-row{display:flex;justify-content:center;gap:6px;overflow-x:auto;padding:2px 0}
+.photo-choice{flex:0 0 auto;width:64px;height:46px;padding:2px;border:2px solid var(--line);border-radius:9px;background:var(--card);pointer-events:auto}
+.photo-choice img{width:100%;height:100%;display:block;object-fit:cover;border-radius:5px;pointer-events:none}
+.photo-choice.on{border-color:var(--teal);border-width:3px;background:var(--reveal)}
+.postcard .photo-gallery{flex:1 1 auto;min-height:0;width:100%;display:flex}
+.postcard .gallery-main{flex:1 1 auto;min-height:150px;height:auto;max-height:100%;aspect-ratio:auto}
+.postcard .photo-row{flex:0 0 auto}
+
 .it-hero{font-size:clamp(1.7rem,6.6vw,2.45rem);line-height:1.45;font-weight:900;color:var(--ink);margin:0}
 .flap{width:100%;background:var(--reveal);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
 .en{display:block;color:var(--teal);font-weight:800;font-size:clamp(1.05rem,4vw,1.3rem);line-height:1.5;margin-top:8px;font-style:normal}
@@ -137,6 +146,10 @@ h1{font-size:clamp(2.2rem,9vw,3rem);line-height:1.45;font-weight:900;color:var(-
 .pass{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:14px;box-shadow:none}
 .cover-block{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:10px 4px}
 .cover-block .city-photo{aspect-ratio:16/10;max-height:240px}
+.landmark-card{width:100%;background:var(--reveal);border:2px solid var(--line);border-radius:18px;padding:10px;text-align:center}
+.landmark-card .gallery-main{aspect-ratio:16/10}
+.landmark-name{font-size:1.3rem;font-weight:900;color:var(--ink);line-height:1.45;margin-top:8px}
+
 .cityname{font-size:clamp(2.2rem,10vw,3.2rem);font-weight:900;color:var(--ink);line-height:1.45}
 .wait{text-align:center;padding:10px 4px 6px}
 .stamps3{display:flex;gap:10px;justify-content:center}
@@ -219,15 +232,25 @@ Torino:{en:"Turin",region:"Piemonte",place:"nord",placeEn:"north",icon:"museum",
 it:"Lo sapevi che Torino ha un museo egizio famoso?",
 enFact:"Did you know Turin has a famous Egyptian museum?"}
 };
-const CITY_PHOTO={
-Roma:"art/cities/roma.jpg?v=6",
-Napoli:"art/cities/napoli.jpg?v=6",
-Firenze:"art/cities/firenze.jpg",
-Venezia:"art/cities/venezia.jpg",
-Torino:"art/cities/torino.jpg?v=6"
+const CITY_PHOTOS={
+Roma:["art/cities/roma.jpg?v=6","art/cities/roma-2.jpg?v=6","art/cities/roma-3.jpg?v=6"],
+Napoli:["art/cities/napoli.jpg?v=6","art/cities/napoli-2.jpg?v=6","art/cities/napoli-3.jpg?v=6"],
+Firenze:["art/cities/firenze.jpg?v=6","art/cities/firenze-2.jpg?v=6","art/cities/firenze-3.jpg?v=6"],
+Venezia:["art/cities/venezia.jpg?v=6","art/cities/venezia-2.jpg?v=6","art/cities/venezia-3.jpg?v=6"],
+Torino:["art/cities/torino.jpg?v=6","art/cities/torino-2.jpg?v=6","art/cities/torino-3.jpg?v=6"],
+"Monte di Procida":["art/cities/monte-di-procida.jpg?v=5","art/cities/monte-di-procida-2.jpg?v=6"]
 };
-const PAGES=["Cover","Dove abito","Com'è","Cosa vedo","Cosa amo","Ciao"];
-const PAGE_EN=["Your city","Where I live","What it is like","What I see","What I love","Goodbye"];
+const CITY_PHOTO=Object.fromEntries(Object.entries(CITY_PHOTOS).map(([name,photos])=>[name,photos[0]]));
+const photoChoice=Object.fromEntries(Object.keys(CITY_PHOTOS).map(name=>[name,0]));
+const LANDMARKS={
+Roma:[{label:"Fontana di Trevi",labelEn:"Trevi Fountain",it:"Io ho la Fontana di Trevi.",en:"I have the Trevi Fountain.",photo:0},{label:"Fontana dei Quattro Fiumi",labelEn:"Fountain of the Four Rivers",it:"Io ho la Fontana dei Quattro Fiumi.",en:"I have the Fountain of the Four Rivers.",photo:1}],
+Napoli:[{label:"Pizza Margherita",labelEn:"Margherita pizza",it:"Io ho la pizza Margherita.",en:"I have Margherita pizza.",photo:0},{label:"Spaccanapoli",labelEn:"Spaccanapoli",it:"Io ho Spaccanapoli.",en:"I have Spaccanapoli.",photo:1}],
+Firenze:[{label:"Duomo di Firenze",labelEn:"Florence Cathedral",it:"Io ho il Duomo di Firenze.",en:"I have Florence Cathedral.",photo:0},{label:"Facciata del Duomo",labelEn:"Cathedral façade",it:"Io vedo la facciata del Duomo.",en:"I see the cathedral façade.",photo:2}],
+Venezia:[{label:"Canal Grande",labelEn:"Grand Canal",it:"Io ho il Canal Grande.",en:"I have the Grand Canal.",photo:0},{label:"Ponte di Rialto",labelEn:"Rialto Bridge",it:"Io ho il Ponte di Rialto.",en:"I have the Rialto Bridge.",photo:1}],
+Torino:[{label:"Museo Egizio",labelEn:"Egyptian Museum",it:"Io ho il Museo Egizio.",en:"I have the Egyptian Museum.",photo:0},{label:"Facciata del Museo Egizio",labelEn:"Egyptian Museum façade",it:"Io vedo la facciata del Museo Egizio.",en:"I see the Egyptian Museum façade.",photo:1}]
+};
+const PAGES=["Copertina","Ciao","Dove abito","Com'è","Luogo 1","Luogo 2","Vedo e amo","Tu","Cibo o cultura","A presto"];
+const PAGE_EN=["Cover","Hello","Where I live","What it is like","Place 1","Place 2","I see and love","You","Food or culture","See you soon"];
 const PICS={
 wave:'<circle cx="30" cy="40" r="11" fill="#ffd166"/><rect x="25" y="18" width="5" height="16" rx="2.5" fill="#ffd166"/><rect x="32" y="15" width="5" height="18" rx="2.5" fill="#ffd166"/><rect x="39" y="20" width="5" height="14" rx="2.5" fill="#ff4d9e"/><path d="M12 20c7 2 8 9 3 12M10 32c6 1 7 7 2 9" fill="none" stroke="#00f5d4" stroke-width="3" stroke-linecap="round"/>',
 sea:'<circle cx="46" cy="16" r="6" fill="#ffd166"/><path d="M6 34c7 8 11-8 18 0s11-8 18 0 11-8 16 0" fill="none" stroke="#00f5d4" stroke-width="4" stroke-linecap="round"/><path d="M6 48c7 8 11-8 18 0s11-8 18 0 11-8 16 0" fill="none" stroke="#c44dff" stroke-width="4" stroke-linecap="round"/>',
@@ -253,7 +276,7 @@ let sound=true,projector=false,screenName="home",idx=0,open=false,city=null,page
 let book=blankBook();
 let audioCtx=null,suppressClick=false,scrollKey="";
 const view=document.getElementById("view");
-function blankBook(){return [[],[],[],[],[],[]];}
+function blankBook(){return Array.from({length:PAGES.length},()=>[]);}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function icon(name){return '<svg class="pic" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#140a22"/>'+(PICS[name]||PICS.star)+"</svg>";}
 function blip(){
@@ -289,10 +312,18 @@ function pool(name){
     ["tuMare","Tu vedi il mare.","You see the sea.","sea"],
     ["pizza","Tu ami la pizza.","You love pizza.","pizza"],
     ["choc","Tu ami il cioccolato.","You love chocolate.","chocolate"],
-    ["presto","A presto!","See you soon!","wave"]
+    ["presto","A presto!","See you soon!","wave"],
+    ["piccola","Io sono piccola.","I am small.","city"],
+    ["grande","Io sono grande.","I am big.","city"],
+    ["antica","Io sono antica.","I am old.","story"],
+    ["vicinaM","Io sono vicina al mare.","I am near the sea.","sea"],
+    ["vicinaMonti","Io sono vicina alle montagne.","I am near the mountains.","mountains"]
   ];
+  (LANDMARKS[name]||[]).forEach((p,i)=>rows.push(["place"+(i+1),p.it,p.en,i===0?"view":"place"]));
   if(name==="Torino")rows=rows.filter(r=>!/mare/.test(r[1]));
   if(name==="Venezia")rows=rows.filter(r=>!/montagne/.test(r[1]));
+  rows.push(["tuVisita","Tu visiti "+(LANDMARKS[name]?.[0]?.label||"la città")+".","You visit "+(LANDMARKS[name]?.[0]?.labelEn||"the city")+".","view"]);
+  rows.push(["tuHai","Tu hai "+(LANDMARKS[name]?.[0]?.label||"una città")+".","You have "+(LANDMARKS[name]?.[0]?.labelEn||"a city")+".","city"]);
   return rows.map(r=>({key:r[0],it:r[1],en:r[2],icon:r[3]}));
 }
 function pick(keys){
@@ -302,11 +333,15 @@ function pick(keys){
   return out.slice(0,4);
 }
 function chips(){
-  if(page===1)return pick(["ciao","citta","abito","place"]);
-  if(page===2)return pick(["famosa","vmare","vmont","piazza"]);
-  if(page===3)return pick(["vedoM","vedoG","tuMare","piazza"]);
-  if(page===4)return pick(city==="Napoli"?["pizza","storia","choc","famosa"]:["storia","pizza","choc","famosa"]);
-  if(page===5)return pick(city==="Napoli"?["ciao","presto","pizza","storia"]:["ciao","presto","storia","choc"]);
+  if(page===1)return pick(["ciao"]);
+  if(page===2)return pick(["abito","place"]);
+  if(page===3)return pick(["piccola","grande","antica","vicinaM","vicinaMonti"]);
+  if(page===4)return pick(["place1"]);
+  if(page===5)return pick(["place2"]);
+  if(page===6)return pick(["vedoM","vedoG","storia"]);
+  if(page===7)return pick(["tuMare","tuVisita","tuHai"]);
+  if(page===8)return pick(city==="Napoli"?["pizza","storia"]:["storia","choc"]);
+  if(page===9)return pick(["presto"]);
   return [];
 }
 function btn(go,label,sub,cls,extra){
@@ -323,28 +358,39 @@ function viewHome(){
 function viewDeck(){
   const it=MODEL[idx][0],en=MODEL[idx][1];
   const flap=open?'<div class="flap"><p class="en" lang="en">'+esc(en)+"</p></div>":"";
-  const photo='<img class="city-photo" src="art/cities/monte-di-procida.jpg?v=5" alt="Monte di Procida in daylight" draggable="false">';
+  const gallery=photoGallery("Monte di Procida","deck-gallery");
   return '<section class="stage deck"><div class="toprow"><span class="tag">Passaporto</span><span class="count">'+(idx+1)+" / "+MODEL.length+'</span></div>'+dots(MODEL.length,idx)+
-    '<button type="button" class="postcard'+(open?" open":"")+'" id="card" data-go="flip" aria-expanded="'+open+'">'+photo+'<h2 class="it-hero">'+esc(it)+"</h2>"+flap+'<span class="tap">'+(open?"Tap again to hide":"Tap for English. Swipe up for next.")+"</span></button>"+
+    '<div class="postcard'+(open?" open":"")+'" id="card" data-go="flip" aria-expanded="'+open+'">'+gallery+'<h2 class="it-hero">'+esc(it)+"</h2>"+flap+'<span class="tap">'+(open?"Tap again to hide":"Tap for English. Swipe up for next.")+"</span></div>"+
     '<div class="dock"><div class="nav">'+
     btn("prev","Indietro","Back","ghost")+
     btn("help","Aiuto","Show English","gold",'aria-pressed="'+open+'"')+
     btn("next","Avanti","Next","teal",'id="nextBtn"')+
     "</div></div></section>";
 }
+function photoGallery(name,cls,photos,key){
+  const pics=photos||CITY_PHOTOS[name]||[];
+  const choiceKey=key||name;
+  const at=Math.max(0,Math.min(photoChoice[choiceKey]||0,pics.length-1));
+  const thumbs=pics.map((src,i)=>'<button type="button" class="photo-choice'+(i===at?" on":"")+'" data-go="photo" data-city="'+esc(choiceKey)+'" data-photo="'+i+'" aria-label="Photo '+(i+1)+' of '+pics.length+' of '+esc(name)+'"><img src="'+src+'" alt="" draggable="false"></button>').join("");
+  return '<div class="photo-gallery '+(cls||"")+'"><img class="gallery-main" src="'+pics[at]+'" alt="'+esc(name)+' in daylight, photo '+(at+1)+'" draggable="false">'+(pics.length>1?'<div class="photo-row" aria-label="Choose a photo">'+thumbs+'</div>':"")+'</div>';
+}
+function landmarkCard(name,which){
+  const place=LANDMARKS[name][which],src=CITY_PHOTOS[name][place.photo],key=name+"-place-"+which;
+  return '<div class="landmark-card">'+photoGallery(name,"place-gallery",[src],key)+'<div class="landmark-name"><b>'+esc(place.label)+'</b>'+(help?'<span class="en" lang="en">'+esc(place.labelEn)+'</span>':"")+'</div></div>';
+}
 function viewCities(){
   const cards=Object.keys(CITIES).map(name=>{
     const d=CITIES[name];
-    return '<button type="button" class="city" data-go="city" data-city="'+name+'"><img class="city-photo" src="'+CITY_PHOTO[name]+'" alt="'+esc(name)+' in daylight" draggable="false"><span class="city-top"><span><strong class="cname">'+name+'</strong><span class="en" lang="en">'+esc(d.en)+"</span></span></span><span class=\"gossip\">"+esc(d.it)+'</span><span class="en" lang="en">'+esc(d.enFact)+'</span><span class="go">Fai questo libro<small>Make this book</small></span></button>';
+    return '<article class="city">'+photoGallery(name,"city-gallery")+'<div class="city-top"><span><strong class="cname">'+name+'</strong><span class="en" lang="en">'+esc(d.en)+"</span></span></div><span class=\"gossip\">"+esc(d.it)+'</span><span class="en" lang="en">'+esc(d.enFact)+'</span><button type="button" class="go" data-go="city" data-city="'+name+'">Fai questo libro<small>Make this book</small></button></article>';
   }).join("");
-  return '<section class="stage"><div class="toprow"><span class="tag">Scegli la città</span></div><p class="hint">Tap a city. Then make its book.</p><div class="grow">'+cards+'</div><div class="dock"><div class="nav two">'+btn("prev","Indietro","Back","ghost")+btn("start","Frasi","Sentences","teal")+"</div></div></section>";
+  return '<section class="stage"><div class="toprow"><span class="tag">Scegli la città</span></div><p class="hint">Tap a photo or city. Then make its book.</p><div class="grow">'+cards+'</div><div class="dock"><div class="nav two">'+btn("prev","Indietro","Back","ghost")+btn("start","Frasi","Sentences","teal")+"</div></div></section>";
 }
 function viewBook(){
   const d=CITIES[city];
   const placed=book[page];
   let body;
   if(page===0){
-    body='<div class="pass cover-block"><div class="pill">Passaporto</div><img class="city-photo" src="'+CITY_PHOTO[city]+'" alt="'+esc(city)+' in daylight" draggable="false"><div class="cityname">'+esc(city)+'</div><p class="en" lang="en">'+esc(d.en)+" · "+esc(d.region)+"</p></div>";
+    body='<div class="pass cover-block"><div class="pill">Passaporto</div>'+photoGallery(city,"cover-gallery")+'<div class="cityname">Io sono '+esc(city)+'!</div>'+(help?'<p class="en" lang="en">'+esc(d.en)+' · '+esc(d.region)+'</p>':'')+'</div>';
   }else{
     const lines=placed.map(s=>'<button type="button" class="placed" data-go="remove" data-key="'+s.key+'">'+icon(s.icon)+"<span><span class=\"line-it\">"+esc(s.it)+"</span>"+(help?'<span class="en" lang="en">'+esc(s.en)+"</span>":"")+"</span></button>").join("");
     const empty=placed.length?"":'<div class="wait"><div class="stamps3"><i class="ghost-stamp"></i><i class="ghost-stamp"></i><i class="ghost-stamp"></i></div><p class="ask">Tocca un adesivo</p><p class="en" lang="en">Tap a sticker</p></div>';
@@ -352,7 +398,8 @@ function viewBook(){
       const on=placed.some(x=>x.key===s.key);
       return '<button type="button" class="sticker'+(on?" on":"")+'" data-go="add" data-key="'+s.key+'">'+icon(s.icon)+"<span><span class=\"it\">"+esc(s.it)+"</span>"+(help?'<span class="en" lang="en">'+esc(s.en)+"</span>":"")+"</span></button>";
     }).join("");
-    body='<div class="pass">'+empty+lines+"</div>"+'<div class="stickers">'+stick+"</div>";
+    const place=page===4||page===5?landmarkCard(city,page-4):"";
+    body=place+'<div class="pass">'+empty+lines+"</div>"+'<div class="stickers">'+stick+"</div>";
   }
   const goal=count()>=3?'<div class="pill good">Basta così · '+count()+"</div>":'<div class="pill">Adesivi '+count()+" / 3</div>";
   const doneBtn=count()>=3?btn("done","Vedi il passaporto","See your passport","gold"):"";
@@ -366,7 +413,7 @@ function viewBook(){
 }
 function viewDone(){
   const d=CITIES[city];
-  const pages=[{name:"Cover",lines:[{it:city,en:d.en+" · "+d.region,icon:d.icon}]}];
+  const pages=[{name:"Cover",lines:[{it:"Io sono "+city+"!",en:d.en+" · "+d.region,icon:d.icon}]}];
   for(let i=1;i<PAGES.length;i++){if(book[i].length)pages.push({name:PAGES[i],lines:book[i]});}
   const list=pages.map(p=>'<article class="final"><h3>'+esc(p.name)+"</h3>"+p.lines.map(s=>'<p><span class="line-it">'+esc(s.it)+'</span><span class="en" lang="en">'+esc(s.en)+"</span></p>").join("")+"</article>").join("");
   return '<section class="stage"><div class="grow"><div class="home" style="justify-content:flex-start"><div class="avatar-frame party"><img src="art/avatar/celebrate.png" alt="Teacher celebrating" draggable="false"></div><div class="pill">Passaporto</div><h1 style="font-size:clamp(2rem,8vw,2.8rem)">Il tuo passaporto</h1><p class="tagline">'+esc(city)+"</p></div>"+list+"</div><div class=\"dock\">"+btn("again","Ricomincia","Start again","teal")+"</div></section>";
@@ -439,6 +486,7 @@ view.addEventListener("click",e=>{
   else if(go==="prev")prev();
   else if(go==="next")next();
   else if(go==="help"){if(screenName==="deck")open=true;else help=!help;render();}
+  else if(go==="photo"){photoChoice[el.dataset.city]=Number(el.dataset.photo)||0;render();}
   else if(go==="city")choose(el.dataset.city);
   else if(go==="add"||go==="remove")toggleChip(el.dataset.key);
   else if(go==="done")finish();
