@@ -4,510 +4,219 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f6f1e6">
-<title>Aura Book</title>
-<!-- Bright daylight photos saved locally from Wikimedia Commons:
-Roma: File:Trevi Fountain - Roma.jpg; File:Fontana dei Quattro Fiumi (Piazza Navona) September 2015-1.jpg; File:Fontana della Barcaccia in Rome, Italy, July 2011.jpg
-Napoli: File:Margherita Originale.JPG; File:Naples spaccanapoli.JPG; File:Pizzeria Da Michele, Napoli.jpg
-Firenze: File:Florence Cathedral & Giotto's Bell Tower Sep 2017 (1).jpg; File:Façade cathédrale Florence.jpg; File:Cathédrale Santa Maria del Fiore (Florence).jpg
-Venezia: File:Grand Canal (15272025058).jpg; File:Panorama of Canal Grande and Ponte di Rialto, Venice - September 2017.jpg; File:Canal Grande from the Accademia bridge.jpg
-Torino: File:Museo Egizio e Galleria sabauda, Torino.jpg; File:Museo Egizio (Torino) 01.jpg; File:Torino, Museo egizio (006).jpg
-Monte di Procida: Sue's local photos (monte-di-procida.jpg and monte-di-procida-2.jpg)
+<title>Mi sono perso</title>
+<!-- Daylight photos from Wikimedia Commons, saved locally under art/cities/.
+Roma: 20110327 Roma - Gianicolo 006.jpg; Colosseo Rome 2.jpg; Fuente de Trevi, Roma, Italia, 2022-09-15, DD 02.jpg; Basilica di San Pietro in Vaticano September 2015-1a.jpg; Cupolone di San Pietro, Vaticano.jpg; Map of the Roman Empire in Via dei Fori Imperiali; Piazza Navona 1.jpg; Fortyseven Hotel Rome - panoramio.jpg
+Napoli: Castel dell'Ovo (Naples) 01.jpg; Golfo di Napoli Posillipo (Paolo Villa); View of Naples with Vesuvio.jpg; Margherita Originale.JPG; Pizza-napoletana.jpg; Galleria Umberto I da piazza del Plebiscito.jpg; Una Hotel Napoli. Pizza Margherita is named for Queen Margherita of Savoy.
+Firenze: Panorama di Firenze dal Piazzale Michelangelo; Florence Cathedral and Giotto's Bell Tower Sep 2017; Vista del Duomo di Firenze nel mattino; Ponte Vecchio Arno Florence; Ponte Vecchio and river Arno; Piazza della Signoria 1; Hotel Alessandra entrance.
+Venezia: Basilica di San Marco 2022-05-09; Gondola on the Canal Grande; Panorama of Canal Grande and Ponte di Rialto September 2017; Palazzo dei Camerlenghi e Ponte Rialto; Piazza San Marco 2019; Danieli venice; Hotel Danieli Palazzo Dandolo.
+Torino: Palazzo Reale da Piazza Castello; Museo Egizio e Galleria sabauda; Torino Museo egizio (003); Via Roma; Piazza San Carlo; statua in Piazza San Carlo; courtyard of hotel Opera35.
 -->
-
 <style>
-:root{
-  --bg:#f6f1e6;--card:#fffaf2;--line:#e4d8c4;--ink:#1c1915;--teal:#0f766e;--reveal:#efe6d4;
-}
+:root{--bg:#f6f1e6;--card:#fffaf2;--ink:#1c1915;--teal:#0f766e;--line:#e4d8c4}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
 html{-webkit-text-size-adjust:100%}
-body{
-  background:var(--bg);color:var(--ink);
-  font-family:ui-rounded,"Avenir Next","Segoe UI",system-ui,sans-serif;
-  font-style:normal;line-height:1.5;
-  display:flex;justify-content:center;
-}
-button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation;pointer-events:auto}
-button,button *{pointer-events:auto}
+body{background:var(--bg);color:var(--ink);font-family:ui-rounded,"Avenir Next","Segoe UI",system-ui,sans-serif;line-height:1.35}
+button{font:inherit;color:var(--ink);cursor:pointer;border:0;background:none;touch-action:manipulation}
 :focus-visible{outline:3px solid var(--teal);outline-offset:3px}
-#shell{
-  width:min(100%,480px);height:100dvh;max-height:100dvh;
-  display:flex;flex-direction:column;min-height:0;
-  padding:
-    max(8px,env(safe-area-inset-top))
-    max(12px,env(safe-area-inset-right))
-    max(10px,env(safe-area-inset-bottom))
-    max(12px,env(safe-area-inset-left));
-  background:var(--bg);
-  overflow:hidden;
-}
+#shell{width:min(100%,480px);height:100dvh;margin:0 auto;display:flex;flex-direction:column;min-height:0;padding:max(8px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:var(--bg);overflow:hidden}
 header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.brand{font-weight:900;font-size:1.2rem;color:var(--ink);letter-spacing:-.02em;line-height:1.45}
+.brand{font-weight:900;font-size:1.15rem;color:var(--ink);letter-spacing:-.02em}
 .controls{display:flex;gap:8px}
-.icon-btn{
-  width:48px;height:48px;border-radius:16px;background:var(--card);
-  border:2px solid var(--ink);box-shadow:none;
-  font-weight:900;font-size:1.15rem;color:var(--ink);
-  display:grid;place-items:center;
-}
-.icon-btn:active{transform:translateY(2px)}
-.icon-btn[aria-pressed="true"]{background:var(--reveal);color:var(--ink);border-color:var(--teal);border-width:3px}
+.icon-btn{width:48px;height:48px;border-radius:16px;background:var(--card);border:2px solid var(--ink);font-weight:900;font-size:1.15rem;color:var(--ink);display:grid;place-items:center}
+.icon-btn[aria-pressed="true"]{border-color:var(--teal);border-width:3px;background:#efe6d4;color:var(--ink)}
 #view{flex:1;min-height:0;display:flex;flex-direction:column}
-.stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
-.grow{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}
-.dock{flex:0 0 auto;display:flex;flex-direction:column;gap:10px;position:relative;z-index:2}
-.nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.nav.two{grid-template-columns:1fr 1fr}
-.btn{
-  min-height:56px;border-radius:18px;padding:8px 10px;
-  background:var(--card);color:var(--ink);font-weight:900;
-  border:2px solid var(--ink);box-shadow:none;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  line-height:1.45;
-}
-.btn b{font-size:1.05rem;line-height:1.45}
-.btn small{font-size:.85rem;font-weight:800;color:var(--ink);line-height:1.45}
-.btn.teal{background:var(--teal);color:var(--card);border-color:var(--teal)}
-.btn.teal small{color:var(--card)}
-.btn.ghost,.btn.gold{background:var(--card);color:var(--ink);border:2px solid var(--ink);box-shadow:none}
-.btn.ghost small,.btn.gold small{color:var(--ink)}
-.btn[aria-pressed="true"]{background:var(--reveal);color:var(--ink);border:3px solid var(--teal)}
-.btn[aria-pressed="true"] small{color:var(--ink)}
-.btn:active{transform:translateY(2px)}
-.home{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:8px 4px 10px}
-.avatar-frame{
-  width:min(78vw,280px);overflow:hidden;border-radius:32px;
-  border:2px solid var(--line);background:var(--card);box-shadow:none;
-}
-.avatar-frame.hi{aspect-ratio:385/220}
-.avatar-frame.party{aspect-ratio:381/190}
-.avatar-frame img{width:100%;height:auto;display:block;pointer-events:none}
-.pill{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--card);color:var(--ink);font-weight:900;
-  border:2px solid var(--ink);border-radius:999px;padding:6px 14px;box-shadow:none;
-  line-height:1.45;
-}
-.pill.good{background:var(--card);color:var(--teal);border-color:var(--teal)}
-h1{font-size:clamp(2.2rem,9vw,3rem);line-height:1.45;font-weight:900;color:var(--ink);letter-spacing:-.03em;margin:0}
-.tagline{font-size:1.2rem;font-weight:800;color:var(--ink);max-width:22rem;line-height:1.5;margin:0}
-.home .btn{width:min(100%,320px);min-height:64px}
-.home .btn b{font-size:1.35rem}
-.toprow{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.tag{font-weight:900;color:var(--ink);letter-spacing:.02em;text-transform:uppercase;font-size:.95rem;line-height:1.45}
-.count{font-weight:900;color:var(--ink);line-height:1.45}
-.dots{flex:0 0 auto;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-.dots i{width:12px;height:12px;border-radius:4px;border:2px solid var(--ink);background:transparent;display:block}
-.dots i.on{background:var(--teal);border-color:var(--teal)}
-.dots i.now{background:var(--reveal);border-color:var(--teal);outline:2px solid var(--teal);outline-offset:1px}
-.deck{gap:8px}
-.postcard{
-  flex:1 1 auto;min-height:0;width:100%;text-align:center;position:relative;
-  border-radius:28px;padding:12px;
-  background:var(--card);
-  border:2px solid var(--line);
-  box-shadow:none;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  overflow:hidden;touch-action:none;
-}
-.postcard.open{border-color:var(--teal)}
-.city-photo{width:100%;display:block;object-fit:cover;border-radius:16px;border:2px solid var(--line);pointer-events:auto}
-.photo-gallery{width:100%;display:flex;flex-direction:column;gap:6px}
-.gallery-main{width:100%;aspect-ratio:16/10;display:block;object-fit:cover;border-radius:16px;border:2px solid var(--line);pointer-events:auto}
-.photo-row{display:flex;justify-content:center;gap:6px;overflow-x:auto;padding:2px 0}
-.photo-choice{flex:0 0 auto;width:64px;height:46px;padding:2px;border:2px solid var(--line);border-radius:9px;background:var(--card);pointer-events:auto}
-.photo-choice img{width:100%;height:100%;display:block;object-fit:cover;border-radius:5px;pointer-events:none}
-.photo-choice.on{border-color:var(--teal);border-width:3px;background:var(--reveal)}
-.postcard .photo-gallery{flex:1 1 auto;min-height:0;width:100%;display:flex}
-.postcard .gallery-main{flex:1 1 auto;min-height:150px;height:auto;max-height:100%;aspect-ratio:auto}
-.postcard .photo-row{flex:0 0 auto}
-
-.it-hero{font-size:clamp(1.7rem,6.6vw,2.45rem);line-height:1.45;font-weight:900;color:var(--ink);margin:0}
-.flap{width:100%;background:var(--reveal);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
-.en{display:block;color:var(--teal);font-weight:800;font-size:clamp(1.05rem,4vw,1.3rem);line-height:1.5;margin-top:8px;font-style:normal}
-.tap{font-weight:800;color:var(--ink);font-size:1rem;line-height:1.45}
-.hint{flex:0 0 auto;text-align:center;font-weight:800;color:var(--ink);font-size:1.05rem;line-height:1.5;margin:0}
-.note{text-align:center;font-weight:900;color:var(--ink);font-size:1.05rem;line-height:1.5;margin:0}
-.pic{width:64px;height:64px;display:block;flex:0 0 auto}
-.city{
-  width:100%;text-align:left;background:var(--card);border:2px solid var(--line);
-  border-radius:22px;padding:12px;margin-bottom:12px;box-shadow:none;color:var(--ink);
-}
-.city .city-photo{aspect-ratio:16/10;height:auto;margin-bottom:10px}
-.city-top{display:flex;gap:10px;align-items:center;margin-bottom:8px}
-.cname{display:block;font-size:1.7rem;font-weight:900;color:var(--ink);line-height:1.45}
-.gossip{display:block;font-size:clamp(1.15rem,4.2vw,1.35rem);font-weight:900;color:var(--ink);line-height:1.5}
-.go{
-  margin-top:12px;min-height:48px;border-radius:14px;background:var(--teal);color:var(--card);
-  font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  box-shadow:none;line-height:1.45;border:2px solid var(--teal);pointer-events:auto;
-}
-.go small{font-weight:800;font-size:.85rem;color:var(--card);line-height:1.45}
-.pass{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:14px;box-shadow:none}
-.cover-block{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:10px 4px}
-.cover-block .city-photo{aspect-ratio:16/10;max-height:240px}
-.landmark-card{width:100%;background:var(--reveal);border:2px solid var(--line);border-radius:18px;padding:10px;text-align:center}
-.landmark-card .gallery-main{aspect-ratio:16/10}
-.landmark-name{font-size:1.3rem;font-weight:900;color:var(--ink);line-height:1.45;margin-top:8px}
-
-.cityname{font-size:clamp(2.2rem,10vw,3.2rem);font-weight:900;color:var(--ink);line-height:1.45}
-.wait{text-align:center;padding:10px 4px 6px}
-.stamps3{display:flex;gap:10px;justify-content:center}
-.ghost-stamp{width:42px;height:42px;border:3px dashed var(--line);border-radius:12px}
-.wait .ask{margin:10px 0 0;font-size:1.25rem;font-weight:900;color:var(--ink);line-height:1.45}
-.placed{
-  width:100%;display:flex;gap:10px;align-items:center;text-align:left;
-  background:var(--reveal);border:2px solid var(--line);border-radius:16px;padding:10px;margin-top:10px;
-  box-shadow:none;min-height:64px;color:var(--ink);
-}
-.placed .pic{width:52px;height:52px}
-.line-it{display:block;font-size:clamp(1.55rem,4.6vw,1.85rem);font-weight:900;color:var(--ink);line-height:1.45}
-.stickers{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-.sticker{
-  width:100%;min-height:72px;display:flex;gap:10px;align-items:center;text-align:left;
-  background:var(--card);border:2px solid var(--line);border-radius:18px;padding:10px;
-  box-shadow:none;color:var(--ink);
-}
-.sticker.on{border-color:var(--teal);border-width:3px;background:var(--reveal)}
-.sticker .it{font-size:1.25rem;font-weight:900;color:var(--ink);line-height:1.45}
-.page-en{color:var(--teal);font-weight:800;font-size:1.05rem;line-height:1.5;margin:0}
-.final{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:14px 16px;margin-bottom:12px;box-shadow:none}
-.final h3{color:var(--ink);font-size:1.35rem;font-weight:900;margin:0 0 8px;line-height:1.45}
-.final .line-it{font-size:1.6rem}
-.final p{margin:0 0 12px}
-body.projector .it-hero{font-size:clamp(2rem,8vw,3rem)}
-body.projector .line-it{font-size:1.9rem}
-body.projector .tagline,body.projector .hint,body.projector .gossip{font-size:1.35rem}
-body.projector .sticker .it{font-size:1.45rem}
-body.projector .en{font-size:1.35rem}
-body.projector h1{font-size:3rem}
+.home,.cities{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:8px 4px 12px}
+.home{justify-content:center}
+.hello{width:120px;height:68px;overflow:hidden;border-radius:18px;border:2px solid var(--line);background:var(--card)}
+.hello img{width:120px;height:auto;display:block;object-position:center top}
+h1{font-size:clamp(2.6rem,11vw,3.4rem);line-height:1.15;font-weight:900;color:var(--ink);letter-spacing:-.03em;margin:0}
+.tagline{font-size:1.2rem;font-weight:800;color:var(--ink);margin:0;max-width:20rem}
+.teal{min-height:64px;width:min(100%,320px);border-radius:18px;padding:12px 16px;background:var(--teal);color:#fff;font-weight:900;font-size:1.45rem;border:2px solid var(--teal)}
+.teal small{color:#fff;font-weight:800}
+.city-list{width:100%;display:flex;flex-direction:column;gap:10px}
+.city-btn{width:100%;min-height:72px;border-radius:20px;background:var(--card);color:var(--ink);border:2px solid var(--ink);font-weight:900;font-size:1.7rem}
+.stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.route{flex:0 0 auto;position:relative;display:flex;justify-content:space-between;align-items:flex-end;height:62px;margin:0 4px;padding:0 2px}
+.route:before{content:"";position:absolute;left:8px;right:8px;bottom:6px;height:3px;background:var(--line);border-radius:99px}
+.stop{position:relative;width:16px;height:16px;flex:0 0 auto;z-index:1}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);background:var(--bg);display:block}
+.stop.done .dot{background:var(--teal);border-color:var(--teal)}
+.stop.now .dot{background:var(--card);border-color:var(--teal);box-shadow:0 0 0 2px var(--teal)}
+.walker{position:absolute;left:50%;bottom:12px;width:64px;height:36px;transform:translateX(-50%);overflow:hidden;pointer-events:none;z-index:2}
+.walker img{width:64px;height:auto;display:block}
+.card{flex:1;min-height:0;width:100%;text-align:center;background:var(--card);border:2px solid var(--line);border-radius:24px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:hidden;color:var(--ink)}
+.card.open{border-color:var(--teal)}
+.card img.shot{width:100%;height:min(34dvh,250px);object-fit:cover;border-radius:16px;border:2px solid var(--line);background:var(--bg);flex:0 0 auto}
+.it{font-size:clamp(1.85rem,7.4vw,2.55rem);line-height:1.2;font-weight:900;color:var(--ink);margin:0}
+.en{color:var(--teal);font-weight:800;font-size:clamp(1.05rem,4vw,1.28rem);line-height:1.35;margin:0}
+.tap{font-weight:800;color:var(--ink);font-size:1rem;margin:0}
+.dock{flex:0 0 auto;display:grid;grid-template-columns:1fr 1.3fr;gap:8px}
+.plain{min-height:56px;border-radius:18px;background:var(--card);color:var(--ink);border:2px solid var(--ink);font-weight:900;font-size:1.15rem}
+body.big .it{font-size:clamp(2.35rem,9vw,3.15rem)}
+body.big .en{font-size:1.4rem}
+body.big h1{font-size:3.5rem}
+body.big .city-btn{font-size:2rem;min-height:84px}
 @media (max-height:700px){
-  .avatar-frame{width:min(62vw,210px)}
-  .postcard .city-photo{max-height:42%;height:42%;min-height:150px}
+  .card img.shot{height:min(28dvh,190px)}
+  .hello{width:96px;height:54px}
+  h1{font-size:2.4rem}
 }
-@media (prefers-reduced-motion:reduce){
-  *{transition:none!important;animation:none!important}
-}
-
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <div id="shell">
 <header>
-  <div class="brand">✦ Passaporto</div>
+  <div class="brand" id="brand">Mi sono perso</div>
   <div class="controls">
-    <button type="button" class="icon-btn" id="muteBtn" aria-label="Mute sounds" aria-pressed="false">🔊</button>
-    <button type="button" class="icon-btn" id="projBtn" aria-label="Projector text size" aria-pressed="false">Aa</button>
+    <button type="button" class="icon-btn" id="muteBtn" aria-label="Mute" aria-pressed="false">🔊</button>
+    <button type="button" class="icon-btn" id="bigBtn" aria-label="Bigger text" aria-pressed="false">Aa</button>
   </div>
 </header>
-<main id="view"></main>
+<div id="view"></div>
 </div>
 <script>
-const MODEL=[
-["Ciao! Io sono Monte di Procida.","Hello! I am Monte di Procida.","wave"],
-["Io abito in Campania.","I live in Campania.","house"],
-["Io sono nel sud d'Italia.","I am in the south of Italy.","compass"],
-["Io sono vicina al mare.","I am near the sea.","sea"],
-["Io vedo i faraglioni.","I see the sea stacks.","stacks"],
-["Io amo i limoni.","I love lemons.","lemon"],
-["Tu visiti la Marina di Acquamorta.","You visit Marina di Acquamorta.","harbor"],
-["Tu vedi il mare.","You see the sea.","sea"],
-["Io ho un belvedere.","I have a viewpoint.","view"],
-["A presto!","See you soon!","wave"]
+var CITIES=[
+{id:"roma",name:"Roma",stops:[
+{it:"Sono a Roma.",en:"I'm in Rome.",img:"art/cities/roma-gianicolo.jpg",alt:"A sunny wide view of Rome from the Gianicolo, with the dome of St. Peter's."},
+{it:"Vedo il Colosseo.",en:"I see the Colosseum.",img:"art/cities/roma-colosseo.jpg",alt:"The Colosseum in Rome, in daylight."},
+{it:"Sono vicino alla Fontana di Trevi.",en:"I'm near the Trevi Fountain.",img:"art/cities/roma-trevi.jpg",alt:"The Trevi Fountain in Rome, sunny, with the statues visible."},
+{it:"Ecco il Vaticano.",en:"Here's the Vatican.",img:"art/cities/roma-san-pietro.jpg",alt:"St. Peter's Basilica at the Vatican, in daylight."},
+{it:"È bellissimo.",en:"It's beautiful.",img:"art/cities/roma-san-pietro-cupola.jpg",alt:"The dome of St. Peter's Basilica at the Vatican."},
+{it:"Ho una mappa vicino a me.",en:"I have a map near me.",img:"art/cities/roma-mappa.jpg",alt:"A marble map on Via dei Fori Imperiali in Rome."},
+{it:"Mi sono perso.",en:"I'm lost.",img:"art/cities/roma-piazza-navona.jpg",alt:"Piazza Navona in Rome, sunny, with Sant'Agnese in Agone and the fountains."},
+{it:"Voglio ritornare all'hotel.",en:"I want to go back to the hotel.",img:"art/cities/roma-hotel.jpg",alt:"FortySeven Hotel, a Rome hotel exterior in daylight."},
+{it:"Vedo l'hotel.",en:"I see the hotel.",img:"art/cities/roma-hotel.jpg",alt:"FortySeven Hotel, a Rome hotel exterior in daylight."},
+{it:"Sono all'hotel. A presto!",en:"I'm at the hotel. See you soon!",img:"art/cities/roma-hotel.jpg",alt:"FortySeven Hotel, a Rome hotel exterior in daylight."}
+]},
+{id:"napoli",name:"Napoli",stops:[
+{it:"Sono a Napoli.",en:"I'm in Naples.",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun."},
+{it:"Vedo il mare.",en:"I see the sea.",img:"art/cities/napoli-golfo.jpg",alt:"The Gulf of Naples from Posillipo, in daylight."},
+{it:"Vedo il Vesuvio.",en:"I see Vesuvius.",img:"art/cities/napoli-vesuvio.jpg",alt:"Mount Vesuvius seen from Naples, in daylight."},
+{it:"Ecco la pizza Margherita.",en:"Here's the Margherita pizza.",img:"art/cities/napoli-pizza-margherita.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil."},
+{it:"È buonissima.",en:"It's really good.",img:"art/cities/napoli-pizza-margherita-2.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil."},
+{it:"Mi sono perso.",en:"I'm lost.",img:"art/cities/napoli-plebiscito.jpg",alt:"Piazza del Plebiscito in Naples, sunny, looking toward the Galleria Umberto I."},
+{it:"Voglio ritornare all'hotel.",en:"I want to go back to the hotel.",img:"art/cities/napoli-hotel.jpg",alt:"UNA Hotels Napoli, a Naples hotel exterior in daylight."},
+{it:"Vedo l'hotel.",en:"I see the hotel.",img:"art/cities/napoli-hotel.jpg",alt:"UNA Hotels Napoli, a Naples hotel exterior in daylight."},
+{it:"Sono all'hotel.",en:"I'm at the hotel.",img:"art/cities/napoli-hotel.jpg",alt:"UNA Hotels Napoli, a Naples hotel exterior in daylight."},
+{it:"A presto!",en:"See you soon!",img:"art/cities/napoli-hotel.jpg",alt:"UNA Hotels Napoli, a Naples hotel exterior in daylight."}
+]},
+{id:"firenze",name:"Firenze",stops:[
+{it:"Sono a Firenze.",en:"I'm in Florence.",img:"art/cities/firenze-panorama.jpg",alt:"A sunny view of Florence from Piazzale Michelangelo, with the Duomo."},
+{it:"Vedo il Duomo.",en:"I see the Duomo.",img:"art/cities/firenze-duomo.jpg",alt:"The Duomo, Santa Maria del Fiore, in Florence, in daylight."},
+{it:"È enorme.",en:"It's enormous.",img:"art/cities/firenze-duomo-cupola.jpg",alt:"The huge dome of the Florence Duomo from a nearby street."},
+{it:"Ecco il Ponte Vecchio.",en:"Here's the Ponte Vecchio.",img:"art/cities/firenze-ponte-vecchio.jpg",alt:"The Ponte Vecchio over the Arno in Florence, in daylight."},
+{it:"È antico.",en:"It's old.",img:"art/cities/firenze-ponte-vecchio-2.jpg",alt:"The shops on the Ponte Vecchio in Florence, in the sun."},
+{it:"Mi sono perso.",en:"I'm lost.",img:"art/cities/firenze-signoria.jpg",alt:"Piazza della Signoria in Florence, with Palazzo Vecchio."},
+{it:"Voglio ritornare all'hotel.",en:"I want to go back to the hotel.",img:"art/cities/firenze-hotel.jpg",alt:"The entrance of Hotel Alessandra in Florence, in daylight."},
+{it:"Vedo l'hotel.",en:"I see the hotel.",img:"art/cities/firenze-hotel.jpg",alt:"The entrance of Hotel Alessandra in Florence, in daylight."},
+{it:"Sono all'hotel.",en:"I'm at the hotel.",img:"art/cities/firenze-hotel.jpg",alt:"The entrance of Hotel Alessandra in Florence, in daylight."},
+{it:"A presto!",en:"See you soon!",img:"art/cities/firenze-hotel.jpg",alt:"The entrance of Hotel Alessandra in Florence, in daylight."}
+]},
+{id:"venezia",name:"Venezia",stops:[
+{it:"Sono a Venezia.",en:"I'm in Venice.",img:"art/cities/venezia-san-marco.jpg",alt:"Piazza San Marco in Venice, with St. Mark's Basilica, sunny, no mountains."},
+{it:"Vedo il Canal Grande.",en:"I see the Grand Canal.",img:"art/cities/venezia-canal-grande.jpg",alt:"The Grand Canal in Venice, with a gondola, in daylight, no mountains."},
+{it:"Ecco il Ponte di Rialto.",en:"Here's the Rialto Bridge.",img:"art/cities/venezia-rialto.jpg",alt:"The Rialto Bridge on the Grand Canal in Venice, in daylight, no mountains."},
+{it:"Il ponte è bello.",en:"The bridge is beautiful.",img:"art/cities/venezia-rialto-2.jpg",alt:"The Rialto Bridge beside the Palazzo dei Camerlenghi in Venice, no mountains."},
+{it:"Mi sono perso.",en:"I'm lost.",img:"art/cities/venezia-san-marco-piazza.jpg",alt:"Piazza San Marco in Venice, with the basilica and the bell tower."},
+{it:"Voglio ritornare all'hotel.",en:"I want to go back to the hotel.",img:"art/cities/venezia-hotel.jpg",alt:"Hotel Danieli on the Venice waterfront, in the sun."},
+{it:"Vedo l'hotel.",en:"I see the hotel.",img:"art/cities/venezia-hotel-porta.jpg",alt:"Hotel Danieli in Venice, the pink palace exterior in daylight."},
+{it:"Sono vicino all'hotel.",en:"I'm near the hotel.",img:"art/cities/venezia-hotel-porta.jpg",alt:"Hotel Danieli in Venice, the entrance in daylight."},
+{it:"Sono all'hotel.",en:"I'm at the hotel.",img:"art/cities/venezia-hotel-porta.jpg",alt:"The entrance of Hotel Danieli in Venice."},
+{it:"A presto!",en:"See you soon!",img:"art/cities/venezia-hotel.jpg",alt:"Hotel Danieli on the Venice waterfront, in the sun."}
+]},
+{id:"torino",name:"Torino",stops:[
+{it:"Sono a Torino.",en:"I'm in Turin.",img:"art/cities/torino-piazza-castello.jpg",alt:"Piazza Castello in Turin, with the Royal Palace, in the sun."},
+{it:"Vedo il Museo Egizio.",en:"I see the Egyptian Museum.",img:"art/cities/torino-museo-egizio.jpg",alt:"The entrance of the Museo Egizio in Turin, with the statues."},
+{it:"È famoso.",en:"It's famous.",img:"art/cities/torino-museo-egizio-2.jpg",alt:"The sunny facade of the Museo Egizio in Turin."},
+{it:"Vedo i portici.",en:"I see the arcades.",img:"art/cities/torino-via-roma.jpg",alt:"The arcades of Via Roma in Turin, in daylight."},
+{it:"Mi sono perso.",en:"I'm lost.",img:"art/cities/torino-piazza-san-carlo.jpg",alt:"Piazza San Carlo in Turin, with the twin churches."},
+{it:"Vedo la statua.",en:"I see the statue.",img:"art/cities/torino-piazza-san-carlo-statua.jpg",alt:"The equestrian statue in Piazza San Carlo, Turin."},
+{it:"Voglio ritornare all'hotel.",en:"I want to go back to the hotel.",img:"art/cities/torino-hotel.jpg",alt:"The courtyard of the Opera35 hotel in Turin, in daylight."},
+{it:"Vedo l'hotel.",en:"I see the hotel.",img:"art/cities/torino-hotel.jpg",alt:"The courtyard of the Opera35 hotel in Turin, in daylight."},
+{it:"Sono all'hotel.",en:"I'm at the hotel.",img:"art/cities/torino-hotel.jpg",alt:"The courtyard of the Opera35 hotel in Turin, in daylight."},
+{it:"A presto!",en:"See you soon!",img:"art/cities/torino-hotel.jpg",alt:"The courtyard of the Opera35 hotel in Turin, in daylight."}
+]}
 ];
-const CITIES={
-Roma:{en:"Rome",region:"Lazio",place:"centro",placeEn:"center",icon:"fountain",
-it:"Lo sapevi che Roma ha moltissime fontane?",
-enFact:"Did you know Rome has lots and lots of fountains?"},
-Napoli:{en:"Naples",region:"Campania",place:"sud",placeEn:"south",icon:"pizza",
-it:"Lo sapevi che la pizza Margherita ha il nome della regina Margherita?",
-enFact:"Did you know Margherita pizza is named for Queen Margherita of Savoy?"},
-Firenze:{en:"Florence",region:"Toscana",place:"centro",placeEn:"center",icon:"cathedral",
-it:"Lo sapevi che il Duomo di Firenze è enorme?",
-enFact:"Did you know Florence's cathedral is huge?"},
-Venezia:{en:"Venice",region:"Veneto",place:"nord",placeEn:"north",icon:"islands",
-it:"Lo sapevi che Venezia è fatta di tante isole?",
-enFact:"Did you know Venice is made of many islands?"},
-Torino:{en:"Turin",region:"Piemonte",place:"nord",placeEn:"north",icon:"museum",
-it:"Lo sapevi che Torino ha un museo egizio famoso?",
-enFact:"Did you know Turin has a famous Egyptian museum?"}
-};
-const CITY_PHOTOS={
-Roma:["art/cities/roma.jpg?v=6","art/cities/roma-2.jpg?v=6","art/cities/roma-3.jpg?v=6"],
-Napoli:["art/cities/napoli.jpg?v=6","art/cities/napoli-2.jpg?v=6","art/cities/napoli-3.jpg?v=6"],
-Firenze:["art/cities/firenze.jpg?v=6","art/cities/firenze-2.jpg?v=6","art/cities/firenze-3.jpg?v=6"],
-Venezia:["art/cities/venezia.jpg?v=6","art/cities/venezia-2.jpg?v=6","art/cities/venezia-3.jpg?v=6"],
-Torino:["art/cities/torino.jpg?v=6","art/cities/torino-2.jpg?v=6","art/cities/torino-3.jpg?v=6"],
-"Monte di Procida":["art/cities/monte-di-procida.jpg?v=5","art/cities/monte-di-procida-2.jpg?v=6"]
-};
-const CITY_PHOTO=Object.fromEntries(Object.entries(CITY_PHOTOS).map(([name,photos])=>[name,photos[0]]));
-const photoChoice=Object.fromEntries(Object.keys(CITY_PHOTOS).map(name=>[name,0]));
-const LANDMARKS={
-Roma:[{label:"Fontana di Trevi",labelEn:"Trevi Fountain",it:"Io ho la Fontana di Trevi.",en:"I have the Trevi Fountain.",photo:0},{label:"Fontana dei Quattro Fiumi",labelEn:"Fountain of the Four Rivers",it:"Io ho la Fontana dei Quattro Fiumi.",en:"I have the Fountain of the Four Rivers.",photo:1}],
-Napoli:[{label:"Pizza Margherita",labelEn:"Margherita pizza",it:"Io ho la pizza Margherita.",en:"I have Margherita pizza.",photo:0},{label:"Spaccanapoli",labelEn:"Spaccanapoli",it:"Io ho Spaccanapoli.",en:"I have Spaccanapoli.",photo:1}],
-Firenze:[{label:"Duomo di Firenze",labelEn:"Florence Cathedral",it:"Io ho il Duomo di Firenze.",en:"I have Florence Cathedral.",photo:0},{label:"Facciata del Duomo",labelEn:"Cathedral façade",it:"Io vedo la facciata del Duomo.",en:"I see the cathedral façade.",photo:2}],
-Venezia:[{label:"Canal Grande",labelEn:"Grand Canal",it:"Io ho il Canal Grande.",en:"I have the Grand Canal.",photo:0},{label:"Ponte di Rialto",labelEn:"Rialto Bridge",it:"Io ho il Ponte di Rialto.",en:"I have the Rialto Bridge.",photo:1}],
-Torino:[{label:"Museo Egizio",labelEn:"Egyptian Museum",it:"Io ho il Museo Egizio.",en:"I have the Egyptian Museum.",photo:0},{label:"Facciata del Museo Egizio",labelEn:"Egyptian Museum façade",it:"Io vedo la facciata del Museo Egizio.",en:"I see the Egyptian Museum façade.",photo:1}]
-};
-const PAGES=["Copertina","Ciao","Dove abito","Com'è","Luogo 1","Luogo 2","Vedo e amo","Tu","Cibo o cultura","A presto"];
-const PAGE_EN=["Cover","Hello","Where I live","What it is like","Place 1","Place 2","I see and love","You","Food or culture","See you soon"];
-const PICS={
-wave:'<circle cx="30" cy="40" r="11" fill="#ffd166"/><rect x="25" y="18" width="5" height="16" rx="2.5" fill="#ffd166"/><rect x="32" y="15" width="5" height="18" rx="2.5" fill="#ffd166"/><rect x="39" y="20" width="5" height="14" rx="2.5" fill="#ff4d9e"/><path d="M12 20c7 2 8 9 3 12M10 32c6 1 7 7 2 9" fill="none" stroke="#00f5d4" stroke-width="3" stroke-linecap="round"/>',
-sea:'<circle cx="46" cy="16" r="6" fill="#ffd166"/><path d="M6 34c7 8 11-8 18 0s11-8 18 0 11-8 16 0" fill="none" stroke="#00f5d4" stroke-width="4" stroke-linecap="round"/><path d="M6 48c7 8 11-8 18 0s11-8 18 0 11-8 16 0" fill="none" stroke="#c44dff" stroke-width="4" stroke-linecap="round"/>',
-lemon:'<ellipse cx="34" cy="36" rx="14" ry="18" fill="#ffd166" transform="rotate(-18 34 36)"/><path d="M30 16c8-10 16 0 8 8-5-2-7 0-8-8z" fill="#00f5d4"/><circle cx="30" cy="36" r="2.2" fill="#c44dff"/><circle cx="36" cy="42" r="2.2" fill="#ff4d9e"/><circle cx="33" cy="32" r="2" fill="#c44dff"/>',
-fountain:'<ellipse cx="32" cy="52" rx="20" ry="6" fill="#c44dff"/><ellipse cx="32" cy="40" rx="14" ry="5" fill="#00f5d4"/><ellipse cx="32" cy="30" rx="8" ry="4" fill="#ffd166"/><rect x="30" y="14" width="4" height="16" rx="2" fill="#00f5d4"/><circle cx="32" cy="13" r="3.5" fill="#f5f0ff"/>',
-pizza:'<path d="M32 8 L56 52 H8 Z" fill="#ffd166"/><path d="M32 18 L48 48 H16 Z" fill="#ff4d9e"/><circle cx="30" cy="36" r="3" fill="#00f5d4"/><circle cx="38" cy="42" r="3" fill="#ffd166"/><circle cx="27" cy="44" r="2.4" fill="#c44dff"/>',
-cathedral:'<polygon points="32,6 48,30 16,30" fill="#ffd166"/><rect x="18" y="30" width="28" height="24" fill="#c44dff"/><rect x="12" y="36" width="7" height="18" fill="#ff4d9e"/><rect x="45" y="36" width="7" height="18" fill="#ff4d9e"/><circle cx="32" cy="22" r="4" fill="#00f5d4"/><rect x="28" y="40" width="8" height="14" fill="#0a0614"/>',
-islands:'<ellipse cx="32" cy="46" rx="24" ry="10" fill="#00f5d4"/><ellipse cx="22" cy="40" rx="12" ry="8" fill="#ffd166"/><ellipse cx="44" cy="42" rx="10" ry="7" fill="#c44dff"/><path d="M18 34c2-10 10-8 8 2" fill="#00f5d4"/>',
-museum:'<polygon points="6,28 32,10 58,28" fill="#ffd166"/><rect x="12" y="28" width="40" height="24" fill="#c44dff"/><rect x="18" y="34" width="6" height="18" fill="#f5f0ff"/><rect x="29" y="34" width="6" height="18" fill="#f5f0ff"/><rect x="40" y="34" width="6" height="18" fill="#f5f0ff"/>',
-mountains:'<polygon points="4,56 24,16 40,56" fill="#c44dff"/><polygon points="22,56 44,12 62,56" fill="#ffd166"/><polygon points="38,24 44,12 50,24" fill="#f5f0ff"/>',
-square:'<rect x="6" y="28" width="14" height="22" fill="#c44dff"/><rect x="44" y="24" width="14" height="26" fill="#ff4d9e"/><rect x="22" y="34" width="20" height="16" fill="#ffd166"/><circle cx="32" cy="26" r="6" fill="#00f5d4"/><rect x="6" y="50" width="52" height="5" rx="2" fill="#f5f0ff"/>',
-stacks:'<circle cx="50" cy="14" r="5" fill="#ffd166"/><polygon points="14,50 22,14 32,50" fill="#f5f0ff"/><polygon points="34,50 44,20 56,50" fill="#c44dff"/><path d="M4 50h56v8H4z" fill="#00f5d4"/>',
-view:'<circle cx="48" cy="16" r="7" fill="#ffd166"/><rect x="10" y="34" width="4" height="16" fill="#f5f0ff"/><rect x="30" y="34" width="4" height="16" fill="#f5f0ff"/><rect x="50" y="34" width="4" height="16" fill="#f5f0ff"/><path d="M6 38h52M6 50h52" stroke="#00f5d4" stroke-width="4" stroke-linecap="round"/>',
-story:'<path d="M12 14h18c6 6 6 30 0 36H12z" fill="#c44dff"/><path d="M52 14H34c-6 6-6 30 0 36h18z" fill="#ff4d9e"/><path d="M32 28c4-7 12-4 12 3 0 8-12 14-12 14S20 39 20 31c0-7 8-10 12-3z" fill="#ffd166"/>',
-chocolate:'<rect x="12" y="14" width="40" height="36" rx="6" fill="#ff4d9e"/><path d="M12 26h40M12 38h40M25 14v36M39 14v36" stroke="#ffd166" stroke-width="3"/>',
-city:'<rect x="8" y="28" width="14" height="26" fill="#c44dff"/><rect x="24" y="14" width="16" height="40" fill="#ffd166"/><rect x="42" y="24" width="14" height="30" fill="#ff4d9e"/><rect x="28" y="22" width="4" height="6" fill="#0a0614"/><rect x="34" y="22" width="4" height="6" fill="#0a0614"/>',
-house:'<polygon points="32,8 56,32 8,32" fill="#ff4d9e"/><rect x="16" y="32" width="32" height="22" fill="#ffd166"/><rect x="28" y="40" width="10" height="14" fill="#c44dff"/>',
-star:'<polygon points="32,6 39,24 58,24 42,36 48,54 32,44 16,54 22,36 6,24 25,24" fill="#ffd166"/>',
-compass:'<circle cx="32" cy="32" r="20" fill="none" stroke="#00f5d4" stroke-width="4"/><polygon points="32,8 37,32 32,27 27,32" fill="#ffd166"/><polygon points="32,56 27,32 32,37 37,32" fill="#ff4d9e"/>',
-harbor:'<path d="M4 44c8 7 12-7 18 0s12-7 18 0 12-7 18 0v10H4z" fill="#00f5d4"/><polygon points="34,40 34,16 50,34" fill="#ff4d9e"/><rect x="32" y="14" width="3" height="30" fill="#f5f0ff"/><path d="M16 42h30l-4 8H20z" fill="#ffd166"/>'
-};
-let sound=true,projector=false,screenName="home",idx=0,open=false,city=null,page=0,help=false,note="",noteEn="";
-let book=blankBook();
-let audioCtx=null,suppressClick=false,scrollKey="";
-const view=document.getElementById("view");
-function blankBook(){return Array.from({length:PAGES.length},()=>[]);}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function icon(name){return '<svg class="pic" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#140a22"/>'+(PICS[name]||PICS.star)+"</svg>";}
-function blip(){
-  if(!sound)return;
-  try{
-    const AC=window.AudioContext||window.webkitAudioContext;
-    if(!AC)return;
-    if(!audioCtx)audioCtx=new AC();
-    if(audioCtx.state==="suspended")audioCtx.resume();
-    const t=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();
-    o.type="sine";o.frequency.setValueAtTime(640,t);
-    g.gain.setValueAtTime(0.0001,t);
-    g.gain.exponentialRampToValueAtTime(0.045,t+0.012);
-    g.gain.exponentialRampToValueAtTime(0.0001,t+0.08);
-    o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+0.09);
-  }catch(e){}
+var view=document.getElementById("view");
+var brand=document.getElementById("brand");
+var muteBtn=document.getElementById("muteBtn");
+var bigBtn=document.getElementById("bigBtn");
+var muted=false, city=null, index=0, open=false;
+function say(text){
+  if(muted||!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text);
+  u.lang="it-IT";
+  window.speechSynthesis.speak(u);
 }
-function count(){return book.reduce((n,p)=>n+p.length,0);}
-function pool(name){
-  const d=CITIES[name];
-  let rows=[
-    ["ciao","Ciao! Io sono "+name+".","Hello! I am "+name+".","wave"],
-    ["citta","Io sono una città italiana.","I am an Italian city.","city"],
-    ["abito","Io abito in "+d.region+".","I live in "+d.region+".","house"],
-    ["place","Io sono nel "+d.place+" d'Italia.","I am in the "+d.placeEn+" of Italy.","compass"],
-    ["famosa","Io sono famosa.","I am famous.","star"],
-    ["vmare","Io sono vicina al mare.","I am near the sea.","sea"],
-    ["vmont","Io sono vicina alle montagne.","I am near the mountains.","mountains"],
-    ["piazza","Io ho una piazza famosa.","I have a famous square.","square"],
-    ["vedoM","Io vedo il mare.","I see the sea.","sea"],
-    ["vedoG","Io vedo le montagne.","I see the mountains.","mountains"],
-    ["storia","Io amo la mia storia.","I love my history.","story"],
-    ["tuMare","Tu vedi il mare.","You see the sea.","sea"],
-    ["pizza","Tu ami la pizza.","You love pizza.","pizza"],
-    ["choc","Tu ami il cioccolato.","You love chocolate.","chocolate"],
-    ["presto","A presto!","See you soon!","wave"],
-    ["piccola","Io sono piccola.","I am small.","city"],
-    ["grande","Io sono grande.","I am big.","city"],
-    ["antica","Io sono antica.","I am old.","story"],
-    ["vicinaM","Io sono vicina al mare.","I am near the sea.","sea"],
-    ["vicinaMonti","Io sono vicina alle montagne.","I am near the mountains.","mountains"]
-  ];
-  (LANDMARKS[name]||[]).forEach((p,i)=>rows.push(["place"+(i+1),p.it,p.en,i===0?"view":"place"]));
-  if(name==="Torino")rows=rows.filter(r=>!/mare/.test(r[1]));
-  if(name==="Venezia")rows=rows.filter(r=>!/montagne/.test(r[1]));
-  rows.push(["tuVisita","Tu visiti "+(LANDMARKS[name]?.[0]?.label||"la città")+".","You visit "+(LANDMARKS[name]?.[0]?.labelEn||"the city")+".","view"]);
-  rows.push(["tuHai","Tu hai "+(LANDMARKS[name]?.[0]?.label||"una città")+".","You have "+(LANDMARKS[name]?.[0]?.labelEn||"a city")+".","city"]);
-  return rows.map(r=>({key:r[0],it:r[1],en:r[2],icon:r[3]}));
+function hush(){ if(window.speechSynthesis) window.speechSynthesis.cancel(); }
+muteBtn.addEventListener("click",function(){
+  muted=!muted;
+  muteBtn.setAttribute("aria-pressed", muted?"true":"false");
+  muteBtn.textContent=muted?"🔇":"🔊";
+  muteBtn.setAttribute("aria-label", muted?"Unmute":"Mute");
+  if(muted) hush();
+});
+bigBtn.addEventListener("click",function(){
+  var on=document.body.classList.toggle("big");
+  bigBtn.setAttribute("aria-pressed", on?"true":"false");
+});
+function home(){
+  hush(); city=null; brand.textContent="Mi sono perso";
+  view.innerHTML='<div class="home"><div class="hello"><img src="art/avatar/wave.png" alt=""></div><h1>Mi sono perso</h1><p class="tagline">Un messaggio a un amico.</p><button type="button" class="teal" id="start">Inizia</button></div>';
+  document.getElementById("start").onclick=cities;
 }
-function pick(keys){
-  const all=pool(city),map=Object.fromEntries(all.map(s=>[s.key,s])),out=[];
-  keys.forEach(k=>{if(map[k])out.push(map[k]);});
-  for(const s of all){if(out.length>=4)break;if(!out.some(x=>x.key===s.key))out.push(s);}
-  return out.slice(0,4);
+function cities(){
+  hush(); city=null; brand.textContent="Mi sono perso";
+  var html='<div class="cities"><h1>La città</h1><div class="city-list">';
+  CITIES.forEach(function(c,i){ html+='<button type="button" class="city-btn" data-i="'+i+'">'+c.name+'</button>'; });
+  html+='</div></div>';
+  view.innerHTML=html;
+  view.querySelectorAll(".city-btn").forEach(function(b){
+    b.onclick=function(){ startCity(Number(b.getAttribute("data-i"))); };
+  });
 }
-function chips(){
-  if(page===1)return pick(["ciao"]);
-  if(page===2)return pick(["abito","place"]);
-  if(page===3)return pick(["piccola","grande","antica","vicinaM","vicinaMonti"]);
-  if(page===4)return pick(["place1"]);
-  if(page===5)return pick(["place2"]);
-  if(page===6)return pick(["vedoM","vedoG","storia"]);
-  if(page===7)return pick(["tuMare","tuVisita","tuHai"]);
-  if(page===8)return pick(city==="Napoli"?["pizza","storia"]:["storia","choc"]);
-  if(page===9)return pick(["presto"]);
-  return [];
-}
-function btn(go,label,sub,cls,extra){
-  return '<button type="button" class="btn '+cls+'" data-go="'+go+'" '+(extra||"")+"><b>"+label+"</b><small>"+sub+"</small></button>";
-}
-function dots(n,cur){
-  let h="";
-  for(let i=0;i<n;i++)h+='<i class="'+(i<cur?"on":"")+(i===cur?" now":"")+'"></i>';
-  return '<div class="dots" aria-hidden="true">'+h+"</div>";
-}
-function viewHome(){
-  return '<section class="stage home"><div class="avatar-frame hi"><img src="art/avatar/wave.png" alt="Teacher waving hello" draggable="false"></div><div class="pill">✦ Passaporto</div><h1>Aura Book</h1><p class="tagline">A passport of Italian sentences.</p>'+btn("start","Inizia","Start","teal")+"</section>";
-}
-function viewDeck(){
-  const it=MODEL[idx][0],en=MODEL[idx][1];
-  const flap=open?'<div class="flap"><p class="en" lang="en">'+esc(en)+"</p></div>":"";
-  const gallery=photoGallery("Monte di Procida","deck-gallery");
-  return '<section class="stage deck"><div class="toprow"><span class="tag">Passaporto</span><span class="count">'+(idx+1)+" / "+MODEL.length+'</span></div>'+dots(MODEL.length,idx)+
-    '<div class="postcard'+(open?" open":"")+'" id="card" data-go="flip" aria-expanded="'+open+'">'+gallery+'<h2 class="it-hero">'+esc(it)+"</h2>"+flap+'<span class="tap">'+(open?"Tap again to hide":"Tap for English. Swipe up for next.")+"</span></div>"+
-    '<div class="dock"><div class="nav">'+
-    btn("prev","Indietro","Back","ghost")+
-    btn("help","Aiuto","Show English","gold",'aria-pressed="'+open+'"')+
-    btn("next","Avanti","Next","teal",'id="nextBtn"')+
-    "</div></div></section>";
-}
-function photoGallery(name,cls,photos,key){
-  const pics=photos||CITY_PHOTOS[name]||[];
-  const choiceKey=key||name;
-  const at=Math.max(0,Math.min(photoChoice[choiceKey]||0,pics.length-1));
-  const thumbs=pics.map((src,i)=>'<button type="button" class="photo-choice'+(i===at?" on":"")+'" data-go="photo" data-city="'+esc(choiceKey)+'" data-photo="'+i+'" aria-label="Photo '+(i+1)+' of '+pics.length+' of '+esc(name)+'"><img src="'+src+'" alt="" draggable="false"></button>').join("");
-  return '<div class="photo-gallery '+(cls||"")+'"><img class="gallery-main" src="'+pics[at]+'" alt="'+esc(name)+' in daylight, photo '+(at+1)+'" draggable="false">'+(pics.length>1?'<div class="photo-row" aria-label="Choose a photo">'+thumbs+'</div>':"")+'</div>';
-}
-function landmarkCard(name,which){
-  const place=LANDMARKS[name][which],src=CITY_PHOTOS[name][place.photo],key=name+"-place-"+which;
-  return '<div class="landmark-card">'+photoGallery(name,"place-gallery",[src],key)+'<div class="landmark-name"><b>'+esc(place.label)+'</b>'+(help?'<span class="en" lang="en">'+esc(place.labelEn)+'</span>':"")+'</div></div>';
-}
-function viewCities(){
-  const cards=Object.keys(CITIES).map(name=>{
-    const d=CITIES[name];
-    return '<article class="city">'+photoGallery(name,"city-gallery")+'<div class="city-top"><span><strong class="cname">'+name+'</strong><span class="en" lang="en">'+esc(d.en)+"</span></span></div><span class=\"gossip\">"+esc(d.it)+'</span><span class="en" lang="en">'+esc(d.enFact)+'</span><button type="button" class="go" data-go="city" data-city="'+name+'">Fai questo libro<small>Make this book</small></button></article>';
-  }).join("");
-  return '<section class="stage"><div class="toprow"><span class="tag">Scegli la città</span></div><p class="hint">Tap a photo or city. Then make its book.</p><div class="grow">'+cards+'</div><div class="dock"><div class="nav two">'+btn("prev","Indietro","Back","ghost")+btn("start","Frasi","Sentences","teal")+"</div></div></section>";
-}
-function viewBook(){
-  const d=CITIES[city];
-  const placed=book[page];
-  let body;
-  if(page===0){
-    body='<div class="pass cover-block"><div class="pill">Passaporto</div>'+photoGallery(city,"cover-gallery")+'<div class="cityname">Io sono '+esc(city)+'!</div>'+(help?'<p class="en" lang="en">'+esc(d.en)+' · '+esc(d.region)+'</p>':'')+'</div>';
-  }else{
-    const lines=placed.map(s=>'<button type="button" class="placed" data-go="remove" data-key="'+s.key+'">'+icon(s.icon)+"<span><span class=\"line-it\">"+esc(s.it)+"</span>"+(help?'<span class="en" lang="en">'+esc(s.en)+"</span>":"")+"</span></button>").join("");
-    const empty=placed.length?"":'<div class="wait"><div class="stamps3"><i class="ghost-stamp"></i><i class="ghost-stamp"></i><i class="ghost-stamp"></i></div><p class="ask">Tocca un adesivo</p><p class="en" lang="en">Tap a sticker</p></div>';
-    const stick=chips().map(s=>{
-      const on=placed.some(x=>x.key===s.key);
-      return '<button type="button" class="sticker'+(on?" on":"")+'" data-go="add" data-key="'+s.key+'">'+icon(s.icon)+"<span><span class=\"it\">"+esc(s.it)+"</span>"+(help?'<span class="en" lang="en">'+esc(s.en)+"</span>":"")+"</span></button>";
-    }).join("");
-    const place=page===4||page===5?landmarkCard(city,page-4):"";
-    body=place+'<div class="pass">'+empty+lines+"</div>"+'<div class="stickers">'+stick+"</div>";
-  }
-  const goal=count()>=3?'<div class="pill good">Basta così · '+count()+"</div>":'<div class="pill">Adesivi '+count()+" / 3</div>";
-  const doneBtn=count()>=3?btn("done","Vedi il passaporto","See your passport","gold"):"";
-  const msg=note?'<p class="note" role="status">'+esc(note)+(noteEn?'<span class="en" lang="en">'+esc(noteEn)+"</span>":"")+"</p>":"";
-  return '<section class="stage"><div class="toprow"><span class="tag">'+esc(PAGES[page])+'</span>'+goal+"</div>"+dots(PAGES.length,page)+'<p class="page-en" lang="en">'+esc(PAGE_EN[page])+"</p>"+
-    '<div class="grow">'+body+"</div>"+'<div class="dock">'+msg+doneBtn+'<div class="nav">'+
-    btn("prev","Indietro","Back","ghost")+
-    btn("help","Aiuto","Show English","gold",'aria-pressed="'+help+'"')+
-    btn("next","Avanti","Next","teal",'id="nextBtn"')+
-    "</div></div></section>";
-}
-function viewDone(){
-  const d=CITIES[city];
-  const pages=[{name:"Cover",lines:[{it:"Io sono "+city+"!",en:d.en+" · "+d.region,icon:d.icon}]}];
-  for(let i=1;i<PAGES.length;i++){if(book[i].length)pages.push({name:PAGES[i],lines:book[i]});}
-  const list=pages.map(p=>'<article class="final"><h3>'+esc(p.name)+"</h3>"+p.lines.map(s=>'<p><span class="line-it">'+esc(s.it)+'</span><span class="en" lang="en">'+esc(s.en)+"</span></p>").join("")+"</article>").join("");
-  return '<section class="stage"><div class="grow"><div class="home" style="justify-content:flex-start"><div class="avatar-frame party"><img src="art/avatar/celebrate.png" alt="Teacher celebrating" draggable="false"></div><div class="pill">Passaporto</div><h1 style="font-size:clamp(2rem,8vw,2.8rem)">Il tuo passaporto</h1><p class="tagline">'+esc(city)+"</p></div>"+list+"</div><div class=\"dock\">"+btn("again","Ricomincia","Start again","teal")+"</div></section>";
-}
+function startCity(i){ city=CITIES[i]; index=0; open=false; brand.textContent=city.name; render(); }
 function render(){
-  const key=screenName+":"+idx+":"+page+":"+city;
-  const keep=key===scrollKey;
-  const old=view.querySelector(".grow");
-  const top=keep&&old?old.scrollTop:0;
-  scrollKey=key;
-  view.innerHTML=screenName==="home"?viewHome():screenName==="deck"?viewDeck():screenName==="cities"?viewCities():screenName==="book"?viewBook():viewDone();
-  bindSwipe();
-  const g=view.querySelector(".grow");
-  if(g&&keep)g.scrollTop=top;
+  var stops=city.stops, s=stops[index];
+  var dots="";
+  for(var i=0;i<stops.length;i++){
+    var cls=i<index?"done":(i===index?"now":"");
+    dots+='<div class="stop '+cls+'">'+(i===index?'<div class="walker"><img src="art/avatar/wave.png" alt=""></div>':'')+'<i class="dot"></i></div>';
+  }
+  view.innerHTML=
+    '<div class="stage">'+
+    '<div class="route" aria-hidden="true">'+dots+'</div>'+
+    '<button type="button" class="card'+(open?" open":"")+'" id="card" aria-expanded="'+(open?"true":"false")+'">'+
+    '<img class="shot" src="'+s.img+'" alt="'+s.alt.replace(/"/g,"&quot;")+'">'+
+    '<p class="it" lang="it">'+s.it+'</p>'+
+    (open?'<p class="en" lang="en">'+s.en+'</p>':'<p class="tap">Tocca</p>')+
+    '</button>'+
+    '<div class="dock">'+
+    '<button type="button" class="plain" id="back">'+(index===0?"Città":"Indietro")+'</button>'+
+    '<button type="button" class="teal" id="next">'+(index===stops.length-1?"Città":"Avanti")+'</button>'+
+    '</div></div>';
+  document.getElementById("card").onclick=function(){ open=!open; render(); };
+  document.getElementById("back").onclick=function(){ if(index===0) cities(); else { index--; open=false; render(); } };
+  document.getElementById("next").onclick=goNext;
+  var y0=null;
+  view.ontouchstart=function(e){ y0=e.changedTouches[0].clientY; };
+  view.ontouchend=function(e){
+    if(y0==null) return;
+    var dy=y0-e.changedTouches[0].clientY;
+    y0=null;
+    if(dy>56) goNext();
+  };
+  say(s.it);
 }
-function start(){idx=0;open=false;city=null;page=0;help=false;note="";noteEn="";book=blankBook();screenName="deck";render();}
-function again(){idx=0;open=false;city=null;page=0;help=false;note="";noteEn="";book=blankBook();screenName="home";render();}
-function prev(){
-  note="";noteEn="";
-  if(screenName==="deck"){if(idx===0){screenName="home";render();return;}idx-=1;open=false;render();return;}
-  if(screenName==="cities"){screenName="deck";open=false;render();return;}
-  if(screenName==="book"){if(page===0){screenName="cities";render();return;}page-=1;render();}
+function goNext(){
+  if(index>=city.stops.length-1){ cities(); return; }
+  index++; open=false; render();
 }
-function next(){
-  note="";noteEn="";
-  if(screenName==="deck"){if(idx>=MODEL.length-1){screenName="cities";render();return;}idx+=1;open=false;render();return;}
-  if(screenName==="cities"){start();return;}
-  if(screenName==="book"){if(page>=PAGES.length-1){finish();return;}page+=1;render();}
-}
-function finish(){
-  if(count()<3){note="Tocca ancora un adesivo. Ne bastano 3.";noteEn="Tap one more sticker. 3 is enough.";render();return;}
-  note="";noteEn="";screenName="done";render();
-}
-function choose(name){
-  if(!CITIES[name])return;
-  if(city!==name){city=name;book=blankBook();page=0;help=false;}
-  note="";noteEn="";screenName="book";render();
-}
-function toggleChip(key){
-  const item=chips().find(s=>s.key===key);
-  if(!item)return;
-  const at=book[page].findIndex(s=>s.key===key);
-  if(at>=0)book[page].splice(at,1);else book[page].push(item);
-  note="";noteEn="";render();
-}
-function bindSwipe(){
-  const card=document.getElementById("card");
-  if(!card)return;
-  let x0=null,y0=null;
-  card.addEventListener("touchstart",e=>{x0=e.changedTouches[0].clientX;y0=e.changedTouches[0].clientY;},{passive:true});
-  card.addEventListener("touchend",e=>{
-    if(y0==null)return;
-    const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;
-    x0=y0=null;
-    if(Math.abs(dy)<48||Math.abs(dy)<=Math.abs(dx))return;
-    suppressClick=true;
-    setTimeout(()=>{suppressClick=false;},500);
-    blip();
-    if(dy<0)next();else prev();
-  },{passive:true});
-}
-view.addEventListener("click",e=>{
-  if(suppressClick)return;
-  const el=e.target.closest("[data-go]");
-  if(!el||!view.contains(el))return;
-  blip();
-  const go=el.dataset.go;
-  if(go==="flip"){open=!open;render();}
-  else if(go==="start")start();
-  else if(go==="prev")prev();
-  else if(go==="next")next();
-  else if(go==="help"){if(screenName==="deck")open=true;else help=!help;render();}
-  else if(go==="photo"){photoChoice[el.dataset.city]=Number(el.dataset.photo)||0;render();}
-  else if(go==="city")choose(el.dataset.city);
-  else if(go==="add"||go==="remove")toggleChip(el.dataset.key);
-  else if(go==="done")finish();
-  else if(go==="again")again();
-});
-document.getElementById("muteBtn").addEventListener("click",()=>{
-  sound=!sound;
-  const b=document.getElementById("muteBtn");
-  b.textContent=sound?"🔊":"🔇";
-  b.setAttribute("aria-pressed",String(!sound));
-  b.setAttribute("aria-label",sound?"Mute sounds":"Unmute sounds");
-  blip();
-});
-document.getElementById("projBtn").addEventListener("click",()=>{
-  projector=!projector;
-  document.body.classList.toggle("projector",projector);
-  const b=document.getElementById("projBtn");
-  b.setAttribute("aria-pressed",String(projector));
-  blip();
-});
-render();
+home();
 </script>
 </body>
 </html>
