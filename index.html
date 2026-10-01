@@ -323,7 +323,7 @@ function viewHome(){
 function viewDeck(){
   const it=MODEL[idx][0],en=MODEL[idx][1];
   const flap=open?'<div class="flap"><p class="en" lang="en">'+esc(en)+"</p></div>":"";
-  const photo='<img class="city-photo" src="art/cities/monte-di-procida.jpg" alt="Monte di Procida in daylight" draggable="false">';
+  const photo='<img class="city-photo" src="art/cities/monte-di-procida.jpg?v=5" alt="Monte di Procida in daylight" draggable="false">';
   return '<section class="stage deck"><div class="toprow"><span class="tag">Passaporto</span><span class="count">'+(idx+1)+" / "+MODEL.length+'</span></div>'+dots(MODEL.length,idx)+
     '<button type="button" class="postcard'+(open?" open":"")+'" id="card" data-go="flip" aria-expanded="'+open+'">'+photo+'<h2 class="it-hero">'+esc(it)+"</h2>"+flap+'<span class="tap">'+(open?"Tap again to hide":"Tap for English. Swipe up for next.")+"</span></button>"+
     '<div class="dock"><div class="nav">'+
