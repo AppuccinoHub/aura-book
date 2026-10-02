@@ -35,10 +35,13 @@ header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-betwe
 .dock{flex:0 0 auto;display:grid;grid-template-columns:1fr 1.3fr;gap:8px}
 .plain,.teal{min-height:60px;border-radius:18px;font-weight:900;font-size:1.25rem;border:2px solid var(--ink);background:var(--card);padding:10px}
 .teal{background:var(--teal);border-color:var(--teal);color:#fff;font-size:1.4rem}
-.start{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
-.start img{height:min(34dvh,240px);width:auto}
-h1{margin:0;font-size:clamp(2.2rem,9vw,3rem);line-height:1.15;font-weight:900}
-.start .teal{width:min(100%,320px)}
+.start{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:4px 2px 12px}
+.start img{height:min(26dvh,190px);width:auto;flex:0 0 auto}
+h1{margin:0;font-size:clamp(2.1rem,8vw,2.8rem);line-height:1.15;font-weight:900}
+.lead{margin:0;font-weight:800;font-size:1.2rem;color:var(--ink);max-width:22rem}
+.steps{margin:0;padding:0;list-style:none;width:min(100%,22rem);display:flex;flex-direction:column;gap:8px}
+.steps li{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 12px;font-weight:800;font-size:1.15rem;color:var(--ink)}
+.start .teal{width:min(100%,320px);flex:0 0 auto}
 body.big .it{font-size:clamp(2.3rem,9vw,3.2rem)}
 body.big .en{font-size:1.5rem}
 body.big .who{font-size:1.25rem}
@@ -86,7 +89,14 @@ function pct(k){ return (4+k*(92/(STOPS.length-1)))+"%"; }
 function start(){
   hush(); i=-1;
   view.innerHTML='<div class="start"><img src="art/avatar/boh-wave.png" alt="">'+
-    '<h1>Passeggiata a Napoli</h1><p class="en">Walk with me. Listen. Read.</p>'+
+    '<h1>Da Boh a Lo So!</h1>'+
+    '<p class="en">From "I don\'t know" to "I know."</p>'+
+    '<p class="lead">Boh walks through Napoli. At each stop she says one easy sentence, the same kind you use in your town book.</p>'+
+    '<ul class="steps">'+
+    '<li lang="it">Io sono. Io vedo. Io ho. Io mangio.</li>'+
+    '<li>Then one <span lang="it">Tu</span> sentence. <span class="en">You.</span></li>'+
+    '<li>You listen. You read. You tap Avanti. You never type.</li>'+
+    '</ul>'+
     '<button type="button" class="teal" id="go">Andiamo!</button></div>';
   document.getElementById("go").onclick=function(){ i=0; show(false); };
 }
