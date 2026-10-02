@@ -69,10 +69,10 @@ header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-betwe
 .result.bene{color:var(--teal)}
 .result.quasi,.result.again{color:var(--ink)}
 .result.saved{color:var(--teal);font-size:1.55rem}
-.flash{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.flash div{background:var(--card);border:3px solid var(--teal);border-radius:28px;padding:18px 32px 14px;text-align:center;box-shadow:0 10px 0 rgba(28,25,21,.16);animation:pop .28s ease-out both}
-.flash b{display:block;font-size:3.2rem;font-weight:900;line-height:1;color:var(--teal)}
-.flash small{display:block;margin-top:8px;font-weight:800;font-size:1.2rem;color:var(--ink)}
+.flash{position:absolute;left:0;right:0;top:0;z-index:4;display:flex;justify-content:center;padding:10px;pointer-events:none}
+.flash div{background:var(--card);border:3px solid var(--teal);border-radius:18px;padding:8px 16px;text-align:center;box-shadow:0 6px 0 rgba(28,25,21,.16);animation:pop .28s ease-out both}
+.flash b{font-size:2rem;font-weight:900;line-height:1;color:var(--teal)}
+.flash small{margin-left:8px;font-weight:800;font-size:1.15rem;color:var(--ink)}
 @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
 .heard{font-weight:800}
 .listen-tag{position:absolute;top:12px;left:12px;z-index:3;background:var(--card);border:2px solid var(--teal);border-radius:99px;padding:6px 12px;font-weight:900}
@@ -102,8 +102,9 @@ button.verb .word{border-bottom:3px dotted var(--teal)}
 .teal[disabled],.plain[disabled]{opacity:.55}
 .start,.done{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:0 2px 4px}
 .start{overflow:auto}
-.start .scene{flex:0 0 auto;width:100%;height:min(22dvh,180px)}
-.done .scene{flex:0 0 auto;width:100%;height:min(20dvh,170px)}
+.start .scene{flex:0 0 auto;width:100%;height:min(34dvh,260px)}
+.done .scene{flex:0 0 auto;width:100%;height:min(32dvh,280px)}
+.city .hook{display:block;font-weight:800;font-size:1.05rem}
 .done .book{flex:1;min-height:0;overflow:auto;width:min(100%,24rem)}
 h1{margin:0;font-size:clamp(2rem,8vw,2.7rem);line-height:1.1;font-weight:900}
 .lead{margin:0;font-weight:800;font-size:1.15rem;max-width:24rem}
@@ -177,7 +178,7 @@ var ROUNDS=[
   {id:"help", name:"With help"}
 ];
 var CITIES=[
-{id:"roma", name:"Roma", en:"Rome", cover:"art/cities/roma-colosseo.jpg",
+{id:"roma", name:"Roma", en:"Rome", hook:"Capitale!", hookEn:"The capital", cover:"art/cities/roma-colosseo.jpg",
  facts:[
   {it:"Roma è la capitale d'Italia.", en:"Rome is the capital of Italy.", word:"capitale", gloss:"capital", img:"art/cities/roma-colosseo.jpg", alt:"The Colosseum in Rome, in daylight.", pose:"art/avatar/boh-point.png", say:"art/voice/roma-capitale.mp3"},
   {it:"Roma è al centro d'Italia.", en:"Rome is in the center of Italy.", word:"centro", gloss:"center", img:"art/cities/roma-gianicolo.jpg", alt:"A view over Rome from the Janiculum.", pose:"art/avatar/boh-walk.png", say:"art/voice/roma-centro.mp3"}
@@ -188,7 +189,7 @@ var CITIES=[
   {who:"tu", whoEn:"you", it:"Tu vedi Roma?", en:"Do you see Rome?", verb:"vedi", before:"Tu ", after:" Roma?", img:"art/cities/roma-gianicolo.jpg", alt:"A view over Rome from the Janiculum.", pose:"art/avatar/boh-wave.png", say:"art/voice/roma-vedi.mp3"},
   {who:"io", whoEn:"I", it:"Io vivo a Roma.", en:"I live in Rome.", verb:"vivo", before:"Io ", after:" a Roma.", img:"art/cities/roma-san-pietro.jpg", alt:"St. Peter's Basilica in Rome.", pose:"art/avatar/boh-walk.png", say:"art/voice/roma-vivo.mp3"}
 ]},
-{id:"napoli", name:"Napoli", en:"Naples", cover:"art/cities/napoli-castel-ovo.jpg",
+{id:"napoli", name:"Napoli", en:"Naples", hook:"Pizza!", hookEn:"Pizza and the sea", cover:"art/cities/napoli-castel-ovo.jpg",
  facts:[
   {it:"Napoli è una città antica.", en:"Naples is an old city.", word:"antica", gloss:"old", img:"art/cities/napoli-castel-ovo.jpg", alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.", pose:"art/avatar/boh-point.png", say:"art/voice/napoli-antica.mp3"},
   {it:"Napoli è al sud d'Italia.", en:"Naples is in the south of Italy.", word:"sud", gloss:"south", img:"art/cities/napoli-vesuvio-bay.jpg", alt:"Mount Vesuvius across the bay of Naples, in daylight.", pose:"art/avatar/boh-walk.png", say:"art/voice/napoli-sud.mp3"}
@@ -199,7 +200,7 @@ var CITIES=[
   {who:"io", whoEn:"I", it:"Io mangio la pizza.", en:"I eat the pizza.", verb:"mangio", before:"Io ", after:" la pizza.", img:"art/cities/napoli-pizza-margherita-2.jpg", alt:"A Margherita pizza with tomato, mozzarella, and basil.", pose:"art/avatar/boh-pizza.png", say:"art/voice/mangio.mp3"},
   {who:"tu", whoEn:"you", it:"Tu mangi la pizza?", en:"Do you eat the pizza?", verb:"mangi", before:"Tu ", after:" la pizza?", img:"art/cities/napoli-pizza-margherita.jpg", alt:"A Margherita pizza with tomato, mozzarella, and basil.", pose:"art/avatar/boh-wave.png", say:"art/voice/napoli-mangi.mp3"}
 ]},
-{id:"firenze", name:"Firenze", en:"Florence", cover:"art/cities/firenze-duomo.jpg",
+{id:"firenze", name:"Firenze", en:"Florence", hook:"Il Duomo", hookEn:"The cathedral", cover:"art/cities/firenze-duomo.jpg",
  facts:[
   {it:"Firenze è in Toscana.", en:"Florence is in Tuscany.", word:"Toscana", gloss:"Tuscany", img:"art/cities/firenze-panorama.jpg", alt:"A daylight view of Florence.", pose:"art/avatar/boh-point.png", say:"art/voice/firenze-toscana.mp3"},
   {it:"Firenze è una città d'arte.", en:"Florence is a city of art.", word:"arte", gloss:"art", img:"art/cities/firenze-signoria.jpg", alt:"Piazza della Signoria in Florence.", pose:"art/avatar/boh-walk.png", say:"art/voice/firenze-arte.mp3"}
@@ -210,7 +211,7 @@ var CITIES=[
   {who:"mi", whoEn:"I", it:"Mi piace Firenze.", en:"I like Florence.", verb:"piace", before:"Mi ", after:" Firenze.", img:"art/cities/firenze-signoria.jpg", alt:"Piazza della Signoria in Florence.", pose:"art/avatar/boh-kiss.png", say:"art/voice/firenze-piace.mp3"},
   {who:"ti", whoEn:"you", it:"Ti piace Firenze?", en:"Do you like Florence?", verb:"piace", before:"Ti ", after:" Firenze?", img:"art/cities/firenze-ponte-vecchio.jpg", alt:"The Ponte Vecchio bridge in Florence.", pose:"art/avatar/boh-wave.png", say:"art/voice/firenze-ti.mp3"}
 ]},
-{id:"venezia", name:"Venezia", en:"Venice", cover:"art/cities/venezia-canal-grande.jpg",
+{id:"venezia", name:"Venezia", en:"Venice", hook:"L'acqua", hookEn:"The water", cover:"art/cities/venezia-canal-grande.jpg",
  facts:[
   {it:"Venezia è una città d'acqua.", en:"Venice is a city of water.", word:"acqua", gloss:"water", img:"art/cities/venezia-canal-grande.jpg", alt:"The Grand Canal in Venice, in daylight.", pose:"art/avatar/boh-point.png", say:"art/voice/venezia-acqua.mp3"},
   {it:"Venezia è al nord d'Italia.", en:"Venice is in the north of Italy.", word:"nord", gloss:"north", img:"art/cities/venezia-san-marco.jpg", alt:"St. Mark's Basilica in Venice.", pose:"art/avatar/boh-walk.png", say:"art/voice/venezia-nord.mp3"}
@@ -221,7 +222,7 @@ var CITIES=[
   {who:"tu", whoEn:"you", it:"Tu cammini a Venezia?", en:"Do you walk in Venice?", verb:"cammini", before:"Tu ", after:" a Venezia?", img:"art/cities/venezia-rialto.jpg", alt:"The Rialto Bridge over the Grand Canal.", pose:"art/avatar/boh-wave.png", say:"art/voice/venezia-cammini.mp3"},
   {who:"tu", whoEn:"you", it:"Tu vai a Venezia?", en:"Do you go to Venice?", verb:"vai", before:"Tu ", after:" a Venezia?", img:"art/cities/venezia-san-marco.jpg", alt:"St. Mark's Basilica in Venice.", pose:"art/avatar/boh-wave.png", say:"art/voice/venezia-vai.mp3"}
 ]},
-{id:"torino", name:"Torino", en:"Turin", cover:"art/cities/torino-piazza-san-carlo.jpg",
+{id:"torino", name:"Torino", en:"Turin", hook:"Il museo", hookEn:"The museum", cover:"art/cities/torino-piazza-san-carlo.jpg",
  facts:[
   {it:"Torino è al nord d'Italia.", en:"Turin is in the north of Italy.", word:"nord", gloss:"north", img:"art/cities/torino-piazza-castello.jpg", alt:"Piazza Castello in Turin.", pose:"art/avatar/boh-point.png", say:"art/voice/torino-nord.mp3"},
   {it:"Torino è una città grande.", en:"Turin is a big city.", word:"grande", gloss:"big", img:"art/cities/torino-piazza-san-carlo.jpg", alt:"Piazza San Carlo in Turin.", pose:"art/avatar/boh-walk.png", say:"art/voice/torino-grande.mp3"}
@@ -243,6 +244,7 @@ sid=sessionStorage.getItem("auraSid")||"";
 if(!sid){ sid=Math.random().toString(36).slice(2,8); sessionStorage.setItem("auraSid", sid); }
 showEn=sessionStorage.getItem("auraEn")==="1";
 var player=document.getElementById("bohVoice");
+var playToken=0;
 function item(){
   var c=CITIES[ci];
   return mode==="fact"?c.facts[fi]:c.lines[i];
@@ -264,6 +266,7 @@ function say(src){
     if(cap) cap.textContent="Sound is off. Tap the speaker.";
     return;
   }
+  var mine=++playToken;
   try{ player.pause(); }catch(e){}
   if(player.getAttribute("data-src")!==src){
     player.src=src;
@@ -271,7 +274,12 @@ function say(src){
   }
   try{ player.currentTime=0; }catch(e){}
   var run=player.play();
+  if(run&&run.then) run.then(function(){
+    if(mine!==playToken) return;
+    if(hear&&hear.isConnected){ hear.textContent="Hear Boh"; hear.classList.remove("need-sound"); }
+  });
   if(run&&run.catch) run.catch(function(){
+    if(mine!==playToken) return;
     if(cap&&cap.isConnected) cap.textContent="Tap Hear Boh to listen.";
     if(hear&&hear.isConnected){ hear.textContent="Tap to hear"; hear.classList.add("need-sound"); }
   });
@@ -356,13 +364,28 @@ document.getElementById("engBtn").onclick=function(){
 };
 applyEn();
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
-function sceneHtml(img, alt, pose, tappable, motion){
+function cheerHtml(){
+  if(!locked) return "";
+  var small=mark==="help"?"You used help.":"Lo so!";
+  return '<div class="flash" role="status"><div><b>Bene!</b><small>'+small+'</small></div></div>';
+}
+function sceneHtml(img, alt, pose, tappable, motion, flash){
   var cls=motion||"";
   var fig=tappable
     ? '<button type="button" class="boh-hit '+cls+'" id="bohBtn" aria-label="Hear Boh"><img src="'+pose+'" alt=""></button>'
     : '<img class="boh '+cls+'" src="'+pose+'" alt="">';
   return '<div class="scene"><img class="shot" src="'+img+'" alt="'+esc(alt)+'">'+
-    '<div class="ground"></div>'+fig+'</div>';
+    '<div class="ground"></div>'+fig+(flash||"")+'</div>';
+}
+function showCheer(){
+  var scene=document.querySelector(".layout .scene")||document.querySelector(".scene");
+  if(scene && !scene.querySelector(".flash")){
+    var wrap=document.createElement("div");
+    wrap.innerHTML=cheerHtml();
+    if(wrap.firstChild) scene.appendChild(wrap.firstChild);
+  }
+  player.onended=null;
+  say("art/voice/bene.mp3");
 }
 function armWalk(el){
   if(!el) return;
@@ -512,7 +535,7 @@ function bindChoices(){
         var solved=document.getElementById("solved");
         if(solved){ solved.hidden=false; solved.textContent=item().en; }
         var cap=document.getElementById("cap");
-        if(cap) cap.textContent=mark==="help"?"Bene! You used help.":"Bene!";
+        if(cap) cap.textContent=mark==="help"?"Bene! You used help.":"Bene! Lo so!";
         var hit=document.getElementById("bohBtn");
         if(hit){
           hit.classList.remove("arrive","stepping");
@@ -521,10 +544,19 @@ function bindChoices(){
         }
         var help=document.getElementById("helpBtn");
         if(help) help.disabled=true;
+        showCheer();
         remember(mark);
       } else {
         btn.classList.add("bad");
         btn.disabled=true;
+        var miss=document.getElementById("cap");
+        if(miss) miss.textContent="Try another.";
+        var who=document.getElementById("bohBtn");
+        if(who){
+          who.classList.remove("arrive","stepping");
+          var face=who.querySelector("img");
+          if(face) face.src="art/avatar/boh-huh.png";
+        }
         remember("again");
       }
     };
@@ -543,7 +575,7 @@ function paint(){
     '<div class="progress" aria-label="'+esc(label)+'"><b>'+esc(label)+'</b><div class="dots" aria-hidden="true">'+dots+'</div></div>'+
     '<div class="layout">'+
     '<div class="bubble" id="bubble"><p class="it" lang="it">'+sentenceHtml()+'</p><p class="cap" id="cap" aria-live="polite">'+esc(captionText())+"</p></div>"+
-    sceneHtml(item().img, item().alt, pose, true, motionClass(pose))+
+    sceneHtml(item().img, item().alt, pose, true, motionClass(pose), cheerHtml())+
     '<div class="panel">'+whoHtml()+choicesHtml()+helpHtml()+"</div>"+
     '<div class="dock">'+
     '<button type="button" class="teal" id="next">'+nextLabel+"</button>"+
@@ -623,15 +655,9 @@ function start(){
   }catch(e){}
   view.innerHTML=
     '<div class="start">'+
-    sceneHtml("art/cities/roma-colosseo.jpg","The Colosseum in Rome.","art/avatar/boh-walk.png",true,"stepping")+
+    sceneHtml("art/cities/roma-colosseo.jpg","The Colosseum in Rome.","art/avatar/boh-wave.png",true,"")+
     "<h1>Da Boh a Lo So!</h1>"+
-    '<p class="lead">Boh walks five cities. A fact comes first. Then each sentence four times.</p>'+
-    '<ul class="steps">'+
-    "<li>Rest on the dotted word. Pick the English.</li>"+
-    "<li>Listen. Pick the Italian.</li>"+
-    "<li>Fill in the verb.</li>"+
-    "<li>Tap Help if you need it. Next is always there.</li>"+
-    "</ul>"+
+    '<p class="lead">Boh walks a city. You listen and tap. Next is always there.</p>'+
     '<label class="field">First name<input id="name" autocomplete="given-name" maxlength="24" value="'+esc(savedName)+'"></label>'+
     '<label class="field">Class code<input id="code" maxlength="6" autocapitalize="characters" value="'+esc(savedCode)+'" placeholder="From your teacher"></label>'+
     '<p class="need" id="need" hidden>Type your first name so your teacher can see you.</p>'+
@@ -648,9 +674,11 @@ function cities(){
     c=CITIES[n]; got=readyCount(c); need=c.facts.length+c.lines.length*ROUNDS.length;
     cards+='<button type="button" class="city" data-n="'+n+'"><img src="'+c.cover+'" alt="">'+
       '<span><b lang="it">'+c.name+'</b><span class="en">'+esc(c.en)+"</span>"+
-      '<span class="cap">'+(got?got+"/"+need+" ready":"Walk here")+"</span></span></button>";
+      '<span class="hook" lang="it">'+esc(c.hook)+"</span>"+
+      '<span class="en">'+esc(c.hookEn)+"</span>"+
+      (got?'<span class="cap">'+got+"/"+need+" ready</span>":"")+"</span></button>";
   }
-  view.innerHTML='<div class="start"><h1>Pick a city</h1><p class="lead">Each city uses different words. One city is enough for today.</p><div class="cities">'+cards+"</div></div>";
+  view.innerHTML='<div class="start"><h1>Where is Boh?</h1><p class="lead">Pick one city. That is enough for today.</p><div class="cities">'+cards+"</div></div>";
   view.querySelectorAll(".city").forEach(function(btn){
     btn.onclick=function(){
       ci=+btn.getAttribute("data-n");
@@ -667,12 +695,14 @@ function done(){
   var note=linked?"Your teacher can see this.":(classCode?"The teacher page did not connect. Copy this and paste it on the teacher page.":"Next time, use a class code from the teacher page.");
   view.innerHTML=
     '<div class="done">'+
-    sceneHtml(c.cover, c.name, "art/avatar/boh-ok.png", false, "")+
-    '<h1 lang="it">'+esc(c.name)+"</h1>"+
-    '<p class="lead">'+esc(note)+" Write one of these sentences in the town book.</p>"+
+    sceneHtml(c.cover, c.name, "art/avatar/boh-kiss.png", false, "")+
+    "<h1>Lo so!</h1>"+
+    '<p class="lead" lang="it">'+esc(c.name)+"</p>"+
+    '<p class="lead">Write one of these sentences in the town book. '+esc(note)+"</p>"+
     '<ul class="book">'+lines+"</ul>"+
     (linked?"":'<button type="button" class="plain" id="copy">Copy for teacher</button>')+
     '<button type="button" class="teal" id="again">All cities</button></div>';
+  say("art/voice/loso.mp3");
   var copy=document.getElementById("copy");
   if(copy) copy.onclick=function(){
     var text=packLog();
