@@ -221,7 +221,7 @@ function start(){
     '<button type="button" class="teal" id="go">Start</button></div>';
   document.getElementById("go").onclick=function(){ i=0; show(); };
   var hello=document.getElementById("bohBtn");
-  if(hello) hello.onclick=function(){ i=0; show(); };
+  if(hello){ hello.setAttribute("aria-label","Start with Boh"); hello.onclick=function(){ i=0; show(); }; }
 }
 function done(){
   clearTake(); hush();
