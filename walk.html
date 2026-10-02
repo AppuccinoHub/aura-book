@@ -14,39 +14,63 @@ html{-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--ink);font-family:ui-rounded,"Avenir Next","Segoe UI",system-ui,sans-serif;line-height:1.35;font-style:normal}
 button{font:inherit;color:var(--ink);cursor:pointer;border:0;background:none;touch-action:manipulation}
 :focus-visible{outline:3px solid var(--teal);outline-offset:3px}
-#shell{width:min(100%,520px);height:100dvh;margin:0 auto;display:flex;flex-direction:column;min-height:0;padding:max(8px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));overflow:hidden}
+#shell{width:min(100%,560px);height:100dvh;margin:0 auto;display:flex;flex-direction:column;min-height:0;padding:max(8px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));overflow:hidden}
 header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
 .brand{font-weight:900;font-size:1.15rem}
 .controls{display:flex;gap:8px}
 .icon-btn{width:48px;height:48px;border-radius:16px;background:var(--card);border:2px solid var(--ink);font-weight:900;font-size:1.15rem;display:grid;place-items:center}
 .icon-btn[aria-pressed="true"]{border-color:var(--teal);border-width:3px;background:#efe6d4}
 #view{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
-.route{flex:0 0 auto;position:relative;height:118px;margin:0 8px}
-.route:before{content:"";position:absolute;left:0;right:0;bottom:8px;height:4px;background:var(--line);border-radius:99px}
-.stop{position:absolute;bottom:4px;width:14px;height:14px;margin-left:-7px;border-radius:50%;border:2px solid var(--ink);background:var(--bg)}
-.stop.done{background:var(--teal);border-color:var(--teal)}
-.stop.now{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal);background:var(--card)}
-.bot{position:absolute;bottom:10px;width:72px;height:104px;margin-left:-36px;transition:left .7s ease;pointer-events:none}
-.bot img{width:100%;height:100%;object-fit:contain;display:block}
-.card{flex:1;min-height:0;background:var(--card);border:2px solid var(--line);border-radius:24px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;overflow:hidden}
-.card img.shot{width:100%;height:min(32dvh,260px);object-fit:cover;border-radius:16px;border:2px solid var(--line);flex:0 0 auto}
-.who{margin:0;padding:2px 14px;border:2px solid var(--teal);border-radius:99px;font-weight:900;font-size:1.05rem;color:var(--ink)}
-.it{margin:0;font-weight:900;font-size:clamp(1.9rem,7.6vw,2.6rem);line-height:1.2}
-.en{margin:0;color:var(--teal);font-weight:800;font-size:clamp(1.1rem,4.2vw,1.35rem)}
-.dock{flex:0 0 auto;display:grid;grid-template-columns:1fr 1.3fr;gap:8px}
-.plain,.teal{min-height:60px;border-radius:18px;font-weight:900;font-size:1.25rem;border:2px solid var(--ink);background:var(--card);padding:10px}
-.teal{background:var(--teal);border-color:var(--teal);color:#fff;font-size:1.4rem}
-.start{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:4px 2px 12px}
-.start img{height:min(26dvh,190px);width:auto;flex:0 0 auto}
-h1{margin:0;font-size:clamp(2.1rem,8vw,2.8rem);line-height:1.15;font-weight:900}
-.lead{margin:0;font-weight:800;font-size:1.2rem;color:var(--ink);max-width:22rem}
-.steps{margin:0;padding:0;list-style:none;width:min(100%,22rem);display:flex;flex-direction:column;gap:8px}
-.steps li{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 12px;font-weight:800;font-size:1.15rem;color:var(--ink)}
-.start .teal{width:min(100%,320px);flex:0 0 auto}
-body.big .it{font-size:clamp(2.3rem,9vw,3.2rem)}
-body.big .en{font-size:1.5rem}
-body.big .who{font-size:1.25rem}
-@media (max-height:700px){.card img.shot{height:min(26dvh,180px)}.route{height:96px}.bot{height:84px;width:58px;margin-left:-29px}}
+.progress{flex:0 0 auto;display:flex;align-items:center;gap:8px}
+.progress b{font-size:1rem;min-width:3.2rem}
+.dots{display:flex;gap:6px;flex:1}
+.dots i{flex:1;height:8px;border-radius:99px;background:var(--line);border:0}
+.dots i.done,.dots i.now{background:var(--teal)}
+.scene{position:relative;flex:1;min-height:140px;border-radius:28px;overflow:hidden;border:2px solid var(--ink);background:#cbbfae}
+.scene .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%}
+.scene .ground{position:absolute;left:16%;right:16%;bottom:3%;height:22px;border-radius:50%;background:rgba(28,25,21,.35);filter:blur(5px);z-index:1}
+.scene .boh{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:86%;width:auto;max-width:96%;z-index:2;pointer-events:none;filter:drop-shadow(0 12px 10px rgba(28,25,21,.28))}
+.panel{flex:0 0 auto;background:var(--card);border:2px solid var(--line);border-radius:22px;padding:10px 12px 12px;text-align:center}
+.who{margin:0 auto 4px;display:inline-block;padding:2px 14px;border:2px solid var(--teal);border-radius:99px;font-weight:900;font-size:1.05rem}
+.it{margin:0;font-weight:900;font-size:clamp(1.7rem,7vw,2.45rem);line-height:1.15}
+.en{margin:2px 0 0;color:var(--teal);font-weight:800;font-size:clamp(1.05rem,3.8vw,1.25rem)}
+.result{margin:8px 0 0;font-weight:800;font-size:1.05rem;min-height:1.3em}
+.result.bene{color:var(--teal)}
+.result.quasi,.result.again,.result.saved{color:var(--ink)}
+.heard{font-weight:800}
+.listen-tag{position:absolute;top:12px;left:12px;z-index:3;background:var(--card);border:2px solid var(--teal);border-radius:99px;padding:6px 12px;font-weight:900}
+.dock{flex:0 0 auto;display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:1fr 1.35fr;gap:8px}
+.plain,.teal,.slim{min-height:58px;border-radius:18px;font-weight:900;font-size:1.2rem;border:2px solid var(--ink);background:var(--card);padding:8px 10px}
+.teal{background:var(--teal);border-color:var(--teal);color:#fff;font-size:1.35rem}
+.slim{min-height:48px;font-size:1.05rem}
+.teal[disabled],.plain[disabled]{opacity:.55}
+.start,.done{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:0 2px 4px}
+.start{overflow:auto}
+.start .scene{flex:0 0 auto;width:100%;height:min(30dvh,240px)}
+.done .scene{flex:0 0 auto;width:100%;height:min(20dvh,170px)}
+.done .book{flex:1;min-height:0;overflow:auto;width:min(100%,24rem)}
+h1{margin:0;font-size:clamp(2rem,8vw,2.7rem);line-height:1.1;font-weight:900}
+.lead{margin:0;font-weight:800;font-size:1.15rem;max-width:24rem}
+.steps{margin:0;padding:0;list-style:none;width:min(100%,24rem);display:flex;flex-direction:column;gap:8px}
+.steps li{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 12px;font-weight:800;font-size:1.08rem;text-align:left}
+.book{margin:0;padding:0;list-style:none;width:min(100%,24rem);display:flex;flex-direction:column;gap:8px}
+.book li{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:6px 12px;font-weight:900;font-size:1.15rem}
+.book small{display:block;color:var(--teal);font-weight:800;font-size:.95rem}
+.start .teal,.done .teal{width:min(100%,320px);flex:0 0 auto}
+body.big .it{font-size:clamp(2.05rem,8.4vw,2.9rem)}
+body.big .en{font-size:1.35rem}
+body.big .who{font-size:1.2rem}
+@media (min-width:800px){
+  #shell{width:min(100%,920px)}
+  .it{font-size:clamp(2rem,4vw,2.8rem)}
+  .scene .boh{height:92%}
+}
+@media (max-height:700px){
+  .start .scene,.done .scene{height:min(26dvh,180px)}
+  .scene .boh{height:92%}
+  .panel{padding:8px 10px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -63,15 +87,32 @@ body.big .who{font-size:1.25rem}
 </div>
 <script>
 var STOPS=[
-{who:"io",whoEn:"I",it:"Io sono a Napoli.",en:"I am in Naples.",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-walk.png",say:"art/voice/sono.mp3"},
-{who:"io",whoEn:"I",it:"Io vedo il mare.",en:"I see the sea.",img:"art/cities/napoli-mare.jpg",alt:"The Gulf of Naples in bright sun, blue water from the rocks at Posillipo.",pose:"art/avatar/boh-point.png",say:"art/voice/mare.mp3"},
-{who:"io",whoEn:"I",it:"Io vedo il Vesuvio.",en:"I see Vesuvius.",img:"art/cities/napoli-vesuvio-bay.jpg",alt:"Mount Vesuvius across the blue bay of Naples, in clear daylight.",pose:"art/avatar/boh-point.png",say:"art/voice/vesuvio.mp3"},
-{who:"io",whoEn:"I",it:"Io vedo la piazza.",en:"I see the town square.",img:"art/cities/napoli-piazza.jpg",alt:"Piazza del Plebiscito in Naples on a sunny day, with people in the square.",pose:"art/avatar/boh-point.png",say:"art/voice/piazza.mp3"},
-{who:"io",whoEn:"I",it:"Io ho una pizza Margherita.",en:"I have a Margherita pizza.",img:"art/cities/napoli-pizza-margherita.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-shrug.png",say:"art/voice/ho.mp3"},
-{who:"io",whoEn:"I",it:"Io mangio la pizza.",en:"I eat the pizza.",img:"art/cities/napoli-pizza-margherita-2.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-pizza.png",say:"art/voice/mangio.mp3"},
-{who:"tu",whoEn:"you",it:"Tu visiti Napoli. A presto!",en:"You visit Naples. See you soon!",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-kiss.png",say:"art/voice/tu.mp3"}
+{who:"io",whoEn:"I",it:"Io sono a Napoli.",en:"I am in Naples.",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-walk.png",say:"art/voice/sono.mp3",keys:["sono","napoli"]},
+{who:"io",whoEn:"I",it:"Io vedo il mare.",en:"I see the sea.",img:"art/cities/napoli-mare.jpg",alt:"The Gulf of Naples in bright sun, blue water from the rocks at Posillipo.",pose:"art/avatar/boh-point.png",say:"art/voice/mare.mp3",keys:["vedo","mare"]},
+{who:"io",whoEn:"I",it:"Io vedo il Vesuvio.",en:"I see Vesuvius.",img:"art/cities/napoli-vesuvio-bay.jpg",alt:"Mount Vesuvius across the blue bay of Naples, in clear daylight.",pose:"art/avatar/boh-point.png",say:"art/voice/vesuvio.mp3",keys:["vedo","vesuvio"]},
+{who:"io",whoEn:"I",it:"Io vedo la piazza.",en:"I see the town square.",img:"art/cities/napoli-piazza.jpg",alt:"Piazza del Plebiscito in Naples on a sunny day, with people in the square.",pose:"art/avatar/boh-point.png",say:"art/voice/piazza.mp3",keys:["vedo","piazza"]},
+{who:"io",whoEn:"I",it:"Io ho una pizza Margherita.",en:"I have a Margherita pizza.",img:"art/cities/napoli-pizza-margherita.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-shrug.png",say:"art/voice/ho.mp3",keys:["ho","pizza"]},
+{who:"io",whoEn:"I",it:"Io mangio la pizza.",en:"I eat the pizza.",img:"art/cities/napoli-pizza-margherita-2.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-pizza.png",say:"art/voice/mangio.mp3",keys:["mangio","pizza"]},
+{who:"tu",whoEn:"you",it:"Tu visiti Napoli. A presto!",en:"You visit Naples. See you soon!",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-kiss.png",say:"art/voice/tu.mp3",keys:["visiti","napoli"]}
 ];
-var view=document.getElementById("view"), muted=false, i=-1, voice=null;
+var view=document.getElementById("view"), muted=false, i=-1, voice=null, mine=null;
+var phase="idle", heard="", mark="", takeUrl="", recog=null, rec=null, mic=null, timer=null, chunks=[], session=0;
+
+function fold(s){
+  return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z\s]/g," ").replace(/\s+/g," ").trim();
+}
+function judge(stop, alts){
+  var best=0, said=alts[0]||"";
+  alts.forEach(function(raw){
+    var h=fold(raw), n=0;
+    stop.keys.forEach(function(k){ if(h.indexOf(fold(k))>=0) n++; });
+    var ratio=n/stop.keys.length;
+    if(ratio>best){ best=ratio; said=raw; }
+  });
+  if(best>=0.99) return {mark:"bene", heard:said};
+  if(best>=0.5) return {mark:"quasi", heard:said};
+  return {mark:"again", heard:said};
+}
 function say(src){
   hush();
   if(muted||!src) return;
@@ -79,52 +120,204 @@ function say(src){
   voice.play().catch(function(){});
 }
 function hush(){ if(voice){ voice.pause(); voice=null; } }
+function hushMine(){ if(mine){ mine.pause(); mine=null; } }
+function releaseMic(){
+  if(timer){ clearTimeout(timer); timer=null; }
+  if(recog){ try{ recog.onresult=null; recog.onerror=null; recog.onend=null; recog.abort(); }catch(e){} recog=null; }
+  if(rec){
+    try{ rec.onstop=null; rec.ondataavailable=null; }catch(e){}
+    if(rec.state==="recording"){ try{ rec.stop(); }catch(e2){} }
+    rec=null;
+  }
+  if(mic){ mic.getTracks().forEach(function(t){ t.stop(); }); mic=null; }
+}
+function clearTake(){
+  session++;
+  releaseMic();
+  hushMine();
+  if(takeUrl){ URL.revokeObjectURL(takeUrl); takeUrl=""; }
+  phase="idle"; heard=""; mark=""; chunks=[];
+}
 document.getElementById("muteBtn").onclick=function(){
   muted=!muted; this.setAttribute("aria-pressed",muted); this.textContent=muted?"🔇":"🔊";
-  this.setAttribute("aria-label",muted?"Unmute":"Mute"); if(muted) hush();
+  this.setAttribute("aria-label",muted?"Unmute":"Mute"); if(muted){ hush(); hushMine(); }
 };
 document.getElementById("bigBtn").onclick=function(){
   this.setAttribute("aria-pressed",document.body.classList.toggle("big"));
 };
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
-function pct(k){ return (4+k*(92/(STOPS.length-1)))+"%"; }
-function start(){
-  hush(); i=-1;
-  view.innerHTML='<div class="start"><img src="art/avatar/boh-wave.png" alt="">'+
-    '<h1>Da Boh a Lo So!</h1>'+
-    '<p class="en">From "I don\'t know" to "I know."</p>'+
-    '<p class="lead">Boh walks through Napoli. At each stop she says one easy sentence, the same kind you use in your town book.</p>'+
-    '<ul class="steps">'+
-    '<li lang="it">Io sono. Io vedo. Io ho. Io mangio.</li>'+
-    '<li>Then one <span lang="it">Tu</span> sentence. <span class="en">You.</span></li>'+
-    '<li>You listen. You read. You tap Avanti. You never type.</li>'+
-    '</ul>'+
-    '<button type="button" class="teal" id="go">Andiamo!</button></div>';
-  document.getElementById("go").onclick=function(){ i=0; show(false); };
+function sceneHtml(img, alt, pose){
+  return '<div class="scene"><img class="shot" src="'+img+'" alt="'+esc(alt)+'">'+
+    '<div class="ground"></div><img class="boh" src="'+pose+'" alt="">'+
+    (phase==="listen"?'<div class="listen-tag">Listening…</div>':"")+'</div>';
 }
-function show(fromBack){
-  var s=STOPS[i], dots="";
-  for(var k=0;k<STOPS.length;k++) dots+='<i class="stop'+(k<i?" done":k===i?" now":"")+'" style="left:'+pct(k)+'"></i>';
-  var existing=document.getElementById("bot");
-  if(!existing){
-    view.innerHTML='<div class="route" aria-hidden="true" id="route"></div><div class="card" id="card"></div>'+
-      '<div class="dock"><button type="button" class="plain" id="back"></button><button type="button" class="teal" id="next"></button></div>';
-    document.getElementById("route").innerHTML='<div class="bot" id="bot" style="left:'+pct(Math.max(i-1,0))+'"><img src="'+STOPS[i].pose+'" alt=""></div>';
-    document.getElementById("back").onclick=function(){ if(i===0) start(); else { i--; show(true); } };
-    document.getElementById("next").onclick=function(){ if(i===STOPS.length-1) start(); else { i++; show(false); } };
-  }
-  var route=document.getElementById("route"), bot=document.getElementById("bot");
-  route.querySelectorAll(".stop").forEach(function(n){ n.remove(); });
-  route.insertAdjacentHTML("afterbegin",dots);
-  bot.querySelector("img").src=s.pose;
-  requestAnimationFrame(function(){ bot.style.left=pct(i); });
-  document.getElementById("card").innerHTML=
-    '<img class="shot" src="'+s.img+'" alt="'+esc(s.alt)+'">'+
+function resultHtml(){
+  if(phase==="listen") return '<p class="result" aria-live="polite">Say the sentence now.</p>';
+  if(mark==="bene") return '<p class="result bene" aria-live="polite">Bene! I heard “'+esc(heard)+'”.</p>';
+  if(mark==="quasi") return '<p class="result quasi" aria-live="polite">Almost. I heard “'+esc(heard)+'”. Try the whole sentence.</p>';
+  if(mark==="again") return '<p class="result again" aria-live="polite">I heard “'+esc(heard||"…")+ '”. Listen to Boh, then say it again.</p>';
+  if(mark==="saved") return '<p class="result saved" aria-live="polite">Saved. This phone can’t score the words. Tap Hear me.</p>';
+  if(mark==="missed") return '<p class="result again" aria-live="polite">I didn’t hear you. Tap Say it again.</p>';
+  if(mark==="blocked") return '<p class="result again" aria-live="polite">The mic is off. Allow the microphone, then tap Say it.</p>';
+  return '<p class="result" aria-live="polite"></p>';
+}
+function start(){
+  clearTake(); hush(); i=-1;
+  view.innerHTML=
+    '<div class="start">'+
+    sceneHtml("art/cities/napoli-castel-ovo.jpg","Castel dell'Ovo on the Gulf of Naples.","art/avatar/boh-wave.png")+
+    '<h1>Da Boh a Lo So!</h1>'+
+    '<p class="en">From “I don’t know” to “I know.”</p>'+
+    '<p class="lead">Boh strolls through Napoli. You say each sentence with her. The app records you and checks the words.</p>'+
+    '<ul class="steps">'+
+    '<li>1. Listen to Boh.</li>'+
+    '<li>2. Tap Say it and speak the sentence.</li>'+
+    '<li>3. Use the same sentences in your town book. <span lang="it">Io sono. Io vedo. Io ho. Io mangio. Tu…</span></li>'+
+    '</ul>'+
+    '<button type="button" class="teal" id="go">Start</button></div>';
+  document.getElementById("go").onclick=function(){ i=0; show(); };
+}
+function done(){
+  clearTake(); hush();
+  view.innerHTML=
+    '<div class="done">'+
+    sceneHtml("art/cities/napoli-vesuvio-bay.jpg","Mount Vesuvius across the bay of Naples.","art/avatar/boh-wave.png")+
+    '<h1>You said them.</h1>'+
+    '<p class="lead">Next, open your town book. The town speaks with these sentences. Write one on the next page.</p>'+
+    '<ul class="book">'+
+    '<li lang="it">Io sono… <small lang="en">I am…</small></li>'+
+    '<li lang="it">Io vedo… <small lang="en">I see…</small></li>'+
+    '<li lang="it">Io ho… <small lang="en">I have…</small></li>'+
+    '<li lang="it">Io mangio… <small lang="en">I eat…</small></li>'+
+    '<li lang="it">Tu… <small lang="en">You…</small></li>'+
+    '</ul>'+
+    '<button type="button" class="teal" id="again">Walk again</button></div>';
+  document.getElementById("again").onclick=start;
+}
+function show(){
+  clearTake();
+  paint();
+  say(STOPS[i].say);
+}
+function paint(){
+  var s=STOPS[i], dots="", k;
+  for(k=0;k<STOPS.length;k++) dots+='<i class="'+(k<i?"done":k===i?"now":"")+'"></i>';
+  var sayLabel=phase==="listen"?"Stop":(mark==="quasi"||mark==="again"||mark==="missed"?"Say it again":"Say it");
+  view.innerHTML=
+    '<div class="progress" aria-label="Stop '+(i+1)+' of '+STOPS.length+'"><b>'+(i+1)+' / '+STOPS.length+'</b><div class="dots" aria-hidden="true">'+dots+'</div></div>'+
+    sceneHtml(s.img,s.alt,s.pose)+
+    '<div class="panel">'+
     '<p class="who" lang="it">'+s.who+' = <span lang="en">'+s.whoEn+'</span></p>'+
-    '<p class="it" lang="it">'+s.it+'</p><p class="en" lang="en">'+s.en+'</p>';
-  document.getElementById("back").textContent=i===0?"Inizio":"Indietro";
-  document.getElementById("next").textContent=i===STOPS.length-1?"Ancora":"Avanti";
-  say(s.say);
+    '<p class="it" lang="it">'+s.it+'</p><p class="en" lang="en">'+s.en+'</p>'+
+    resultHtml()+
+    '</div>'+
+    '<div class="dock">'+
+    (takeUrl&&phase!=="listen"?'<button type="button" class="slim" id="playMe">Hear me</button>':"")+
+    '<div class="row">'+
+    '<button type="button" class="plain" id="hear">Hear Boh</button>'+
+    '<button type="button" class="teal" id="sayBtn">'+sayLabel+'</button>'+
+    '</div>'+
+    '<div class="row">'+
+    '<button type="button" class="plain" id="back">'+(i===0?"Start":"Back")+'</button>'+
+    '<button type="button" class="plain" id="next">'+(i===STOPS.length-1?"Finish":"Next")+'</button>'+
+    '</div></div>';
+  document.getElementById("hear").onclick=function(){ if(phase==="listen") return; say(s.say); };
+  document.getElementById("sayBtn").onclick=function(){ if(phase==="listen") stopListen(); else beginListen(); };
+  document.getElementById("back").onclick=function(){ if(i===0) start(); else { i--; show(); } };
+  document.getElementById("next").onclick=function(){ if(i===STOPS.length-1) done(); else { i++; show(); } };
+  var playMe=document.getElementById("playMe");
+  if(playMe) playMe.onclick=function(){
+    if(!takeUrl||muted) return;
+    hush(); hushMine();
+    mine=new Audio(takeUrl);
+    mine.play().catch(function(){});
+  };
+}
+function beginListen(){
+  hush(); hushMine();
+  var my=++session;
+  var SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    if(!SpeechRec){ mark="blocked"; phase="idle"; paint(); return; }
+  }
+  phase="listen"; heard=""; mark=""; paint();
+  function armTimer(){ if(timer) clearTimeout(timer); timer=setTimeout(stopListen, 5000); }
+  function closeListen(){
+    if(my!==session) return;
+    if(mic){ mic.getTracks().forEach(function(t){ t.stop(); }); mic=null; }
+    if(phase!=="listen"){ paint(); return; }
+    phase="done";
+    if(!mark) mark=(window.SpeechRecognition||window.webkitSpeechRecognition)?"missed":"saved";
+    paint();
+  }
+  if(SpeechRec){
+    recog=new SpeechRec();
+    recog.lang="it-IT";
+    recog.interimResults=false;
+    recog.maxAlternatives=5;
+    recog.continuous=false;
+    recog.onresult=function(ev){
+      var alts=[], j, res=ev.results[ev.results.length-1];
+      for(j=0;j<res.length;j++) alts.push(res[j].transcript);
+      var judged=judge(STOPS[i], alts);
+      mark=judged.mark; heard=judged.heard;
+      stopListen();
+    };
+    recog.onerror=function(ev){
+      if(my!==session) return;
+      if(ev.error==="no-speech"){ if(!mark) mark="missed"; }
+      else if(!mark) mark="saved";
+      setTimeout(function(){
+        if(my!==session||phase!=="listen") return;
+        if(rec&&rec.state==="recording") return;
+        stopListen();
+      }, 500);
+    };
+    try{ recog.start(); }catch(err){ mark="saved"; }
+  }
+  var startRec=function(stream){
+    if(my!==session||phase!=="listen"){ stream.getTracks().forEach(function(t){ t.stop(); }); return; }
+    mic=stream;
+    chunks=[];
+    var mime="";
+    if(window.MediaRecorder){
+      if(MediaRecorder.isTypeSupported("audio/webm")) mime="audio/webm";
+      else if(MediaRecorder.isTypeSupported("audio/mp4")) mime="audio/mp4";
+    }
+    try{
+      rec=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
+    }catch(err){ rec=null; }
+    if(!rec){ if(!SpeechRec){ mark="blocked"; phase="done"; paint(); } else armTimer(); return; }
+    rec.ondataavailable=function(e){ if(e.data&&e.data.size) chunks.push(e.data); };
+    rec.onstop=function(){
+      if(chunks.length){
+        if(takeUrl) URL.revokeObjectURL(takeUrl);
+        takeUrl=URL.createObjectURL(new Blob(chunks,{type:chunks[0].type||mime||"audio/webm"}));
+      }
+      setTimeout(closeListen, 600);
+    };
+    rec.start();
+    armTimer();
+  };
+  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({audio:true}).then(startRec).catch(function(){
+      if(my!==session) return;
+      if(!SpeechRec){ mark="blocked"; phase="done"; paint(); return; }
+      if(!mark) mark="";
+      if(phase==="listen") armTimer();
+    });
+  }else armTimer();
+}
+function stopListen(){
+  if(timer){ clearTimeout(timer); timer=null; }
+  if(recog){ try{ recog.stop(); }catch(e){} }
+  if(rec&&rec.state==="recording"){ try{ rec.stop(); }catch(e){} return; }
+  if(mic){ mic.getTracks().forEach(function(t){ t.stop(); }); mic=null; }
+  if(phase==="listen"){
+    phase="done";
+    if(!mark) mark="missed";
+    paint();
+  }
 }
 start();
 </script>
