@@ -67,7 +67,13 @@ header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-betwe
 .teacher-link{font-weight:800;color:var(--teal);font-size:1rem}
 .result{margin:8px 0 0;font-weight:800;font-size:1.05rem;min-height:1.3em}
 .result.bene{color:var(--teal)}
-.result.quasi,.result.again,.result.saved{color:var(--ink)}
+.result.quasi,.result.again{color:var(--ink)}
+.result.saved{color:var(--teal);font-size:1.55rem}
+.flash{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.flash div{background:var(--card);border:3px solid var(--teal);border-radius:28px;padding:18px 32px 14px;text-align:center;box-shadow:0 10px 0 rgba(28,25,21,.16);animation:pop .28s ease-out both}
+.flash b{display:block;font-size:3.2rem;font-weight:900;line-height:1;color:var(--teal)}
+.flash small{display:block;margin-top:8px;font-weight:800;font-size:1.2rem;color:var(--ink)}
+@keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
 .heard{font-weight:800}
 .listen-tag{position:absolute;top:12px;left:12px;z-index:3;background:var(--card);border:2px solid var(--teal);border-radius:99px;padding:6px 12px;font-weight:900}
 .dock{flex:0 0 auto;display:flex;flex-direction:column;gap:8px}
@@ -103,7 +109,7 @@ body.big .who{font-size:1.2rem}
   .scene .boh,.boh-hit{height:86%}
   .panel{padding:8px 10px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -297,13 +303,13 @@ document.getElementById("engBtn").onclick=function(){
 };
 applyEn();
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
-function sceneHtml(img, alt, pose, tappable, motion){
+function sceneHtml(img, alt, pose, tappable, motion, flash){
   var cls=motion||"";
   var fig=tappable
     ? '<button type="button" class="boh-hit '+cls+'" id="bohBtn" aria-label="Hear Boh"><img src="'+pose+'" alt=""></button>'
     : '<img class="boh '+cls+'" src="'+pose+'" alt="">';
   return '<div class="scene"><img class="shot" src="'+img+'" alt="'+esc(alt)+'">'+
-    '<div class="ground"></div>'+fig+'</div>';
+    '<div class="ground"></div>'+fig+(flash||'')+'</div>';
 }
 function armWalk(el){
   if(!el) return;
@@ -322,7 +328,7 @@ function resultHtml(){
   if(mark==="bene") return '<p class="result bene" aria-live="polite">Bene! I heard “'+esc(heard)+'”.</p>';
   if(mark==="quasi") return '<p class="result quasi" aria-live="polite">Almost. I heard “'+esc(heard)+'”. Try the whole sentence.</p>';
   if(mark==="again") return '<p class="result again" aria-live="polite">I heard “'+esc(heard||"…")+ '”. Listen to Boh, then say it again.</p>';
-  if(mark==="saved") return '<p class="result saved" aria-live="polite">Saved. This phone can’t score the words. Tap Hear me.</p>';
+  if(mark==="saved") return '<p class="result saved" aria-live="polite">Saved. Tap Hear me.</p>';
   if(mark==="missed") return '<p class="result again" aria-live="polite">I didn’t hear you. Tap Say it again.</p>';
   if(mark==="blocked") return '<p class="result again" aria-live="polite">The mic is off. Allow the microphone, then tap Say it.</p>';
   return '<p class="result" aria-live="polite"></p>';
@@ -422,7 +428,7 @@ function paint(){
     '<div class="stage">'+
     '<div class="bubble'+(phase==="listen"?" speaking":"")+'" id="bubble">'+
     '<p class="it" lang="it">'+s.it+'</p><p class="en" lang="en">'+esc(s.en)+'</p><p class="cap" id="cap">'+esc(caption())+'</p></div>'+
-    sceneHtml(s.img,s.alt,pose,true,motionClass(pose))+
+    sceneHtml(s.img,s.alt,pose,true,motionClass(pose), mark==="saved"?'<div class="flash" role="status"><div><b>Saved</b><small>Tap Hear me</small></div></div>':'')+
     '</div>'+
     '<div class="panel">'+
     '<p class="who" lang="it">'+s.who+' = <span lang="en">'+s.whoEn+'</span></p>'+
