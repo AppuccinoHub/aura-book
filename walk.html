@@ -678,7 +678,7 @@ function cities(){
       '<span class="en">'+esc(c.hookEn)+"</span>"+
       (got?'<span class="cap">'+got+"/"+need+" ready</span>":"")+"</span></button>";
   }
-  view.innerHTML='<div class="start"><h1>Where is Boh?</h1><p class="lead">Pick one city. That is enough for today.</p><div class="cities">'+cards+"</div></div>";
+  view.innerHTML='<div class="start"><h1 lang="it">Dov\'è Bohina?</h1><p class="en">Where is Bohina?</p><p class="lead">Pick one city. That is enough for today.</p><div class="cities">'+cards+"</div></div>";
   view.querySelectorAll(".city").forEach(function(btn){
     btn.onclick=function(){
       ci=+btn.getAttribute("data-n");
