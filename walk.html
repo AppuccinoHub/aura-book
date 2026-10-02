@@ -29,7 +29,17 @@ header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-betwe
 .scene{position:relative;flex:1;min-height:140px;border-radius:28px;overflow:hidden;border:2px solid var(--ink);background:#cbbfae}
 .scene .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%}
 .scene .ground{position:absolute;left:16%;right:16%;bottom:3%;height:22px;border-radius:50%;background:rgba(28,25,21,.35);filter:blur(5px);z-index:1}
-.scene .boh{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:86%;width:auto;max-width:96%;z-index:2;pointer-events:none;filter:drop-shadow(0 12px 10px rgba(28,25,21,.28))}
+.scene .boh,.boh-hit{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:82%;z-index:2;filter:drop-shadow(0 12px 10px rgba(28,25,21,.28))}
+.scene .boh{width:auto;max-width:92%;pointer-events:none}
+.boh-hit{padding:0;background:none;border:0;width:max-content;max-width:92%;cursor:pointer}
+.boh-hit img{height:100%;width:auto;max-width:100%;display:block;pointer-events:none}
+.stage{flex:1;min-height:0;display:flex;flex-direction:column}
+.bubble{flex:0 0 auto;position:relative;z-index:3;background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:8px 12px 6px;text-align:center}
+.bubble.speaking{border-color:var(--teal)}
+.bubble:after{content:"";position:absolute;left:50%;bottom:-10px;width:16px;height:16px;background:var(--card);border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
+.bubble.speaking:after{border-color:transparent var(--teal) var(--teal) transparent}
+.bubble .it{font-size:clamp(1.45rem,6vw,2.1rem)}
+.cap{margin:2px 0 0;font-weight:800;font-size:1rem}
 .panel{flex:0 0 auto;background:var(--card);border:2px solid var(--line);border-radius:22px;padding:10px 12px 12px;text-align:center}
 .who{margin:0 auto 4px;display:inline-block;padding:2px 14px;border:2px solid var(--teal);border-radius:99px;font-weight:900;font-size:1.05rem}
 .it{margin:0;font-weight:900;font-size:clamp(1.7rem,7vw,2.45rem);line-height:1.15}
@@ -64,11 +74,12 @@ body.big .who{font-size:1.2rem}
 @media (min-width:800px){
   #shell{width:min(100%,920px)}
   .it{font-size:clamp(2rem,4vw,2.8rem)}
-  .scene .boh{height:92%}
+  .bubble .it{font-size:clamp(1.8rem,3vw,2.4rem)}
+  .scene .boh,.boh-hit{height:88%}
 }
 @media (max-height:700px){
   .start .scene,.done .scene{height:min(26dvh,180px)}
-  .scene .boh{height:92%}
+  .scene .boh,.boh-hit{height:86%}
   .panel{padding:8px 10px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -96,7 +107,7 @@ var STOPS=[
 {who:"tu",whoEn:"you",it:"Tu visiti Napoli. A presto!",en:"You visit Naples. See you soon!",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-kiss.png",say:"art/voice/tu.mp3",keys:["visiti","napoli"]}
 ];
 var view=document.getElementById("view"), muted=false, i=-1, voice=null, mine=null;
-var phase="idle", heard="", mark="", takeUrl="", recog=null, rec=null, mic=null, timer=null, chunks=[], session=0;
+var phase="idle", heard="", mark="", takeUrl="", recog=null, rec=null, mic=null, timer=null, chunks=[], session=0, heardHer=false;
 
 function fold(s){
   return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z\s]/g," ").replace(/\s+/g," ").trim();
@@ -136,7 +147,38 @@ function clearTake(){
   releaseMic();
   hushMine();
   if(takeUrl){ URL.revokeObjectURL(takeUrl); takeUrl=""; }
-  phase="idle"; heard=""; mark=""; chunks=[];
+  phase="idle"; heard=""; mark=""; chunks=[]; heardHer=false;
+}
+function poseNow(stop){
+  if(phase==="listen") return "art/avatar/boh-please.png";
+  if(mark==="bene"||mark==="saved") return "art/avatar/boh-ok.png";
+  if(mark==="quasi"||mark==="again"||mark==="missed"||mark==="blocked") return "art/avatar/boh-huh.png";
+  return stop.pose;
+}
+function caption(){
+  if(phase==="listen") return "Boh is listening.";
+  if(mark==="bene") return "Boh says: Bene!";
+  if(mark==="quasi") return "Boh says: Almost. Try the whole sentence.";
+  if(mark==="again"||mark==="missed") return "Boh says: Try again.";
+  if(mark==="saved") return "Boh heard you. Tap Hear me.";
+  if(mark==="blocked") return "Allow the microphone, then try again.";
+  if(heardHer) return "Now say it back.";
+  return "Tap Boh.";
+}
+function hearBoh(){
+  if(phase==="listen"||i<0) return;
+  heardHer=true;
+  mark=""; phase="idle";
+  paint();
+  var bub=document.getElementById("bubble");
+  var cap=document.getElementById("cap");
+  if(bub) bub.classList.add("speaking");
+  if(cap) cap.textContent="Listen.";
+  say(STOPS[i].say);
+  if(voice) voice.onended=function(){
+    if(bub) bub.classList.remove("speaking");
+    if(cap) cap.textContent="Now say it back.";
+  };
 }
 document.getElementById("muteBtn").onclick=function(){
   muted=!muted; this.setAttribute("aria-pressed",muted); this.textContent=muted?"🔇":"🔊";
@@ -146,10 +188,12 @@ document.getElementById("bigBtn").onclick=function(){
   this.setAttribute("aria-pressed",document.body.classList.toggle("big"));
 };
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
-function sceneHtml(img, alt, pose){
+function sceneHtml(img, alt, pose, tappable){
+  var fig=tappable
+    ? '<button type="button" class="boh-hit" id="bohBtn" aria-label="Hear Boh"><img src="'+pose+'" alt=""></button>'
+    : '<img class="boh" src="'+pose+'" alt="">';
   return '<div class="scene"><img class="shot" src="'+img+'" alt="'+esc(alt)+'">'+
-    '<div class="ground"></div><img class="boh" src="'+pose+'" alt="">'+
-    (phase==="listen"?'<div class="listen-tag">Listening…</div>':"")+'</div>';
+    '<div class="ground"></div>'+fig+'</div>';
 }
 function resultHtml(){
   if(phase==="listen") return '<p class="result" aria-live="polite">Say the sentence now.</p>';
@@ -165,17 +209,19 @@ function start(){
   clearTake(); hush(); i=-1;
   view.innerHTML=
     '<div class="start">'+
-    sceneHtml("art/cities/napoli-castel-ovo.jpg","Castel dell'Ovo on the Gulf of Naples.","art/avatar/boh-wave.png")+
+    sceneHtml("art/cities/napoli-castel-ovo.jpg","Castel dell'Ovo on the Gulf of Naples.","art/avatar/boh-wave.png",true)+
     '<h1>Da Boh a Lo So!</h1>'+
     '<p class="en">From “I don’t know” to “I know.”</p>'+
     '<p class="lead">Boh strolls through Napoli. You say each sentence with her. The app records you and checks the words.</p>'+
     '<ul class="steps">'+
-    '<li>1. Listen to Boh.</li>'+
-    '<li>2. Tap Say it and speak the sentence.</li>'+
+    '<li>1. Tap Boh and listen.</li>'+
+    '<li>2. Tap Say it and speak the sentence. She answers.</li>'+
     '<li>3. Use the same sentences in your town book. <span lang="it">Io sono. Io vedo. Io ho. Io mangio. Tu…</span></li>'+
     '</ul>'+
     '<button type="button" class="teal" id="go">Start</button></div>';
   document.getElementById("go").onclick=function(){ i=0; show(); };
+  var hello=document.getElementById("bohBtn");
+  if(hello) hello.onclick=function(){ i=0; show(); };
 }
 function done(){
   clearTake(); hush();
@@ -197,7 +243,16 @@ function done(){
 function show(){
   clearTake();
   paint();
+  var bub=document.getElementById("bubble");
+  var cap=document.getElementById("cap");
+  if(bub) bub.classList.add("speaking");
+  if(cap) cap.textContent="Listen.";
   say(STOPS[i].say);
+  if(voice) voice.onended=function(){
+    if(bub) bub.classList.remove("speaking");
+    heardHer=true;
+    if(cap) cap.textContent="Now say it back.";
+  };
 }
 function paint(){
   var s=STOPS[i], dots="", k;
@@ -205,10 +260,14 @@ function paint(){
   var sayLabel=phase==="listen"?"Stop":(mark==="quasi"||mark==="again"||mark==="missed"?"Say it again":"Say it");
   view.innerHTML=
     '<div class="progress" aria-label="Stop '+(i+1)+' of '+STOPS.length+'"><b>'+(i+1)+' / '+STOPS.length+'</b><div class="dots" aria-hidden="true">'+dots+'</div></div>'+
-    sceneHtml(s.img,s.alt,s.pose)+
+    '<div class="stage">'+
+    '<div class="bubble'+(phase==="listen"?" speaking":"")+'" id="bubble">'+
+    '<p class="it" lang="it">'+s.it+'</p><p class="cap" id="cap">'+esc(caption())+'</p></div>'+
+    sceneHtml(s.img,s.alt,poseNow(s),true)+
+    '</div>'+
     '<div class="panel">'+
     '<p class="who" lang="it">'+s.who+' = <span lang="en">'+s.whoEn+'</span></p>'+
-    '<p class="it" lang="it">'+s.it+'</p><p class="en" lang="en">'+s.en+'</p>'+
+    '<p class="en" lang="en">'+s.en+'</p>'+
     resultHtml()+
     '</div>'+
     '<div class="dock">'+
@@ -219,9 +278,10 @@ function paint(){
     '</div>'+
     '<div class="row">'+
     '<button type="button" class="plain" id="back">'+(i===0?"Start":"Back")+'</button>'+
-    '<button type="button" class="plain" id="next">'+(i===STOPS.length-1?"Finish":"Next")+'</button>'+
+    '<button type="button" class="plain" id="next">'+(i===STOPS.length-1?"Finish":"Next place")+'</button>'+
     '</div></div>';
-  document.getElementById("hear").onclick=function(){ if(phase==="listen") return; say(s.say); };
+  document.getElementById("bohBtn").onclick=hearBoh;
+  document.getElementById("hear").onclick=hearBoh;
   document.getElementById("sayBtn").onclick=function(){ if(phase==="listen") stopListen(); else beginListen(); };
   document.getElementById("back").onclick=function(){ if(i===0) start(); else { i--; show(); } };
   document.getElementById("next").onclick=function(){ if(i===STOPS.length-1) done(); else { i++; show(); } };
