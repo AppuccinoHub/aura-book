@@ -73,7 +73,7 @@ function makeCode(){
   for(i=0;i<4;i++) out+=chars.charAt(Math.floor(Math.random()*chars.length));
   return out;
 }
-function rank(m){ return {bene:3,quasi:2,saved:2,again:1,missed:1,started:0}[m]||0; }
+function rank(m){ return {bene:3,help:2,quasi:2,saved:2,again:1,missed:1,started:0}[m]||0; }
 function cityNames(stops){
   var names=[], id;
   for(id in stops) if(stops.hasOwnProperty(id)) names.push(id);
@@ -106,7 +106,7 @@ function render(){
       html+='<div class="city"><b lang="it">'+esc(cid)+'</b> <span class="'+(good&&good===total?"ok":"wait")+'">'+good+" ready"+'</span><ul>';
       for(i=0;i<rows.length;i++){
         row=rows[i]; if(!row) continue;
-        html+='<li><span lang="it">'+esc(row.it)+'</span> <span class="'+(rank(row.mark)>=2?"ok":"wait")+'">'+esc(row.mark||"")+'</span></li>';
+        html+='<li>'+(row.round?'<span class="wait">'+esc(row.round)+' · </span>':'')+'<span lang="it">'+esc(row.it)+'</span> <span class="'+(rank(row.mark)>=2?"ok":"wait")+'">'+esc(row.mark||"")+'</span></li>';
       }
       html+='</ul></div>';
     });
@@ -145,14 +145,14 @@ document.getElementById("reopen").onclick=function(){
   render();
 };
 document.getElementById("copy").onclick=function(){
-  var lines=["Name,City,Sentence,English,Result,Heard"], id, kid, cid, rows, i, r;
+  var lines=["Name,City,Round,Sentence,English,Result,Heard"], id, kid, cid, rows, i, r;
   for(id in students){
     kid=students[id];
     for(cid in (kid.stops||{})){
       rows=kid.stops[cid]||[];
       for(i=0;i<rows.length;i++){
         r=rows[i]; if(!r) continue;
-        lines.push([kid.name,cid,r.it,r.en,r.mark,r.heard].map(function(v){
+        lines.push([kid.name,cid,r.round||"",r.it,r.en,r.mark,r.heard].map(function(v){
           v=String(v==null?"":v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;
         }).join(","));
       }
