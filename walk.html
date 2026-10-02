@@ -62,21 +62,22 @@ body.big .who{font-size:1.25rem}
 </div>
 <script>
 var STOPS=[
-{who:"io",whoEn:"I",it:"Io sono a Napoli.",en:"I am in Naples.",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-walk.png"},
-{who:"io",whoEn:"I",it:"Io vedo il mare.",en:"I see the sea.",img:"art/cities/napoli-golfo.jpg",alt:"The Gulf of Naples from Posillipo, in daylight.",pose:"art/avatar/boh-point.png"},
-{who:"io",whoEn:"I",it:"Io vedo il Vesuvio.",en:"I see Vesuvius.",img:"art/cities/napoli-vesuvio.jpg",alt:"Mount Vesuvius seen from Naples, in daylight.",pose:"art/avatar/boh-point.png"},
-{who:"io",whoEn:"I",it:"Io vedo la piazza.",en:"I see the town square.",img:"art/cities/napoli-plebiscito.jpg",alt:"Piazza del Plebiscito in Naples, sunny, looking toward the Galleria Umberto I.",pose:"art/avatar/boh-point.png"},
-{who:"io",whoEn:"I",it:"Io ho una pizza Margherita.",en:"I have a Margherita pizza.",img:"art/cities/napoli-pizza-margherita.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-walk.png"},
-{who:"io",whoEn:"I",it:"Io mangio la pizza.",en:"I eat the pizza.",img:"art/cities/napoli-pizza-margherita-2.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-pizza.png"},
-{who:"tu",whoEn:"you",it:"Tu visiti Napoli. A presto!",en:"You visit Naples. See you soon!",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-wave.png"}
+{who:"io",whoEn:"I",it:"Io sono a Napoli.",en:"I am in Naples.",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-walk.png",say:"art/voice/sono.mp3"},
+{who:"io",whoEn:"I",it:"Io vedo il mare.",en:"I see the sea.",img:"art/cities/napoli-golfo.jpg",alt:"The Gulf of Naples from Posillipo, in daylight.",pose:"art/avatar/boh-point.png",say:"art/voice/mare.mp3"},
+{who:"io",whoEn:"I",it:"Io vedo il Vesuvio.",en:"I see Vesuvius.",img:"art/cities/napoli-vesuvio.jpg",alt:"Mount Vesuvius seen from Naples, in daylight.",pose:"art/avatar/boh-point.png",say:"art/voice/vesuvio.mp3"},
+{who:"io",whoEn:"I",it:"Io vedo la piazza.",en:"I see the town square.",img:"art/cities/napoli-plebiscito.jpg",alt:"Piazza del Plebiscito in Naples, sunny, looking toward the Galleria Umberto I.",pose:"art/avatar/boh-point.png",say:"art/voice/piazza.mp3"},
+{who:"io",whoEn:"I",it:"Io ho una pizza Margherita.",en:"I have a Margherita pizza.",img:"art/cities/napoli-pizza-margherita.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-walk.png",say:"art/voice/ho.mp3"},
+{who:"io",whoEn:"I",it:"Io mangio la pizza.",en:"I eat the pizza.",img:"art/cities/napoli-pizza-margherita-2.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-pizza.png",say:"art/voice/mangio.mp3"},
+{who:"tu",whoEn:"you",it:"Tu visiti Napoli. A presto!",en:"You visit Naples. See you soon!",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-wave.png",say:"art/voice/tu.mp3"}
 ];
-var view=document.getElementById("view"), muted=false, i=-1;
-function say(t){
-  if(muted||!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(t); u.lang="it-IT"; window.speechSynthesis.speak(u);
+var view=document.getElementById("view"), muted=false, i=-1, voice=null;
+function say(src){
+  hush();
+  if(muted||!src) return;
+  voice=new Audio(src);
+  voice.play().catch(function(){});
 }
-function hush(){ if(window.speechSynthesis) window.speechSynthesis.cancel(); }
+function hush(){ if(voice){ voice.pause(); voice=null; } }
 document.getElementById("muteBtn").onclick=function(){
   muted=!muted; this.setAttribute("aria-pressed",muted); this.textContent=muted?"🔇":"🔊";
   this.setAttribute("aria-label",muted?"Unmute":"Mute"); if(muted) hush();
@@ -122,7 +123,7 @@ function show(fromBack){
     '<p class="it" lang="it">'+s.it+'</p><p class="en" lang="en">'+s.en+'</p>';
   document.getElementById("back").textContent=i===0?"Inizio":"Indietro";
   document.getElementById("next").textContent=i===STOPS.length-1?"Ancora":"Avanti";
-  say(s.it);
+  say(s.say);
 }
 start();
 </script>
