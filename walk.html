@@ -29,11 +29,11 @@ header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-betwe
 .scene{position:relative;flex:1;min-height:140px;border-radius:28px;overflow:hidden;border:2px solid var(--ink);background:#cbbfae}
 .scene .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%}
 .scene .ground{position:absolute;left:16%;right:16%;bottom:3%;height:22px;border-radius:50%;background:rgba(28,25,21,.35);filter:blur(5px);z-index:1}
-.scene .boh,.boh-hit{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:82%;z-index:2;filter:drop-shadow(0 12px 10px rgba(28,25,21,.28))}
-.scene .boh{width:auto;max-width:92%;pointer-events:none}
-.boh-hit{padding:0;background:none;border:0;width:max-content;max-width:92%;cursor:pointer}
-.boh-hit img{height:100%;width:auto;max-width:100%;display:block;pointer-events:none}
-.stage{flex:1;min-height:0;display:flex;flex-direction:column}
+.scene .boh,.boh-hit{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:94%;max-width:94%;z-index:2;filter:drop-shadow(0 12px 10px rgba(28,25,21,.28))}
+.scene .boh{width:auto;pointer-events:none;object-fit:contain;object-position:center bottom}
+.boh-hit{padding:0;background:none;border:0;width:max-content;cursor:pointer}
+.boh-hit img{height:100%;width:auto;max-width:100%;display:block;pointer-events:none;object-fit:contain;object-position:center bottom}
+.layout{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
 .bubble{flex:0 0 auto;position:relative;z-index:3;background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:8px 12px 6px;text-align:center}
 .bubble.speaking{border-color:var(--teal)}
 .bubble:after{content:"";position:absolute;left:50%;bottom:-10px;width:16px;height:16px;background:var(--card);border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
@@ -79,6 +79,7 @@ header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-betwe
 .dock{flex:0 0 auto;display:flex;flex-direction:column;gap:8px}
 .row{display:grid;grid-template-columns:1fr 1.35fr;gap:8px}
 .plain,.teal,.slim{min-height:58px;border-radius:18px;font-weight:900;font-size:1.2rem;border:2px solid var(--ink);background:var(--card);padding:8px 10px}
+.plain.need-sound{border-color:var(--teal);border-width:3px;background:#efe6d4}
 .teal{background:var(--teal);border-color:var(--teal);color:#fff;font-size:1.35rem}
 .slim{min-height:48px;font-size:1.05rem}
 .teal[disabled],.plain[disabled]{opacity:.55}
@@ -99,15 +100,21 @@ body.big .it{font-size:clamp(2.05rem,8.4vw,2.9rem)}
 body.big .en{font-size:1.35rem}
 body.big .who{font-size:1.2rem}
 @media (min-width:800px){
-  #shell{width:min(100%,920px)}
+  #shell{width:min(100%,1120px)}
   .it{font-size:clamp(2rem,4vw,2.8rem)}
   .bubble .it{font-size:clamp(1.8rem,3vw,2.4rem)}
-  .scene .boh,.boh-hit{height:88%}
+  .layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,400px);grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"photo words" "photo check" "photo buttons";gap:12px;align-items:stretch}
+  .bubble{grid-area:words}
+  .bubble:after{display:none}
+  .scene{grid-area:photo;min-height:0;height:100%}
+  .panel{grid-area:check;align-self:end}
+  .dock{grid-area:buttons}
+  .scene .boh,.boh-hit{height:96%}
 }
 @media (max-height:700px){
   .start .scene,.done .scene{height:min(26dvh,180px)}
-  .scene .boh,.boh-hit{height:86%}
   .panel{padding:8px 10px}
+  .plain,.teal{min-height:50px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -124,6 +131,8 @@ body.big .who{font-size:1.2rem}
 </header>
 <div id="view"></div>
 </div>
+<audio id="bohVoice" preload="auto" playsinline></audio>
+<audio id="meVoice" preload="auto" playsinline></audio>
 <script src="vendor/peerjs.min.js"></script>
 <script>
 var CITIES=[
@@ -187,13 +196,30 @@ function judge(stop, alts){
   if(best>=0.5) return {mark:"quasi", heard:said};
   return {mark:"again", heard:said};
 }
+var player=document.getElementById("bohVoice");
+var mePlayer=document.getElementById("meVoice");
 function say(src){
-  hush();
-  if(muted||!src) return;
-  voice=new Audio(src);
-  voice.play().catch(function(){});
+  if(!src) return;
+  var cap=document.getElementById("cap");
+  var hear=document.getElementById("hear");
+  if(muted){
+    if(cap) cap.textContent="Sound is off. Tap the speaker.";
+    return;
+  }
+  try{ player.pause(); }catch(e){}
+  if(player.getAttribute("data-src")!==src){
+    player.src=src;
+    player.setAttribute("data-src", src);
+  }
+  try{ player.currentTime=0; }catch(e){}
+  voice=player;
+  var run=player.play();
+  if(run&&run.catch) run.catch(function(){
+    if(cap&&cap.isConnected) cap.textContent="Tap Hear Boh to listen.";
+    if(hear&&hear.isConnected){ hear.textContent="Tap to hear"; hear.classList.add("need-sound"); }
+  });
 }
-function hush(){ if(voice){ voice.pause(); voice=null; } }
+function hush(){ if(player){ try{ player.pause(); }catch(e){} } voice=null; }
 function hushMine(){ if(mine){ mine.pause(); mine=null; } }
 function releaseMic(){
   if(timer){ clearTimeout(timer); timer=null; }
@@ -425,11 +451,10 @@ function paint(){
   var sayLabel=phase==="listen"?"Stop":(mark==="quasi"||mark==="again"||mark==="missed"?"Say it again":"Say it");
   view.innerHTML=
     '<div class="progress" aria-label="Stop '+(i+1)+' of '+list().length+'"><b>'+(i+1)+' / '+list().length+'</b><div class="dots" aria-hidden="true">'+dots+'</div></div>'+
-    '<div class="stage">'+
+    '<div class="layout">'+
     '<div class="bubble'+(phase==="listen"?" speaking":"")+'" id="bubble">'+
     '<p class="it" lang="it">'+s.it+'</p><p class="en" lang="en">'+esc(s.en)+'</p><p class="cap" id="cap">'+esc(caption())+'</p></div>'+
     sceneHtml(s.img,s.alt,pose,true,motionClass(pose), mark==="saved"?'<div class="flash" role="status"><div><b>Saved</b><small>Tap Hear me</small></div></div>':'')+
-    '</div>'+
     '<div class="panel">'+
     '<p class="who" lang="it">'+s.who+' = <span lang="en">'+s.whoEn+'</span></p>'+
     resultHtml()+
@@ -443,7 +468,7 @@ function paint(){
     '<div class="row">'+
     '<button type="button" class="plain" id="back">'+(i===0?"Cities":"Back")+'</button>'+
     '<button type="button" class="plain" id="next">'+(i===list().length-1?"Finish":"Next place")+'</button>'+
-    '</div></div>';
+    '</div></div></div>';
   armWalk(document.getElementById("bohBtn"));
   document.getElementById("bohBtn").onclick=hearBoh;
   document.getElementById("hear").onclick=hearBoh;
@@ -454,8 +479,10 @@ function paint(){
   if(playMe) playMe.onclick=function(){
     if(!takeUrl||muted) return;
     hush(); hushMine();
-    mine=new Audio(takeUrl);
-    mine.play().catch(function(){});
+    mePlayer.src=takeUrl;
+    mine=mePlayer;
+    var run=mePlayer.play();
+    if(run&&run.catch) run.catch(function(){ playMe.textContent="Tap again to hear"; });
   };
 }
 function beginListen(){
