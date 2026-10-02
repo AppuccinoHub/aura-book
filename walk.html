@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f6f1e6">
-<title>Da Boh a Lo So! · Passeggiata a Napoli</title>
+<title>Da Boh a Lo So! · Le città</title>
 <!-- Sea: Paolo Villa, CC BY-SA 4.0. Vesuvius: PaestumPaestum, CC BY-SA 4.0. Piazza: Giorgio Visco, CC BY-SA 4.0. Wikimedia Commons. -->
 <style>
 :root{--bg:#f6f1e6;--card:#fffaf2;--ink:#1c1915;--teal:#0f766e;--line:#e4d8c4}
@@ -43,7 +43,28 @@ header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-betwe
 .panel{flex:0 0 auto;background:var(--card);border:2px solid var(--line);border-radius:22px;padding:10px 12px 12px;text-align:center}
 .who{margin:0 auto 4px;display:inline-block;padding:2px 14px;border:2px solid var(--teal);border-radius:99px;font-weight:900;font-size:1.05rem}
 .it{margin:0;font-weight:900;font-size:clamp(1.7rem,7vw,2.45rem);line-height:1.15}
-.en{margin:2px 0 0;color:var(--teal);font-weight:800;font-size:clamp(1.05rem,3.8vw,1.25rem)}
+.en{display:none;margin:2px 0 0;color:var(--teal);font-weight:800;font-size:clamp(1.05rem,3.8vw,1.25rem)}
+.bubble:hover .en,.bubble:focus-within .en,.city:hover .en,body.en .en{display:block}
+@keyframes walk-in{
+  0%{transform:translateX(calc(-50% - 78px)) translateY(0) rotate(-3deg)}
+  35%{transform:translateX(calc(-50% - 40px)) translateY(-10px) rotate(2deg)}
+  65%{transform:translateX(calc(-50% - 16px)) translateY(0) rotate(-2deg)}
+  100%{transform:translateX(-50%) translateY(0) rotate(0)}
+}
+@keyframes step{
+  0%,100%{transform:translateX(calc(-50% - 6px)) translateY(0) rotate(-2.5deg)}
+  50%{transform:translateX(calc(-50% + 6px)) translateY(-10px) rotate(2.5deg)}
+}
+.boh-hit.arrive,.scene .boh.arrive{animation:walk-in 1.05s ease-out both}
+.boh-hit.stepping,.scene .boh.stepping{animation:step .68s ease-in-out infinite}
+.field{width:min(100%,24rem);display:flex;flex-direction:column;gap:4px;text-align:left;font-weight:800;font-size:1rem}
+.field input{min-height:56px;border-radius:16px;border:2px solid var(--ink);background:var(--card);padding:8px 12px;font:inherit;font-weight:800;font-size:1.15rem;color:var(--ink)}
+.need{margin:0;font-weight:800;color:var(--ink)}
+.cities{width:min(100%,24rem);display:flex;flex-direction:column;gap:8px}
+.city{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:center;background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:8px;text-align:left;min-height:88px}
+.city img{width:92px;height:72px;object-fit:cover;border-radius:12px}
+.city b{display:block;font-size:1.35rem}
+.teacher-link{font-weight:800;color:var(--teal);font-size:1rem}
 .result{margin:8px 0 0;font-weight:800;font-size:1.05rem;min-height:1.3em}
 .result.bene{color:var(--teal)}
 .result.quasi,.result.again,.result.saved{color:var(--ink)}
@@ -90,14 +111,23 @@ body.big .who{font-size:1.2rem}
 <header>
   <div class="brand">Da Boh a Lo So!</div>
   <div class="controls">
+    <button type="button" class="icon-btn" id="engBtn" aria-label="Show English" aria-pressed="false">En</button>
     <button type="button" class="icon-btn" id="muteBtn" aria-label="Mute" aria-pressed="false">🔊</button>
     <button type="button" class="icon-btn" id="bigBtn" aria-label="Bigger text" aria-pressed="false">Aa</button>
   </div>
 </header>
 <div id="view"></div>
 </div>
+<script src="vendor/peerjs.min.js"></script>
 <script>
-var STOPS=[
+var CITIES=[
+{id:"roma",name:"Roma",en:"Rome",cover:"art/cities/roma-colosseo.jpg",stops:[
+{who:"io",whoEn:"I",it:"Io vedo il Colosseo.",en:"I see the Colosseum.",img:"art/cities/roma-colosseo.jpg",alt:"The Colosseum in Rome, in daylight.",pose:"art/avatar/boh-point.png",say:"art/voice/roma-colosseo.mp3",keys:["vedo","colosseo"]},
+{who:"io",whoEn:"I",it:"Io vedo la fontana.",en:"I see the fountain.",img:"art/cities/roma-trevi.jpg",alt:"The Trevi Fountain in Rome.",pose:"art/avatar/boh-point.png",say:"art/voice/roma-fontana.mp3",keys:["vedo","fontana"]},
+{who:"io",whoEn:"I",it:"Io sono a Roma.",en:"I am in Rome.",img:"art/cities/roma-san-pietro.jpg",alt:"St. Peter's Basilica in Rome.",pose:"art/avatar/boh-walk.png",say:"art/voice/roma-sono.mp3",keys:["sono","roma"]},
+{who:"tu",whoEn:"you",it:"Tu visiti Roma.",en:"You visit Rome.",img:"art/cities/roma-gianicolo.jpg",alt:"A view over Rome from the Janiculum.",pose:"art/avatar/boh-wave.png",say:"art/voice/roma-tu.mp3",keys:["visiti","roma"]}
+]},
+{id:"napoli",name:"Napoli",en:"Naples",cover:"art/cities/napoli-castel-ovo.jpg",stops:[
 {who:"io",whoEn:"I",it:"Io sono a Napoli.",en:"I am in Naples.",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-walk.png",say:"art/voice/sono.mp3",keys:["sono","napoli"]},
 {who:"io",whoEn:"I",it:"Io vedo il mare.",en:"I see the sea.",img:"art/cities/napoli-mare.jpg",alt:"The Gulf of Naples in bright sun, blue water from the rocks at Posillipo.",pose:"art/avatar/boh-point.png",say:"art/voice/mare.mp3",keys:["vedo","mare"]},
 {who:"io",whoEn:"I",it:"Io vedo il Vesuvio.",en:"I see Vesuvius.",img:"art/cities/napoli-vesuvio-bay.jpg",alt:"Mount Vesuvius across the blue bay of Naples, in clear daylight.",pose:"art/avatar/boh-point.png",say:"art/voice/vesuvio.mp3",keys:["vedo","vesuvio"]},
@@ -105,9 +135,36 @@ var STOPS=[
 {who:"io",whoEn:"I",it:"Io ho una pizza Margherita.",en:"I have a Margherita pizza.",img:"art/cities/napoli-pizza-margherita.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-shrug.png",say:"art/voice/ho.mp3",keys:["ho","pizza"]},
 {who:"io",whoEn:"I",it:"Io mangio la pizza.",en:"I eat the pizza.",img:"art/cities/napoli-pizza-margherita-2.jpg",alt:"A Margherita pizza with tomato, mozzarella, and basil.",pose:"art/avatar/boh-pizza.png",say:"art/voice/mangio.mp3",keys:["mangio","pizza"]},
 {who:"tu",whoEn:"you",it:"Tu visiti Napoli. A presto!",en:"You visit Naples. See you soon!",img:"art/cities/napoli-castel-ovo.jpg",alt:"Castel dell'Ovo on the Gulf of Naples, in the sun.",pose:"art/avatar/boh-kiss.png",say:"art/voice/tu.mp3",keys:["visiti","napoli"]}
+]},
+{id:"firenze",name:"Firenze",en:"Florence",cover:"art/cities/firenze-duomo.jpg",stops:[
+{who:"io",whoEn:"I",it:"Io sono a Firenze.",en:"I am in Florence.",img:"art/cities/firenze-panorama.jpg",alt:"A daylight view of Florence.",pose:"art/avatar/boh-walk.png",say:"art/voice/firenze-sono.mp3",keys:["sono","firenze"]},
+{who:"io",whoEn:"I",it:"Io vedo il Duomo.",en:"I see the cathedral.",img:"art/cities/firenze-duomo.jpg",alt:"The Duomo of Florence, with the bell tower.",pose:"art/avatar/boh-point.png",say:"art/voice/firenze-duomo.mp3",keys:["vedo","duomo"]},
+{who:"io",whoEn:"I",it:"Io vedo il ponte.",en:"I see the bridge.",img:"art/cities/firenze-ponte-vecchio.jpg",alt:"The Ponte Vecchio bridge in Florence.",pose:"art/avatar/boh-point.png",say:"art/voice/firenze-ponte.mp3",keys:["vedo","ponte"]},
+{who:"tu",whoEn:"you",it:"Tu vedi Firenze.",en:"You see Florence.",img:"art/cities/firenze-signoria.jpg",alt:"Piazza della Signoria in Florence.",pose:"art/avatar/boh-wave.png",say:"art/voice/firenze-tu.mp3",keys:["vedi","firenze"]}
+]},
+{id:"venezia",name:"Venezia",en:"Venice",cover:"art/cities/venezia-canal-grande.jpg",stops:[
+{who:"io",whoEn:"I",it:"Io vedo il canale.",en:"I see the canal.",img:"art/cities/venezia-canal-grande.jpg",alt:"The Grand Canal in Venice, in daylight.",pose:"art/avatar/boh-point.png",say:"art/voice/venezia-canale.mp3",keys:["vedo","canale"]},
+{who:"io",whoEn:"I",it:"Io vedo Rialto.",en:"I see the Rialto bridge.",img:"art/cities/venezia-rialto.jpg",alt:"The Rialto Bridge over the Grand Canal.",pose:"art/avatar/boh-point.png",say:"art/voice/venezia-rialto.mp3",keys:["vedo","rialto"]},
+{who:"io",whoEn:"I",it:"Io sono a Venezia.",en:"I am in Venice.",img:"art/cities/venezia-san-marco.jpg",alt:"St. Mark's Basilica in Venice.",pose:"art/avatar/boh-walk.png",say:"art/voice/venezia-sono.mp3",keys:["sono","venezia"]},
+{who:"tu",whoEn:"you",it:"Tu visiti Venezia.",en:"You visit Venice.",img:"art/cities/venezia-san-marco-piazza.jpg",alt:"St. Mark's Square in Venice.",pose:"art/avatar/boh-kiss.png",say:"art/voice/venezia-tu.mp3",keys:["visiti","venezia"]}
+]},
+{id:"torino",name:"Torino",en:"Turin",cover:"art/cities/torino-piazza-san-carlo.jpg",stops:[
+{who:"io",whoEn:"I",it:"Io vedo la piazza.",en:"I see the town square.",img:"art/cities/torino-piazza-san-carlo.jpg",alt:"Piazza San Carlo in Turin.",pose:"art/avatar/boh-point.png",say:"art/voice/torino-piazza.mp3",keys:["vedo","piazza"]},
+{who:"io",whoEn:"I",it:"Io vedo il museo.",en:"I see the museum.",img:"art/cities/torino-museo-egizio.jpg",alt:"The Egyptian Museum in Turin, with statues by the door.",pose:"art/avatar/boh-point.png",say:"art/voice/torino-museo.mp3",keys:["vedo","museo"]},
+{who:"tu",whoEn:"you",it:"Tu sei a Torino.",en:"You are in Turin.",img:"art/cities/torino-via-roma.jpg",alt:"Via Roma, a main street in Turin.",pose:"art/avatar/boh-wave.png",say:"art/voice/torino-tu.mp3",keys:["sei","torino"]},
+{who:"io",whoEn:"I",it:"Io sono a Torino.",en:"I am in Turin.",img:"art/cities/torino-piazza-castello.jpg",alt:"Piazza Castello in Turin.",pose:"art/avatar/boh-walk.png",say:"art/voice/torino-sono.mp3",keys:["sono","torino"]}
+]}
 ];
-var view=document.getElementById("view"), muted=false, i=-1, voice=null, mine=null;
-var phase="idle", heard="", mark="", takeUrl="", recog=null, rec=null, mic=null, timer=null, chunks=[], session=0, heardHer=false;
+var view=document.getElementById("view"), muted=false, ci=-1, i=-1, voice=null, mine=null;
+var phase="idle", heard="", mark="", takeUrl="", recog=null, rec=null, mic=null, timer=null, chunks=[], session=0, heardHer=false, arrive=false;
+var studentName="", classCode="", sid="", conn=null, peer=null, linked=false, showEn=false;
+var log={};
+function list(){ return ci<0?[]:CITIES[ci].stops; }
+function cur(){ return list()[i]; }
+try{ log=JSON.parse(sessionStorage.getItem("auraLog")||"{}")||{}; }catch(e){ log={}; }
+sid=sessionStorage.getItem("auraSid")||"";
+if(!sid){ sid=Math.random().toString(36).slice(2,8); sessionStorage.setItem("auraSid", sid); }
+showEn=sessionStorage.getItem("auraEn")==="1";
 
 function fold(s){
   return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z\s]/g," ").replace(/\s+/g," ").trim();
@@ -150,10 +207,49 @@ function clearTake(){
   phase="idle"; heard=""; mark=""; chunks=[]; heardHer=false;
 }
 function poseNow(stop){
+  if(arrive) return "art/avatar/boh-walk.png";
   if(phase==="listen") return "art/avatar/boh-please.png";
   if(mark==="bene"||mark==="saved") return "art/avatar/boh-ok.png";
   if(mark==="quasi"||mark==="again"||mark==="missed"||mark==="blocked") return "art/avatar/boh-huh.png";
   return stop.pose;
+}
+function motionClass(pose){
+  if(arrive) return "arrive";
+  if(phase!=="listen" && !mark && /boh-walk/.test(pose)) return "stepping";
+  return "";
+}
+function saidCount(c){
+  var rows=log[c.id]||[], n=0, k;
+  for(k=0;k<c.stops.length;k++) if(rows[k] && rows[k].mark && rows[k].mark!=="started") n++;
+  return n;
+}
+function remember(kind){
+  if(ci<0||i<0) return;
+  var c=CITIES[ci], s=c.stops[i];
+  if(!log[c.id]) log[c.id]=[];
+  log[c.id][i]={it:s.it, en:s.en, mark:kind||mark||"started", heard:heard||""};
+  try{ sessionStorage.setItem("auraLog", JSON.stringify(log)); }catch(e){}
+  sendTeacher();
+}
+function packLog(){
+  try{ return "WALK1."+btoa(unescape(encodeURIComponent(JSON.stringify({name:studentName||"Student", stops:log})))); }
+  catch(e){ return ""; }
+}
+function teacherId(code){ return "aurawalk-"+String(code||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
+function sendTeacher(){
+  if(!conn||!conn.open) return;
+  try{ conn.send({type:"update", id:sid, name:studentName||"Student", stops:log}); }catch(e){}
+}
+function connectTeacher(){
+  if(!window.Peer||!classCode||!studentName) return;
+  try{ if(peer) peer.destroy(); }catch(e){}
+  peer=new Peer(teacherId(classCode)+"-s-"+sid, {debug:0});
+  peer.on("open", function(){
+    conn=peer.connect(teacherId(classCode));
+    conn.on("open", function(){ linked=true; sendTeacher(); });
+    conn.on("close", function(){ linked=false; });
+  });
+  peer.on("error", function(){ linked=false; });
 }
 function caption(){
   if(phase==="listen") return "Boh is listening.";
@@ -174,7 +270,7 @@ function hearBoh(){
   var cap=document.getElementById("cap");
   if(bub) bub.classList.add("speaking");
   if(cap) cap.textContent="Listen.";
-  say(STOPS[i].say);
+  say(cur().say);
   if(voice) voice.onended=function(){
     if(bub) bub.classList.remove("speaking");
     if(cap) cap.textContent="Now say it back.";
@@ -187,13 +283,39 @@ document.getElementById("muteBtn").onclick=function(){
 document.getElementById("bigBtn").onclick=function(){
   this.setAttribute("aria-pressed",document.body.classList.toggle("big"));
 };
+function applyEn(){
+  document.body.classList.toggle("en", showEn);
+  var b=document.getElementById("engBtn");
+  if(!b) return;
+  b.setAttribute("aria-pressed", showEn?"true":"false");
+  b.setAttribute("aria-label", showEn?"Hide English":"Show English");
+}
+document.getElementById("engBtn").onclick=function(){
+  showEn=!showEn;
+  try{ sessionStorage.setItem("auraEn", showEn?"1":"0"); }catch(e){}
+  applyEn();
+};
+applyEn();
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
-function sceneHtml(img, alt, pose, tappable){
+function sceneHtml(img, alt, pose, tappable, motion){
+  var cls=motion||"";
   var fig=tappable
-    ? '<button type="button" class="boh-hit" id="bohBtn" aria-label="Hear Boh"><img src="'+pose+'" alt=""></button>'
-    : '<img class="boh" src="'+pose+'" alt="">';
+    ? '<button type="button" class="boh-hit '+cls+'" id="bohBtn" aria-label="Hear Boh"><img src="'+pose+'" alt=""></button>'
+    : '<img class="boh '+cls+'" src="'+pose+'" alt="">';
   return '<div class="scene"><img class="shot" src="'+img+'" alt="'+esc(alt)+'">'+
     '<div class="ground"></div>'+fig+'</div>';
+}
+function armWalk(el){
+  if(!el) return;
+  el.addEventListener("animationend", function(ev){
+    if(ev.animationName!=="walk-in"||!arrive||!el.isConnected) return;
+    arrive=false;
+    var pose=poseNow(cur());
+    var img=el.querySelector("img")||el;
+    img.src=pose;
+    el.classList.remove("arrive");
+    if(motionClass(pose)==="stepping") el.classList.add("stepping");
+  });
 }
 function resultHtml(){
   if(phase==="listen") return '<p class="result" aria-live="polite">Say the sentence now.</p>';
@@ -205,69 +327,105 @@ function resultHtml(){
   if(mark==="blocked") return '<p class="result again" aria-live="polite">The mic is off. Allow the microphone, then tap Say it.</p>';
   return '<p class="result" aria-live="polite"></p>';
 }
+function enterCities(){
+  studentName=(document.getElementById("name").value||"").trim();
+  classCode=(document.getElementById("code").value||"").trim().toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
+  if(classCode && !studentName){ document.getElementById("need").hidden=false; return; }
+  try{
+    sessionStorage.setItem("auraName", studentName);
+    sessionStorage.setItem("auraCode", classCode);
+  }catch(e){}
+  if(classCode && studentName) connectTeacher();
+  cities();
+}
 function start(){
-  clearTake(); hush(); i=-1;
+  clearTake(); hush(); ci=-1; i=-1;
+  var savedName="", savedCode="";
+  try{
+    savedName=sessionStorage.getItem("auraName")||"";
+    savedCode=(new URLSearchParams(location.search).get("code")||sessionStorage.getItem("auraCode")||"").toUpperCase();
+  }catch(e){}
   view.innerHTML=
     '<div class="start">'+
-    sceneHtml("art/cities/napoli-castel-ovo.jpg","Castel dell'Ovo on the Gulf of Naples.","art/avatar/boh-wave.png",true)+
+    sceneHtml("art/cities/roma-colosseo.jpg","The Colosseum in Rome.","art/avatar/boh-walk.png",true,"stepping")+
     '<h1>Da Boh a Lo So!</h1>'+
-    '<p class="en">From “I don’t know” to “I know.”</p>'+
-    '<p class="lead">Boh strolls through Napoli. You say each sentence with her. The app records you and checks the words.</p>'+
-    '<ul class="steps">'+
-    '<li>1. Tap Boh and listen.</li>'+
-    '<li>2. Tap Say it and speak the sentence. She answers.</li>'+
-    '<li>3. Use the same sentences in your town book. <span lang="it">Io sono. Io vedo. Io ho. Io mangio. Tu…</span></li>'+
-    '</ul>'+
-    '<button type="button" class="teal" id="go">Start</button></div>';
-  document.getElementById("go").onclick=function(){ i=0; show(); };
+    '<p class="lead">Boh walks through five cities. You say each sentence. Tap En, or rest on the words, to see English.</p>'+
+    '<label class="field">First name<input id="name" autocomplete="given-name" maxlength="24" value="'+esc(savedName)+'"></label>'+
+    '<label class="field">Class code<input id="code" maxlength="6" autocapitalize="characters" value="'+esc(savedCode)+'" placeholder="From your teacher"></label>'+
+    '<p class="need" id="need" hidden>Type your first name so your teacher can see you.</p>'+
+    '<button type="button" class="teal" id="go">Pick a city</button>'+
+    '<a class="teacher-link" href="teacher.html">Teacher page</a></div>';
+  document.getElementById("go").onclick=enterCities;
   var hello=document.getElementById("bohBtn");
-  if(hello){ hello.setAttribute("aria-label","Start with Boh"); hello.onclick=function(){ i=0; show(); }; }
+  if(hello) hello.onclick=enterCities;
+}
+function cities(){
+  clearTake(); hush(); ci=-1; i=-1;
+  var cards="", n, c, got;
+  for(n=0;n<CITIES.length;n++){
+    c=CITIES[n]; got=saidCount(c);
+    cards+='<button type="button" class="city" data-n="'+n+'"><img src="'+c.cover+'" alt="">'+
+      '<span><b lang="it">'+c.name+'</b><span class="en">'+esc(c.en)+'</span>'+
+      '<span class="cap">'+(got?got+"/"+c.stops.length+" said":"Walk here")+'</span></span></button>';
+  }
+  view.innerHTML='<div class="start"><h1>Pick a city</h1><p class="lead">Each city uses different words.</p><div class="cities">'+cards+'</div></div>';
+  view.querySelectorAll(".city").forEach(function(btn){
+    btn.onclick=function(){ ci=+btn.getAttribute("data-n"); i=0; show(); };
+  });
 }
 function done(){
   clearTake(); hush();
+  var c=CITIES[ci], lines="", k, row;
+  for(k=0;k<c.stops.length;k++){
+    row=(log[c.id]||[])[k];
+    lines+='<li lang="it">'+esc(c.stops[k].it)+'<small class="en">'+esc(c.stops[k].en)+(row&&row.mark&&row.mark!=="started"?" · "+row.mark:"")+'</small></li>';
+  }
+  var note=linked?"Your teacher can see this.":(classCode?"The teacher page did not connect. Copy this and paste it on the teacher page.":"Next time, use a class code from the teacher page.");
   view.innerHTML=
     '<div class="done">'+
-    sceneHtml("art/cities/napoli-vesuvio-bay.jpg","Mount Vesuvius across the bay of Naples.","art/avatar/boh-wave.png")+
-    '<h1>You said them.</h1>'+
-    '<p class="lead">Next, open your town book. The town speaks with these sentences. Write one on the next page.</p>'+
-    '<ul class="book">'+
-    '<li lang="it">Io sono… <small lang="en">I am…</small></li>'+
-    '<li lang="it">Io vedo… <small lang="en">I see…</small></li>'+
-    '<li lang="it">Io ho… <small lang="en">I have…</small></li>'+
-    '<li lang="it">Io mangio… <small lang="en">I eat…</small></li>'+
-    '<li lang="it">Tu… <small lang="en">You…</small></li>'+
-    '</ul>'+
-    '<button type="button" class="teal" id="again">Walk again</button></div>';
-  document.getElementById("again").onclick=start;
+    sceneHtml(c.cover,c.name,"art/avatar/boh-walk.png",false,"stepping")+
+    '<h1 lang="it">'+esc(c.name)+'</h1>'+
+    '<p class="lead">'+esc(note)+' Write one of these sentences in the town book.</p>'+
+    '<ul class="book">'+lines+'</ul>'+
+    (linked?"":'<button type="button" class="plain" id="copy">Copy for teacher</button>')+
+    '<button type="button" class="teal" id="again">All cities</button></div>';
+  var copy=document.getElementById("copy");
+  if(copy) copy.onclick=function(){
+    var text=packLog();
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(function(){});
+    copy.textContent="Copied";
+  };
+  document.getElementById("again").onclick=cities;
 }
 function show(){
   clearTake();
+  arrive=true;
   paint();
+  remember("started");
   var bub=document.getElementById("bubble");
   var cap=document.getElementById("cap");
   if(bub) bub.classList.add("speaking");
   if(cap) cap.textContent="Listen.";
-  say(STOPS[i].say);
+  say(cur().say);
   if(voice) voice.onended=function(){
-    if(bub) bub.classList.remove("speaking");
+    if(bub&&bub.isConnected) bub.classList.remove("speaking");
     heardHer=true;
-    if(cap) cap.textContent="Now say it back.";
+    if(cap&&cap.isConnected) cap.textContent="Now say it back.";
   };
 }
 function paint(){
-  var s=STOPS[i], dots="", k;
-  for(k=0;k<STOPS.length;k++) dots+='<i class="'+(k<i?"done":k===i?"now":"")+'"></i>';
+  var s=cur(), dots="", k, pose=poseNow(s);
+  for(k=0;k<list().length;k++) dots+='<i class="'+(k<i?"done":k===i?"now":"")+'"></i>';
   var sayLabel=phase==="listen"?"Stop":(mark==="quasi"||mark==="again"||mark==="missed"?"Say it again":"Say it");
   view.innerHTML=
-    '<div class="progress" aria-label="Stop '+(i+1)+' of '+STOPS.length+'"><b>'+(i+1)+' / '+STOPS.length+'</b><div class="dots" aria-hidden="true">'+dots+'</div></div>'+
+    '<div class="progress" aria-label="Stop '+(i+1)+' of '+list().length+'"><b>'+(i+1)+' / '+list().length+'</b><div class="dots" aria-hidden="true">'+dots+'</div></div>'+
     '<div class="stage">'+
     '<div class="bubble'+(phase==="listen"?" speaking":"")+'" id="bubble">'+
-    '<p class="it" lang="it">'+s.it+'</p><p class="cap" id="cap">'+esc(caption())+'</p></div>'+
-    sceneHtml(s.img,s.alt,poseNow(s),true)+
+    '<p class="it" lang="it">'+s.it+'</p><p class="en" lang="en">'+esc(s.en)+'</p><p class="cap" id="cap">'+esc(caption())+'</p></div>'+
+    sceneHtml(s.img,s.alt,pose,true,motionClass(pose))+
     '</div>'+
     '<div class="panel">'+
     '<p class="who" lang="it">'+s.who+' = <span lang="en">'+s.whoEn+'</span></p>'+
-    '<p class="en" lang="en">'+s.en+'</p>'+
     resultHtml()+
     '</div>'+
     '<div class="dock">'+
@@ -277,14 +435,15 @@ function paint(){
     '<button type="button" class="teal" id="sayBtn">'+sayLabel+'</button>'+
     '</div>'+
     '<div class="row">'+
-    '<button type="button" class="plain" id="back">'+(i===0?"Start":"Back")+'</button>'+
-    '<button type="button" class="plain" id="next">'+(i===STOPS.length-1?"Finish":"Next place")+'</button>'+
+    '<button type="button" class="plain" id="back">'+(i===0?"Cities":"Back")+'</button>'+
+    '<button type="button" class="plain" id="next">'+(i===list().length-1?"Finish":"Next place")+'</button>'+
     '</div></div>';
+  armWalk(document.getElementById("bohBtn"));
   document.getElementById("bohBtn").onclick=hearBoh;
   document.getElementById("hear").onclick=hearBoh;
   document.getElementById("sayBtn").onclick=function(){ if(phase==="listen") stopListen(); else beginListen(); };
-  document.getElementById("back").onclick=function(){ if(i===0) start(); else { i--; show(); } };
-  document.getElementById("next").onclick=function(){ if(i===STOPS.length-1) done(); else { i++; show(); } };
+  document.getElementById("back").onclick=function(){ if(i===0) cities(); else { i--; show(); } };
+  document.getElementById("next").onclick=function(){ if(i===list().length-1) done(); else { i++; show(); } };
   var playMe=document.getElementById("playMe");
   if(playMe) playMe.onclick=function(){
     if(!takeUrl||muted) return;
@@ -294,6 +453,7 @@ function paint(){
   };
 }
 function beginListen(){
+  arrive=false;
   hush(); hushMine();
   var my=++session;
   var SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -309,6 +469,7 @@ function beginListen(){
     phase="done";
     if(!mark) mark=(window.SpeechRecognition||window.webkitSpeechRecognition)?"missed":"saved";
     paint();
+    remember();
   }
   if(SpeechRec){
     recog=new SpeechRec();
@@ -319,7 +480,7 @@ function beginListen(){
     recog.onresult=function(ev){
       var alts=[], j, res=ev.results[ev.results.length-1];
       for(j=0;j<res.length;j++) alts.push(res[j].transcript);
-      var judged=judge(STOPS[i], alts);
+      var judged=judge(cur(), alts);
       mark=judged.mark; heard=judged.heard;
       stopListen();
     };
@@ -377,6 +538,7 @@ function stopListen(){
     phase="done";
     if(!mark) mark="missed";
     paint();
+    remember();
   }
 }
 start();

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f1e6">
+<title>Da Boh a Lo So! · Teacher</title>
+<style>
+:root{--bg:#f6f1e6;--card:#fffaf2;--ink:#1c1915;--teal:#0f766e;--line:#e4d8c4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-rounded,"Avenir Next","Segoe UI",system-ui,sans-serif;line-height:1.35}
+button,input,textarea{font:inherit;color:var(--ink)}
+header{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px 20px;border-bottom:2px solid var(--line)}
+h1{margin:0;font-size:1.4rem}
+a{color:var(--teal);font-weight:800}
+main{max-width:980px;margin:0 auto;padding:16px 16px 40px;display:grid;gap:14px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:16px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{min-height:48px;border-radius:14px;border:2px solid var(--ink);background:var(--card);font-weight:900;padding:8px 14px;cursor:pointer}
+button.teal{background:var(--teal);color:#fff;border-color:var(--teal)}
+.code{font-size:2.6rem;font-weight:900;letter-spacing:.18em;text-align:center;margin:8px 0}
+.muted{font-weight:700;color:var(--ink)}
+.kid{border:2px solid var(--line);border-radius:16px;padding:12px;margin-top:10px;background:#fff}
+.kid h2{margin:0 0 6px;font-size:1.2rem}
+.city{margin:8px 0}
+.city b{font-size:1.05rem}
+ul{margin:4px 0 0;padding:0;list-style:none}
+li{font-weight:800;padding:3px 0}
+.ok{color:var(--teal)}
+.wait{color:#6b6258}
+textarea{width:100%;min-height:72px;border-radius:12px;border:2px solid var(--ink);padding:8px;font-weight:700}
+label{font-weight:800;display:grid;gap:4px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Teacher · Da Boh a Lo So!</h1>
+  <a href="walk.html">Student walk</a>
+</header>
+<main>
+  <section class="card">
+    <p class="muted">Leave this page open on your computer. Students type the code on the walk page. You will see each sentence they say.</p>
+    <div class="row" style="margin-top:10px">
+      <button type="button" class="teal" id="make">Make a class code</button>
+      <button type="button" id="reopen">Reopen last code</button>
+    </div>
+    <div id="live" hidden>
+      <div class="code" id="code"></div>
+      <p class="muted" id="join"></p>
+    </div>
+  </section>
+  <section class="card">
+    <h2>Who did it</h2>
+    <div id="roster"><p class="muted">No students yet.</p></div>
+    <div class="row" style="margin-top:10px">
+      <button type="button" id="copy">Copy results</button>
+    </div>
+  </section>
+  <section class="card">
+    <label>Paste a student code if the live list did not connect
+      <textarea id="paste" placeholder="WALK1...."></textarea>
+    </label>
+    <button type="button" id="import" style="margin-top:8px">Add this student</button>
+  </section>
+</main>
+<script src="vendor/peerjs.min.js"></script>
+<script>
+var KEY="aura-teacher";
+var students={}, peer=null, code="";
+function teacherId(c){ return "aurawalk-"+String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
+function makeCode(){
+  var chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", out="", i;
+  for(i=0;i<4;i++) out+=chars.charAt(Math.floor(Math.random()*chars.length));
+  return out;
+}
+function rank(m){ return {bene:3,quasi:2,saved:2,again:1,missed:1,started:0}[m]||0; }
+function cityNames(stops){
+  var names=[], id;
+  for(id in stops) if(stops.hasOwnProperty(id)) names.push(id);
+  return names;
+}
+function takeUpdate(msg){
+  if(!msg||!msg.id) return;
+  var prev=students[msg.id]||{id:msg.id, name:msg.name||"Student", stops:{}};
+  prev.name=msg.name||prev.name;
+  prev.stops=msg.stops||prev.stops;
+  prev.seen=Date.now();
+  students[msg.id]=prev;
+  try{ localStorage.setItem(KEY, JSON.stringify({code:code, students:students})); }catch(e){}
+  render();
+}
+function render(){
+  var box=document.getElementById("roster"), html="", id, kid, cities, c, rows, i, row, good, total;
+  var ids=Object.keys(students);
+  if(!ids.length){ box.innerHTML='<p class="muted">No students yet.</p>'; return; }
+  ids.sort(function(a,b){ return (students[a].name||"").localeCompare(students[b].name||""); });
+  for(id of ids){
+    kid=students[id];
+    html+='<article class="kid"><h2>'+esc(kid.name)+'</h2>';
+    cities=cityNames(kid.stops||{});
+    if(!cities.length) html+='<p class="muted">Joined. No city yet.</p>';
+    cities.forEach(function(cid){
+      rows=kid.stops[cid]||[];
+      good=0; total=0;
+      rows.forEach(function(r){ if(!r) return; total++; if(rank(r.mark)>=2) good++; });
+      html+='<div class="city"><b lang="it">'+esc(cid)+'</b> <span class="'+(good&&good===total?"ok":"wait")+'">'+good+" ready"+'</span><ul>';
+      for(i=0;i<rows.length;i++){
+        row=rows[i]; if(!row) continue;
+        html+='<li><span lang="it">'+esc(row.it)+'</span> <span class="'+(rank(row.mark)>=2?"ok":"wait")+'">'+esc(row.mark||"")+'</span></li>';
+      }
+      html+='</ul></div>';
+    });
+    html+='</article>';
+  }
+  box.innerHTML=html;
+}
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function showCode(c){
+  code=c;
+  document.getElementById("live").hidden=false;
+  document.getElementById("code").textContent=c;
+  var link=location.href.replace(/teacher\.html.*$/,"walk.html?code="+c);
+  document.getElementById("join").innerHTML='Students open the walk and type <b>'+c+'</b>. Or share <a href="'+link+'">'+link+'</a>';
+}
+function host(c){
+  showCode(c);
+  try{ if(peer) peer.destroy(); }catch(e){}
+  if(!window.Peer){ document.getElementById("join").textContent="Live list could not start. Students can still copy a code at the end of a city."; return; }
+  peer=new Peer(teacherId(c), {debug:0});
+  peer.on("connection", function(conn){
+    conn.on("data", function(msg){ if(msg&&msg.type==="update") takeUpdate(msg); });
+  });
+  peer.on("error", function(){
+    document.getElementById("join").textContent="Live list hit a problem. Leave this page open, or paste a student code below.";
+  });
+  try{ localStorage.setItem(KEY, JSON.stringify({code:code, students:students})); }catch(e){}
+}
+document.getElementById("make").onclick=function(){ students={}; host(makeCode()); };
+document.getElementById("reopen").onclick=function(){
+  var saved=null;
+  try{ saved=JSON.parse(localStorage.getItem(KEY)||"null"); }catch(e){}
+  if(!saved||!saved.code) return;
+  students=saved.students||{};
+  host(saved.code);
+  render();
+};
+document.getElementById("copy").onclick=function(){
+  var lines=["Name,City,Sentence,English,Result,Heard"], id, kid, cid, rows, i, r;
+  for(id in students){
+    kid=students[id];
+    for(cid in (kid.stops||{})){
+      rows=kid.stops[cid]||[];
+      for(i=0;i<rows.length;i++){
+        r=rows[i]; if(!r) continue;
+        lines.push([kid.name,cid,r.it,r.en,r.mark,r.heard].map(function(v){
+          v=String(v==null?"":v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;
+        }).join(","));
+      }
+    }
+  }
+  var text=lines.join("\n");
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(function(){});
+  this.textContent="Copied";
+};
+document.getElementById("import").onclick=function(){
+  var raw=(document.getElementById("paste").value||"").trim(), data=null;
+  try{
+    if(raw.indexOf("WALK1.")===0) data=JSON.parse(decodeURIComponent(escape(atob(raw.slice(6)))));
+  }catch(e){ data=null; }
+  if(!data){ this.textContent="Could not read that"; return; }
+  takeUpdate({id:"paste-"+Date.now(), name:data.name||"Student", stops:data.stops||{}});
+  this.textContent="Added";
+};
+try{
+  var saved=JSON.parse(localStorage.getItem(KEY)||"null");
+  if(saved&&saved.students) students=saved.students;
+  render();
+}catch(e){}
+</script>
+</body>
+</html>
