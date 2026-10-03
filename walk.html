@@ -40,6 +40,7 @@ header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-betwe
 .bubble.speaking:after{border-color:transparent var(--teal) var(--teal) transparent}
 .bubble .it{font-size:clamp(1.45rem,6vw,2.1rem)}
 .cap{margin:2px 0 0;font-weight:800;font-size:1rem}
+.cap.won{color:var(--teal);font-size:1.35rem}
 .panel{flex:0 1 auto;min-height:0;overflow:auto;background:var(--card);border:2px solid var(--line);border-radius:22px;padding:10px 12px 12px;text-align:center}
 .who{margin:0 auto 4px;display:inline-block;padding:2px 14px;border:2px solid var(--teal);border-radius:99px;font-weight:900;font-size:1.05rem}
 .it{margin:0;font-weight:900;font-size:clamp(1.7rem,7vw,2.45rem);line-height:1.15}
@@ -137,7 +138,19 @@ body.big .who{font-size:1.2rem}
   .choice{font-size:1.05rem}
 }
 @media (max-width:799px){
-  .panel{max-height:40dvh}
+  .scene{flex:0 0 auto;height:min(34dvh,240px);min-height:200px}
+  .scene .boh,.boh-hit{height:78%}
+  .panel{flex:1 1 auto;min-height:0;max-height:none;padding:8px 10px}
+  .choices{gap:6px;margin-top:4px}
+  .choice{min-height:46px;font-size:1.05rem;padding:6px 12px}
+  .who{margin-bottom:2px}
+  .flash{padding:6px}
+  .flash div{padding:4px 12px}
+  .flash b{font-size:1.45rem}
+  .flash small{font-size:1rem}
+}
+@media (max-width:799px) and (max-height:640px){
+  .scene{height:180px;min-height:180px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -419,7 +432,7 @@ function sentenceHtml(){
   return lineHtml(it, false);
 }
 function captionText(){
-  if(locked) return mark==="help"?"Bene! You used help.":"Bene!";
+  if(locked) return mark==="help"?"Bene! You used help.":"Bene! Lo so!";
   if(mode==="fact") return "Rest on the new word. Pick the English.";
   if(round===0) return "Rest on the verb. Pick the English.";
   if(round===1) return "Listen. Pick the Italian.";
@@ -535,7 +548,10 @@ function bindChoices(){
         var solved=document.getElementById("solved");
         if(solved){ solved.hidden=false; solved.textContent=item().en; }
         var cap=document.getElementById("cap");
-        if(cap) cap.textContent=mark==="help"?"Bene! You used help.":"Bene! Lo so!";
+        if(cap){
+          cap.textContent=mark==="help"?"Bene! You used help.":"Bene! Lo so!";
+          cap.classList.add("won");
+        }
         var hit=document.getElementById("bohBtn");
         if(hit){
           hit.classList.remove("arrive","stepping");
@@ -574,7 +590,7 @@ function paint(){
   view.innerHTML=
     '<div class="progress" aria-label="'+esc(label)+'"><b>'+esc(label)+'</b><div class="dots" aria-hidden="true">'+dots+'</div></div>'+
     '<div class="layout">'+
-    '<div class="bubble" id="bubble"><p class="it" lang="it">'+sentenceHtml()+'</p><p class="cap" id="cap" aria-live="polite">'+esc(captionText())+"</p></div>"+
+    '<div class="bubble" id="bubble"><p class="it" lang="it">'+sentenceHtml()+'</p><p class="cap'+(locked?" won":"")+'" id="cap" aria-live="polite">'+esc(captionText())+"</p></div>"+
     sceneHtml(item().img, item().alt, pose, true, motionClass(pose), cheerHtml())+
     '<div class="panel">'+whoHtml()+choicesHtml()+helpHtml()+"</div>"+
     '<div class="dock">'+
