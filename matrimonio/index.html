@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Il Matrimonio · Scena 1</title>
+<style>
+:root{--bg:#f6f1e6;--ink:#1c1915;--teal:#0f766e;--tealD:#0b5a54;--card:#fffdf8;--line:#d9cfbd;--soft:#efe6d3;--fs:18px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:var(--fs);line-height:1.45}
+body.proj{--fs:26px}
+button{font:inherit;color:inherit;cursor:pointer;border-radius:14px;min-height:48px;padding:.55em 1em;border:2px solid var(--ink);background:var(--card);font-weight:650;transition:transform .08s}
+button:active{transform:scale(.97)}
+button:focus-visible{outline:4px solid var(--teal);outline-offset:3px}
+button.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+button.primary:hover{background:var(--tealD)}
+button[disabled]{opacity:.5;cursor:not-allowed}
+header{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;border-bottom:2px solid var(--line)}
+header h1{margin:0;font-size:1.35em}
+header h1 span{color:var(--teal)}
+.tools{display:flex;gap:.5rem;flex-wrap:wrap}
+.tools button{min-height:44px;font-size:.85em}
+.tools button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+nav.steps{display:flex;gap:.4rem;flex-wrap:wrap;padding:.8rem 1.2rem 0}
+nav.steps button{font-size:.8em;min-height:44px;border-color:var(--line)}
+nav.steps button.on{border-color:var(--teal);background:var(--teal);color:#fff}
+nav.steps button.done{border-color:var(--teal)}
+main{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.6rem;padding:1.2rem;max-width:1400px;margin:0 auto;align-items:start}
+.phone{width:min(360px,calc((100vh - 13rem)*9/16));min-width:200px;aspect-ratio:9/16;border-radius:34px;border:10px solid var(--ink);background:#000;overflow:hidden;position:relative;box-shadow:0 12px 30px rgba(28,25,21,.25)}
+.phone{position:relative}
+.phone video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
+.phone video.show{opacity:1}
+.cap{position:absolute;left:8px;right:8px;bottom:14px;background:rgba(28,25,21,.88);color:#fff;border-radius:12px;padding:.5em .7em;font-size:.95em;font-weight:650;text-align:center;display:none}
+.cap small{display:block;font-weight:500;font-size:.8em;margin-top:.2em}
+.count{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:5em;font-weight:800;color:#fff;background:rgba(28,25,21,.55)}
+.rec{position:absolute;top:12px;left:12px;background:var(--card);color:var(--ink);border-radius:999px;padding:.15em .7em;font-size:.8em;font-weight:700;display:none}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:1.3rem 1.5rem;min-width:0}
+.panel h2{margin:.1em 0 .4em;font-size:1.4em}
+.panel p{margin:.4em 0}
+.hide{display:none!important}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin:.8rem 0}
+.line{border:2px solid var(--line);border-radius:16px;padding:.8rem 1rem;margin:.8rem 0;background:var(--bg)}
+.line.ok{border-color:var(--teal)}
+.it{font-size:1.15em;font-weight:700}
+.blank{display:inline-block;min-width:5.5em;border-bottom:3px solid var(--ink);text-align:center;color:var(--teal)}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+.chips button{border-color:var(--teal)}
+.chips button.pick{background:var(--teal);color:#fff}
+.chips button.nope{border-color:var(--line)}
+.fb{margin-top:.6rem;padding:.6rem .8rem;border-radius:12px;background:var(--soft);display:none}
+.fb.show{display:block;animation:wob .5s}
+@keyframes wob{0%{transform:rotate(0)}25%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}100%{transform:rotate(0)}}
+.en{font-size:.9em;margin-top:.3rem}
+.small{font-size:.85em}
+.voices{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;margin:1rem 0}
+.voices button{min-height:90px;font-size:1.05em}
+.voices button.pick{background:var(--teal);color:#fff;border-color:var(--teal)}
+.voices span{display:block;font-size:2em}
+ol.script{padding-left:1.3em}
+ol.script li{margin:.35em 0;padding:.2em .4em;border-radius:8px}
+ol.script li.now{background:var(--teal);color:#fff}
+.note{border-left:6px solid var(--teal);padding:.5rem .9rem;background:var(--soft);border-radius:8px;margin-top:1rem}
+@media (max-width:820px){
+ main{grid-template-columns:1fr;padding:.8rem}
+ .phone{position:relative;top:0;margin:0 auto;width:min(300px,78vw)}
+ header{padding:.6rem .8rem}
+ .panel{padding:1rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+ <h1>Il Matrimonio · <span>Scena 1: L'arrivo</span></h1>
+ <div class="tools">
+  <button id="muteBtn" aria-pressed="false">🔊 Sound on</button>
+  <button id="projBtn" aria-pressed="false">🖥️ Projector mode</button>
+ </div>
+</header>
+<nav class="steps" id="steps"></nav>
+<main>
+ <div class="phone" id="phone">
+  <video id="v0" src="clip1.mp4" muted playsinline preload="auto" class="show"></video>
+  <video id="v1" src="clip2.mp4" muted playsinline preload="auto"></video>
+  <video id="v2" src="clip3.mp4" muted playsinline preload="auto"></video>
+  <div class="rec" id="recTag">● REC</div>
+  <div class="cap" id="cap"></div>
+  <div class="count" id="count"></div>
+ </div>
+
+ <section class="panel" id="p0">
+  <h2>1 · Watch the episode</h2>
+  <p>Welcome to the <b>Palazzo delle Meraviglie</b>, the most <b>pacchiano</b> (tacky) wedding palace in Naples. Don Ciro, <b>il Re dei Matrimoni</b>, is waiting for Sharon and Gennaro…</p>
+  <p>Watch the scene with the model dub. Tap <b>Show English</b> if you need it.</p>
+  <div class="row">
+   <button class="primary" id="watchBtn">▶ Play with model dub</button>
+   <button id="enBtn" aria-pressed="false">Show English</button>
+  </div>
+  <p class="small" id="voiceNote"></p>
+  <div class="row"><button class="primary" data-go="1">Next: build your lines →</button></div>
+ </section>
+
+ <section class="panel hide" id="p1">
+  <h2>2 · Build your lines</h2>
+  <p>Pick the word that fits. <b>Hint:</b> describing the scene (what <b>was</b> going on) or something that <b>happened</b>?</p>
+  <div id="lines"></div>
+  <div class="row"><button class="primary" id="toVoice" disabled data-go="2">Next: pick a voice →</button></div>
+  <p class="small" id="leftNote">Finish all 5 lines to continue.</p>
+ </section>
+
+ <section class="panel hide" id="p2">
+  <h2>3 · Pick your voice</h2>
+  <p>This is just for fun on playback. Your teacher gets your normal voice.</p>
+  <div class="voices" id="voices"></div>
+  <div class="row"><button class="primary" data-go="3">Next: record →</button></div>
+ </section>
+
+ <section class="panel hide" id="p3">
+  <h2>4 · Record your dub</h2>
+  <p>The scene plays silently. Read each line when it lights up. Redo as many times as you like.</p>
+  <ol class="script" id="script"></ol>
+  <div class="row">
+   <button class="primary" id="recBtn">🎙️ Start recording</button>
+   <button id="stopBtn" class="hide">■ Stop</button>
+  </div>
+  <p class="small" id="recMsg"></p>
+  <div class="row"><button class="primary hide" id="toPlay" data-go="4">Next: watch your dub →</button></div>
+ </section>
+
+ <section class="panel hide" id="p4">
+  <h2>5 · Watch your dub &amp; turn it in</h2>
+  <div class="row">
+   <button class="primary" id="playBtn">▶ Play my dub</button>
+   <button data-go="2">Change voice</button>
+   <button data-go="3">Redo recording</button>
+  </div>
+  <p>Your voice: <b id="voiceName"></b></p>
+  <div class="row"><button class="primary" id="dlBtn">⬇ Download scena-01</button></div>
+  <p class="small">The download is your normal voice (no filter, no name). Turn in the file where your teacher tells you.</p>
+  <div class="note"><b>Coming in the full version:</b> 10 scenes, one per student (the dress, the ring, a seagull, the late singer, the cake, the ex, Nonna's secret, the cat, the finale). Your teacher joins all 10 dubs into one episode for the class premiere.</div>
+ </section>
+</main>
+
+<script>
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const TOTAL=28; // 3 clips x 8 s + 4 s hold on the last frame
+const LINES=[
+ {pre:"Era sabato e il Palazzo",post:"di glitter.",en:"It was Saturday and the Palazzo sparkled with glitter.",t:[0.6,7.4],
+  chips:[["brillava",1,""],["ha brillato",0,"This describes the scene in the background, not one event. Use imperfetto: brillava."]]},
+ {pre:"Don Ciro",post:"alla porta.",en:"Don Ciro was waiting at the door.",t:[8.6,15.4],
+  chips:[["ha aspettato",0,"He was in the middle of waiting when the story starts. That's background, so use imperfetto: aspettava."],["aspettava",1,""]]},
+ {pre:"Gli sposi",post:"in una limousine rosa.",en:"The bride and groom arrived in a pink limousine.",t:[16.2,20],
+  chips:[["arrivavano",0,"They arrived once, at one moment. That's an event, so use passato prossimo: sono arrivati."],["sono arrivati",1,""],["sono arrivate",0,"Close! Gli sposi is a man and a woman, so the ending is masculine plural: arrivati."]]},
+ {pre:"Poi Sharon",post:"!",en:"Then Sharon screamed!",t:[20.2,23.4],
+  chips:[["ha urlato",1,""],["urlava",0,"\"Poi\" (then) means a sudden event. Use passato prossimo: ha urlato."]]},
+ {pre:"Mamma mia,",post:"",en:"Oh my gosh, …",t:[23.8,27.6],free:1,
+  chips:[["c'è un problema!",1,"","there's a problem!"],["che cosa succede?",1,"","what's happening?"],["non è possibile!",1,"","it's not possible!"]]}
+];
+const MODEL=["brillava","aspettava","sono arrivati","ha urlato","c'è un problema!"];
+const picks=[null,null,null,null,null];
+const VOICES=[["Normale","🙂"],["Chipmunk","🐿️"],["Mostro","👹"],["Robot","🤖"]];
+let voice=LS.get("mat_voice")||"Normale", muted=LS.get("mat_mute")==="1", showEn=false;
+const $=s=>document.querySelector(s);
+const vids=[$("#v0"),$("#v1"),$("#v2")];
+let AC=null; function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC}
+
+// UI sounds
+function tone(seq){if(muted)return;try{const c=ac();let t=c.currentTime;seq.forEach(([f,d,type])=>{const o=c.createOscillator(),g=c.createGain();o.type=type||"triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.18,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.02);t+=d*.8})}catch(e){}}
+const snd={tap:()=>tone([[660,.08]]),ok:()=>tone([[523,.1],[659,.1],[784,.18]]),huh:()=>tone([[300,.14,"sine"],[240,.22,"sine"]]),go:()=>tone([[440,.08],[880,.14]])};
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!b.dataset.silent)snd.tap()},true);
+
+// speech
+let itVoice=null;
+function pickVoice(){const vs=speechSynthesis.getVoices();itVoice=vs.find(v=>/^it/i.test(v.lang)&&/google/i.test(v.name))||vs.find(v=>/^it/i.test(v.lang))||null;
+ $("#voiceNote").textContent=itVoice?"Model voice: "+itVoice.name:(vs.length?"No Italian voice on this device, so the model dub uses the default voice. Captions show every line.":"")}
+if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}else $("#voiceNote").textContent="This browser has no speech voice. Read the captions instead.";
+function say(txt,rate){if(muted||!("speechSynthesis" in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang="it-IT";if(itVoice)u.voice=itVoice;u.rate=rate||.95;speechSynthesis.speak(u)}
+function full(i,w){const L=LINES[i];return (L.pre+" "+w+(L.post?" "+L.post:"")).replace(" !","!")}
+
+// timeline player
+let raf=null,startT=0,onEnd=null,cueFn=null;
+function stopPlayer(){cancelAnimationFrame(raf);vids.forEach(v=>v.pause());$("#cap").style.display="none";if("speechSynthesis" in window)speechSynthesis.cancel()}
+function showClip(i){vids.forEach((v,j)=>v.classList.toggle("show",j===i))}
+function play(opts){stopPlayer();vids.forEach(v=>{v.currentTime=0});showClip(0);vids[0].play().catch(()=>{});startT=performance.now();let cur=0,lastCue=-1;
+ const tick=()=>{const t=(performance.now()-startT)/1000;const ci=Math.min(2,Math.floor(t/8));
+  if(ci!==cur){cur=ci;showClip(ci);vids[ci].currentTime=0;vids[ci].play().catch(()=>{})}
+  if(t>=24)vids[2].pause();
+  const li=LINES.findIndex(L=>t>=L.t[0]&&t<L.t[1]);
+  if(li!==lastCue){lastCue=li;opts.cue&&opts.cue(li)}
+  if(t>=TOTAL){stopPlayer();opts.end&&opts.end();return}
+  raf=requestAnimationFrame(tick)};raf=requestAnimationFrame(tick)}
+function caption(it,en){const c=$("#cap");if(!it){c.style.display="none";return}c.innerHTML="";c.append(it);if(en&&showEn){const s=document.createElement("small");s.textContent=en;c.append(s)}c.style.display="block"}
+
+// Watch
+$("#watchBtn").onclick=()=>{snd.go();play({cue:i=>{if(i<0){caption(null);return}caption(full(i,MODEL[i]),LINES[i].en);say(full(i,MODEL[i]))},end:()=>caption(null)})};
+$("#enBtn").onclick=e=>{showEn=!showEn;e.currentTarget.setAttribute("aria-pressed",showEn);e.currentTarget.textContent=showEn?"Hide English":"Show English"};
+
+// Build
+function renderLines(){const box=$("#lines");box.innerHTML="";LINES.forEach((L,i)=>{const d=document.createElement("div");d.className="line"+(picks[i]?" ok":"");
+ const p=document.createElement("div");p.className="it";p.append(L.pre+" ");const b=document.createElement("span");b.className="blank";b.textContent=picks[i]||"???";p.append(b);if(L.post)p.append(" "+L.post);d.append(p);
+ const en=document.createElement("div");en.className="en";en.textContent="English: "+L.en;en.hidden=!picks[i];d.append(en);
+ const ch=document.createElement("div");ch.className="chips";
+ L.chips.forEach(([w,ok,why,gloss])=>{const c=document.createElement("button");c.textContent=w+(gloss?"  ("+gloss+")":"");if(picks[i]===w)c.className="pick";c.dataset.silent=1;
+  c.onclick=()=>{const fb=d.querySelector(".fb");if(ok){picks[i]=w;snd.ok();say(full(i,w));renderLines()}else{snd.huh();c.classList.add("nope");fb.innerHTML="";const h=document.createElement("b");h.textContent="🤨 Don Ciro looks confused… ";fb.append(h,why);fb.classList.remove("show");void fb.offsetWidth;fb.classList.add("show")}};ch.append(c)});
+ const s=document.createElement("button");s.textContent="🔈 Senti";s.title="Hear this line";s.onclick=()=>say(full(i,picks[i]||(L.free?MODEL[i]:MODEL[i])));ch.append(s);
+ d.append(ch);const fb=document.createElement("div");fb.className="fb";fb.setAttribute("role","status");d.append(fb);box.append(d)});
+ const left=picks.filter(x=>!x).length;$("#toVoice").disabled=left>0;$("#leftNote").textContent=left?`Finish all 5 lines to continue (${left} left).`:"All set! Your lines are ready.";renderScript()}
+function renderScript(){const ol=$("#script");ol.innerHTML="";LINES.forEach((L,i)=>{const li=document.createElement("li");li.textContent=full(i,picks[i]||"…");ol.append(li)})}
+
+// Voices
+function renderVoices(){const g=$("#voices");g.innerHTML="";VOICES.forEach(([n,e])=>{const b=document.createElement("button");b.innerHTML=`<span>${e}</span>${n}`;b.setAttribute("aria-pressed",voice===n);if(voice===n)b.className="pick";b.onclick=()=>{voice=n;LS.set("mat_voice",n);renderVoices();previewVoice()};g.append(b)});$("#voiceName").textContent=voice}
+function previewVoice(){if(muted)return;const c=ac();const r={Normale:[1,"sine"],Chipmunk:[1.7,"sine"],Mostro:[.55,"sawtooth"],Robot:[1,"square"]}[voice];tone([[330*r[0],.1,r[1]],[440*r[0],.15,r[1]]])}
+
+// Recording
+let stream=null,mr=null,chunks=[],cleanBlob=null,cleanBuf=null,fxCache={};
+async function startRec(){$("#recMsg").textContent="";
+ try{stream=stream||await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(e){$("#recMsg").textContent="The microphone is blocked. Click the lock icon in the address bar, allow the microphone, and try again.";return}
+ const mime=["audio/webm;codecs=opus","audio/webm","audio/mp4"].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m))||"";
+ $("#recBtn").disabled=true;
+ for(const n of ["3","2","1"]){$("#count").textContent=n;$("#count").style.display="flex";tone([[520,.12]]);await new Promise(r=>setTimeout(r,800))}
+ $("#count").style.display="none";chunks=[];mr=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);mr.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+ mr.onstop=async()=>{cleanBlob=new Blob(chunks,{type:mr.mimeType||"audio/webm"});fxCache={};try{cleanBuf=await ac().decodeAudioData(await cleanBlob.arrayBuffer())}catch(e){cleanBuf=null}
+  $("#recMsg").textContent="Saved! Listen on the next step, or record again.";$("#toPlay").classList.remove("hide");$("#recBtn").textContent="🎙️ Record again";$("#recBtn").disabled=false;$("#stopBtn").classList.add("hide");$("#recTag").style.display="none"};
+ mr.start();$("#recTag").style.display="block";$("#stopBtn").classList.remove("hide");
+ const lis=[...$("#script").children];
+ play({cue:i=>{lis.forEach((l,j)=>l.classList.toggle("now",j===i));caption(i<0?null:full(i,picks[i]))},end:()=>{lis.forEach(l=>l.classList.remove("now"));if(mr&&mr.state==="recording")mr.stop()}})}
+$("#recBtn").onclick=startRec;
+$("#stopBtn").onclick=()=>{stopPlayer();[...$("#script").children].forEach(l=>l.classList.remove("now"));if(mr&&mr.state==="recording")mr.stop()};
+
+// Voice effects (offline, playback only)
+function pitchShift(buf,p){const c=ac(),N=buf.length,inp=buf.getChannelData(0),out=new Float32Array(N),G=2048,H=G/2,w=new Float32Array(G);for(let i=0;i<G;i++)w[i]=.5-.5*Math.cos(2*Math.PI*i/G);
+ for(let s=0;s+G<N;s+=H){for(let i=0;i<G;i++){const x=s+i*p- (p>1?0:0);const j=Math.floor(x),f=x-j;if(j+1>=N)break;out[s+i]+=w[i]*(inp[j]*(1-f)+inp[j+1]*f)}}
+ const b=c.createBuffer(1,N,buf.sampleRate);b.copyToChannel(out,0);return b}
+function fxBuffer(){if(!cleanBuf)return null;if(fxCache[voice])return fxCache[voice];let b=cleanBuf;
+ if(voice==="Chipmunk")b=pitchShift(cleanBuf,1.6);if(voice==="Mostro")b=pitchShift(cleanBuf,.65);return fxCache[voice]=b}
+let src=null;
+function playDub(){const b=fxBuffer();if(!b){$("#voiceName").textContent=voice+" (could not load audio on this browser)";return}
+ const c=ac();if(src)try{src.stop()}catch(e){}src=c.createBufferSource();src.buffer=b;let node=src;
+ if(voice==="Robot"){const g=c.createGain();g.gain.value=0;const o=c.createOscillator();o.frequency.value=55;o.type="square";o.connect(g.gain);o.start();node.connect(g);node=g}
+ if(voice==="Mostro"){const f=c.createBiquadFilter();f.type="lowpass";f.frequency.value=1800;node.connect(f);node=f}
+ const out=c.createGain();out.gain.value=voice==="Robot"?1.4:1.2;node.connect(out).connect(c.destination);
+ play({cue:i=>caption(i<0?null:full(i,picks[i])),end:()=>caption(null)});src.start()}
+$("#playBtn").onclick=()=>{snd.go();setTimeout(playDub,250)};
+$("#dlBtn").onclick=()=>{if(!cleanBlob)return;const ext=/mp4/.test(cleanBlob.type)?"m4a":"webm";const a=document.createElement("a");a.href=URL.createObjectURL(cleanBlob);a.download="scena-01."+ext;document.body.append(a);a.click();a.remove()};
+
+// Steps
+const STEPS=["1 Watch","2 Build","3 Voice","4 Record","5 Play & turn in"];let step=0;
+function go(n){if(n>=2&&picks.some(x=>!x))n=1;if(n>=4&&!cleanBlob)n=3;stopPlayer();if(src)try{src.stop()}catch(e){};step=n;
+ document.querySelectorAll(".panel").forEach((p,i)=>p.classList.toggle("hide",i!==n));renderNav();if(n===4)$("#voiceName").textContent=voice;
+ if(innerWidth<=820)$("#phone").scrollIntoView({behavior:"smooth"})}
+function renderNav(){const nv=$("#steps");nv.innerHTML="";STEPS.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s;b.className=i===step?"on":(i<step?"done":"");b.setAttribute("aria-current",i===step?"step":"false");b.onclick=()=>go(i);nv.append(b)})}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b)go(+b.dataset.go)});
+
+// Toggles
+function setMute(m){muted=m;LS.set("mat_mute",m?"1":"0");$("#muteBtn").setAttribute("aria-pressed",m);$("#muteBtn").textContent=m?"🔇 Sound off":"🔊 Sound on";if(m&&"speechSynthesis" in window)speechSynthesis.cancel()}
+$("#muteBtn").onclick=()=>setMute(!muted);
+function setProj(p){document.body.classList.toggle("proj",p);LS.set("mat_proj",p?"1":"0");$("#projBtn").setAttribute("aria-pressed",p)}
+$("#projBtn").onclick=()=>setProj(!document.body.classList.contains("proj"));
+setMute(muted);setProj(LS.get("mat_proj")==="1");renderLines();renderVoices();renderNav();
+</script>
+</body>
+</html>
