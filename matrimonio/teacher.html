@@ -74,6 +74,18 @@ main{padding:.6rem 1rem;gap:1.2rem}
 .tdirs ol{margin:0;padding-left:1.3em}
 .tdirs li{margin:.2em 0}
 @media (max-width:820px){.stage{position:static}.ctl{flex-wrap:wrap;justify-content:center}.dirs{font-size:1.05em}}
+
+/* v3 TV layout (laptop/projector): 16:9 frame, clip centered, blurred sides */
+body.tv main{grid-template-columns:minmax(0,1fr);gap:.8rem;max-width:none}
+body.tv .stage{position:static;width:100%;align-items:center}
+body.tv .phone{aspect-ratio:16/9;border:14px solid #1c1915;border-radius:18px;background:#000;box-shadow:0 0 0 2px #3a332a,0 14px 34px rgba(28,25,21,.35),inset 0 0 40px rgba(0,0,0,.6)}
+body.tv .phone video{inset:0 auto 0 50%;height:100%;width:auto;aspect-ratio:9/16;transform:translateX(-50%);object-fit:cover;z-index:1}
+body.tv .amb{display:block}
+.amb{display:none;position:absolute;inset:0;width:100%;height:100%;filter:blur(22px) brightness(.5) saturate(1.1);transform:scale(1.2);z-index:0}
+body.tv .phone .cap,body.tv .phone .count,body.tv .phone .rec{z-index:3}
+body.tv .cap{font-size:clamp(17px,2.4cqw,26px);padding:.3em 1em .35em;max-height:20%}
+body.tv .ctl{width:100%;justify-content:center}
+body.tv .panel{max-width:1100px;width:100%;margin:0 auto;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -191,11 +203,16 @@ $("#projBtn").onclick=()=>setProj(!document.body.classList.contains("proj"));
 $("#homeBtn").onclick=()=>{location.href="./"};
 
 function fitPhone(){const ph=document.querySelector(".phone"),m=document.querySelector("main");if(!ph||!m||!m.offsetParent)return;
- let h;if(innerWidth<=820){const w=Math.min(380,innerWidth*0.86);h=Math.min(w*16/9,innerHeight*0.74)}
- else{const top=m.getBoundingClientRect().top+scrollY+parseFloat(getComputedStyle(m).paddingTop);const ctl=document.querySelector(".ctl");const rc=(ctl?Math.max(ctl.offsetHeight,48):48)+14;
-  h=innerHeight-top-rc-12;h=Math.min(h,innerWidth*0.44*16/9,980);h=Math.max(h,320)}
- ph.style.height=Math.round(h)+"px";ph.style.width=Math.round(h*9/16)+"px"}
+ const tv=innerWidth>820;document.body.classList.toggle("tv",tv);
+ if(!tv){const w=Math.min(380,innerWidth*0.86);const h=Math.min(w*16/9,innerHeight*0.74);ph.style.height=Math.round(h)+"px";ph.style.width=Math.round(h*9/16)+"px";return}
+ const cs=getComputedStyle(m);const cw=m.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);const ctl=document.querySelector(".ctl");const stg=ph.parentElement;const rc=Math.max(stg.offsetHeight-ph.offsetHeight,ctl&&ctl.offsetParent?ctl.offsetHeight:0)+20;
+ let w=Math.min(cw,(innerHeight-rc-28)*16/9);w=Math.max(w,Math.min(cw,480));
+ ph.style.width=Math.round(w)+"px";ph.style.height=Math.round(w*9/16)+"px"}
 addEventListener("resize",fitPhone);
+(function(){const ph=document.querySelector(".phone");if(!ph)return;const c=document.createElement("canvas");c.className="amb";c.width=96;c.height=54;c.setAttribute("aria-hidden","true");ph.prepend(c);const x=c.getContext("2d");
+ function draw(){if(document.body.classList.contains("tv")){const v=ph.querySelector("video.show")||ph.querySelector("video");if(v&&v.readyState>=2){try{x.drawImage(v,0,(54-96*16/9)/2,96,96*16/9)}catch(e){}}}requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
+const _scr=()=>{if(document.body.classList.contains("tv")){const s=document.querySelector(".stage");if(s&&Math.abs(s.getBoundingClientRect().top)>4)s.scrollIntoView({block:"start",behavior:"auto"})}};
+document.addEventListener("click",e=>{if(e.target.closest("#ctlPlay,#watchBtn,#recBtn,#playBtn,#ctlRestart"))_scr()},true);
 
 $("#dirBtn").onclick=()=>{const d=$("#tdirs");const on=d.classList.toggle("hide");$("#dirBtn").setAttribute("aria-pressed",!on);if(!on)d.scrollIntoView({behavior:"smooth",block:"nearest"})};
 
