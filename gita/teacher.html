@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>La Gita a Roma · Teacher premiere</title>
+<script src="scenes.js"></script>
+<style>
+:root{--bg:#f6f1e6;--ink:#1c1915;--teal:#0f766e;--tealD:#0b5a54;--card:#fffdf8;--line:#d9cfbd;--soft:#efe6d3;--fs:18px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:var(--fs);line-height:1.45}
+body.proj{--fs:26px}
+button,.filebtn{font:inherit;color:inherit;cursor:pointer;border-radius:14px;min-height:48px;padding:.55em 1em;border:2px solid var(--ink);background:var(--card);font-weight:650;display:inline-flex;align-items:center;gap:.3em}
+button:active{transform:scale(.97)}
+button:focus-visible,.filebtn:focus-within{outline:4px solid var(--teal);outline-offset:3px}
+button.primary,.filebtn{background:var(--teal);border-color:var(--teal);color:#fff}
+button.primary:hover{background:var(--tealD)}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+a{color:var(--teal);font-weight:700}
+header{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;border-bottom:2px solid var(--line)}
+header h1{margin:0;font-size:1.35em}
+header h1 span{color:var(--teal)}
+.tools{display:flex;gap:.5rem;flex-wrap:wrap}
+.tools button{min-height:44px;font-size:.85em}
+main{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.6rem;padding:1.2rem;max-width:1400px;margin:0 auto;align-items:start}
+.stage{display:flex;flex-direction:column;align-items:center;gap:.7rem}
+.phone{width:min(380px,calc((100vh - 17rem)*9/16));min-width:200px;aspect-ratio:9/16;border-radius:34px;border:10px solid var(--ink);background:#000;overflow:hidden;position:relative;box-shadow:0 12px 30px rgba(28,25,21,.25)}
+.phone video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
+.phone video.show{opacity:1}
+.card{position:absolute;inset:0;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.2rem;gap:.4rem}
+.card .n{font-size:1em;font-weight:700;color:var(--teal)}
+.card .t{font-size:1.9em;font-weight:800;line-height:1.15}
+.card .who{font-size:.85em;margin-top:.6rem}
+.badge{position:absolute;top:12px;left:12px;background:var(--card);color:var(--ink);border-radius:999px;padding:.15em .7em;font-size:.8em;font-weight:700}
+.ctl{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;max-width:440px}
+.ctl button{min-width:6.4em;font-size:.95em;padding:.55em .8em;justify-content:center}
+.ctime{width:100%;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:1.3rem 1.5rem;min-width:0}
+.panel h2{margin:.1em 0 .4em;font-size:1.4em}
+.drop{border:3px dashed var(--teal);border-radius:18px;padding:1.2rem;text-align:center;background:var(--bg);margin:.8rem 0}
+.drop.over{background:var(--soft)}
+.filebtn input{position:absolute;opacity:0;width:1px;height:1px}
+ol.list{list-style:none;padding:0;margin:.8rem 0;display:grid;gap:.4rem}
+ol.list li{display:flex;gap:.6rem;align-items:center;justify-content:space-between;border:2px solid var(--line);border-radius:12px;padding:.45rem .7rem;background:var(--bg)}
+ol.list li.has{border-color:var(--teal)}
+ol.list li.now{outline:3px solid var(--ink)}
+ol.list .src{font-size:.85em;text-align:right}
+ol.list button{min-height:40px;font-size:.8em;padding:.3em .7em}
+.small{font-size:.85em}
+@media (max-width:820px){main{grid-template-columns:1fr;padding:.8rem}.phone{width:min(300px,78vw)}.stage{width:100%}.panel{padding:1rem}}
+</style>
+</head>
+<body>
+<header>
+ <h1>La Gita a Roma · <span>Teacher premiere</span></h1>
+ <div class="tools">
+  <button id="muteBtn" aria-pressed="false">🔊 Sound on</button>
+  <button id="projBtn" aria-pressed="false">🖥️ Projector mode</button>
+  <button id="homeBtn">← Scenes</button>
+ </div>
+</header>
+<main>
+ <div class="stage">
+  <div class="phone">
+   <video id="v0" muted playsinline preload="auto" class="show"></video>
+   <video id="v1" muted playsinline preload="auto"></video>
+   <video id="v2" muted playsinline preload="auto"></video>
+   <div class="badge" id="badge">Scena 1</div>
+   <div class="card" id="card"><div class="n" id="cardN">La Gita</div><div class="t" id="cardT">a Roma</div><div class="who" id="cardW">Press Play to start the premiere</div></div>
+  </div>
+  <div class="ctl" role="group" aria-label="Episode controls">
+   <button id="ctlRestart">⏮ Restart</button>
+   <button id="ctlBack">↺ Back 5s</button>
+   <button id="ctlPlay" class="primary">▶ Play</button>
+   <div class="ctime" id="ctlTime">0:00 / 0:00</div>
+  </div>
+ </div>
+ <section class="panel">
+  <h2>Load the students' dubs</h2>
+  <p>Add the files your students turned in (<b>scena-01.webm</b> to <b>scena-10.webm</b>). Each file goes to its scene by the number in its name. Scenes without a file play with the model dub.</p>
+  <div class="drop" id="drop">
+   <p><b>Drag the files here</b>, or</p>
+   <label class="filebtn">📂 Choose files<input type="file" id="files" multiple accept="audio/*,video/webm,.webm,.m4a,.mp3,.ogg,.wav"></label>
+  </div>
+  <p class="small" id="msg" role="status"></p>
+  <ol class="list" id="list"></ol>
+  <p class="small">Everything stays in this browser. Nothing is uploaded.</p>
+ </section>
+</main>
+<script>
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const $=s=>document.querySelector(s);const SCENES=window.SCENES;
+const CARD=3,SCL=28,SEG=CARD+SCL,TOTAL=SEG*SCENES.length;
+const vids=[$("#v0"),$("#v1"),$("#v2")];
+const student={}; // n -> {url,name}
+const auds=SCENES.map(S=>{const a=new Audio();a.preload="auto";a.src="audio/s"+S.n+"/dub.mp3";return a});
+let muted=LS.get("gita_mute")==="1";
+let AC=null;function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC}
+function tone(seq){if(muted)return;try{const c=ac();let t=c.currentTime;seq.forEach(([f,d])=>{const o=c.createOscillator(),g=c.createGain();o.type="triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.18,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.02);t+=d*.8})}catch(e){}}
+document.addEventListener("click",e=>{if(e.target.closest("button"))tone([[660,.08]])},true);
+function clipSrc(n,i){return "s"+n+"/clip"+(i+1)+".mp4"}
+
+// list + files
+function renderList(){const ol=$("#list");ol.innerHTML="";SCENES.forEach((S,k)=>{const li=document.createElement("li");li.className=(student[S.n]?"has":"")+(k===curSeg?" now":"");
+ const l=document.createElement("span");l.innerHTML="<b>"+S.n+".</b> "+S.title;const r=document.createElement("span");r.className="src";
+ r.textContent=student[S.n]?"🎙️ "+student[S.n].name:"Model dub";
+ const b=document.createElement("button");b.textContent="▶ Go";b.setAttribute("aria-label","Jump to scene "+S.n);b.onclick=()=>seek(k*SEG);
+ const right=document.createElement("span");right.style.display="flex";right.style.gap=".5rem";right.style.alignItems="center";right.append(r,b);li.append(l,right);ol.append(li)})}
+function addFiles(fl){let ok=0,bad=[];[...fl].forEach(f=>{const m=f.name.match(/scena[\s_-]*0*(\d{1,2})/i);const n=m&&+m[1];
+ if(n>=1&&n<=10){if(student[n])URL.revokeObjectURL(student[n].url);const rec={url:URL.createObjectURL(f),name:f.name,buf:null};student[n]=rec;f.arrayBuffer().then(ab=>ac().decodeAudioData(ab)).then(b=>{rec.buf=b;if(curSeg===n-1)stopB()}).catch(()=>{auds[n-1].src=rec.url});ok++}else bad.push(f.name)});
+ $("#msg").textContent=(ok?ok+" recording"+(ok>1?"s":"")+" added. ":"")+(bad.length?"Couldn't find a scene number in: "+bad.join(", ")+". Name them like scena-03.webm.":"");
+ const was=T.playing;seek(tNow());if(was)resume();renderList()}
+$("#files").onchange=e=>addFiles(e.target.files);
+const dz=$("#drop");["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove("over")}));
+dz.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
+document.addEventListener("dragover",e=>e.preventDefault());document.addEventListener("drop",e=>{e.preventDefault();if(!dz.contains(e.target))addFiles(e.dataTransfer.files)});
+
+// student audio via Web Audio (MediaRecorder webm files don't seek reliably)
+let bsrc=null,bK=-1;
+function stopB(){if(bsrc){try{bsrc.stop()}catch(e){}bsrc=null;bK=-1}}
+function startB(k,st,buf){stopB();const c=ac();bsrc=c.createBufferSource();bsrc.buffer=buf;bsrc.connect(c.destination);bK=k;if(st<buf.duration)bsrc.start(0,st)}
+// timeline
+const T={base:0,start:0,playing:false,raf:null};let curSeg=-1,curClip=-1,started=false;
+function tNow(){return T.playing?T.base+(performance.now()-T.start)/1000:T.base}
+function setCard(k){const n=SCENES[k].n;$("#cardN").textContent="Scena "+n;$("#cardT").textContent=SCENES[k].title;$("#cardW").textContent=student[n]?"Voice: a student dub":"Voice: model dub"}
+function loadSeg(k){if(k===curSeg)return;stopB();curSeg=k;curClip=-1;const n=SCENES[k].n;vids.forEach((v,i)=>{v.src=clipSrc(n,i)});auds.forEach((a,j)=>{if(j!==k)a.pause()});
+ setCard(k);$("#badge").textContent="Scena "+n;renderList()}
+function apply(t){t=Math.max(0,Math.min(TOTAL,t));const k=Math.min(SCENES.length-1,Math.floor(t/SEG));loadSeg(k);const u=t-k*SEG;const a=auds[k];
+ if(!started){$("#card").style.display="flex";return}
+ if(u<CARD){stopB();setCard(k);$("#card").style.display="flex";vids.forEach(v=>v.pause());a.pause();try{a.currentTime=0}catch(e){}vids.forEach(v=>{v.dataset.want="0"});const v0=vids[0];if(v0.readyState>0)try{v0.currentTime=0}catch(e){};vids.forEach((v,j)=>v.classList.toggle("show",j===0));curClip=-1;return}
+ $("#card").style.display="none";const st=u-CARD;const ci=Math.min(2,Math.floor(st/8));
+ if(ci!==curClip){curClip=ci;vids.forEach((v,j)=>{v.classList.toggle("show",j===ci);if(j!==ci)v.pause()})}
+ const v=vids[ci];const vt=st<24?st-8*ci:7.95;if(Math.abs(v.currentTime-vt)>.35)try{v.currentTime=vt}catch(e){}
+ if(T.playing&&st<24){if(v.paused)v.play().catch(()=>{})}else v.pause();
+ const sb=student[SCENES[k].n]&&student[SCENES[k].n].buf;
+ if(sb){a.pause();if(T.playing&&!muted){if(bK!==k)startB(k,st,sb)}else stopB();return}
+ stopB();
+ if(T.playing&&!muted){if(a.duration&&st>=a.duration-.05){a.pause()}else{if(Math.abs(a.currentTime-st)>.35)try{a.currentTime=st}catch(e){}if(a.paused&&!(a.duration&&st>=a.duration))a.play().catch(()=>{})}}else a.pause()}
+function tick(){const t=tNow();if(t>=TOTAL){T.playing=false;T.base=TOTAL;apply(TOTAL);vids.forEach(v=>v.pause());auds.forEach(a=>a.pause());upd();$("#card").style.display="flex";$("#cardN").textContent="Fine";$("#cardT").textContent="Mai più gite!";$("#cardW").textContent="Bravi, tutti!";return}
+ apply(t);T.raf=requestAnimationFrame(tick)}
+function resume(){started=true;if(T.base>=TOTAL-.05)T.base=0;T.start=performance.now();T.playing=true;apply(T.base);cancelAnimationFrame(T.raf);T.raf=requestAnimationFrame(tick);upd()}
+function pause(){if(!T.playing)return;T.base=tNow();T.playing=false;cancelAnimationFrame(T.raf);vids.forEach(v=>v.pause());auds.forEach(a=>a.pause());stopB();upd()}
+function seek(t){const was=T.playing;if(was)pause();T.base=Math.max(0,Math.min(TOTAL,t));started=true;apply(T.base);if(was)resume();upd()}
+function fmt(x){x=Math.floor(x);return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")}
+function upd(){$("#ctlPlay").textContent=T.playing?"⏸ Pause":"▶ Play";$("#ctlTime").textContent=fmt(Math.min(TOTAL,tNow()))+" / "+fmt(TOTAL)}
+setInterval(()=>{if(T.playing)upd()},250);
+$("#ctlPlay").onclick=()=>{ac();T.playing?pause():resume()};
+$("#ctlBack").onclick=()=>seek(tNow()-5);
+$("#ctlRestart").onclick=()=>seek(0);
+function setMute(m){muted=m;LS.set("gita_mute",m?"1":"0");$("#muteBtn").setAttribute("aria-pressed",m);$("#muteBtn").textContent=m?"🔇 Sound off":"🔊 Sound on";if(m){auds.forEach(a=>a.pause());stopB()}}
+$("#muteBtn").onclick=()=>setMute(!muted);
+function setProj(p){document.body.classList.toggle("proj",p);LS.set("gita_proj",p?"1":"0");$("#projBtn").setAttribute("aria-pressed",p)}
+$("#projBtn").onclick=()=>setProj(!document.body.classList.contains("proj"));
+$("#homeBtn").onclick=()=>{location.href="./"};
+setMute(muted);setProj(LS.get("gita_proj")==="1");loadSeg(0);$("#cardN").textContent="La Gita";$("#cardT").textContent="a Roma";$("#cardW").textContent="Load the dubs, then press Play";renderList();upd();
+</script>
+</body>
+</html>

@@ -238,7 +238,7 @@ function renderLines(){const box=$("#lines");box.innerHTML="";LINES.forEach((L,i
  const en=document.createElement("div");en.className="en";en.textContent="English: "+L.en;en.hidden=!picks[i];d.append(en);
  const ch=document.createElement("div");ch.className="chips";
  L.chips.forEach(([w,ok,why,gloss])=>{const c=document.createElement("button");c.textContent=w+(gloss?"  ("+gloss+")":"");if(picks[i]===w)c.className="pick";c.dataset.silent=1;
-  c.onclick=()=>{const fb=d.querySelector(".fb");if(ok){picks[i]=w;snd.ok();say(i,w);renderLines()}else{snd.huh();c.classList.add("nope");fb.innerHTML="";const h=document.createElement("b");h.textContent="🤨 Don Ciro looks confused… ";fb.append(h,why);fb.classList.remove("show");void fb.offsetWidth;fb.classList.add("show")}};ch.append(c)});
+  c.onclick=()=>{const fb=d.querySelector(".fb");if(ok){picks[i]=w;snd.ok();say(i,w);renderLines()}else{snd.huh();c.classList.add("nope");fb.innerHTML="";const h=document.createElement("b");h.textContent="🤨 "+(SC.who||"Don Ciro")+" looks confused… ";fb.append(h,why);fb.classList.remove("show");void fb.offsetWidth;fb.classList.add("show")}};ch.append(c)});
  const s=document.createElement("button");s.textContent="🔈 Senti";s.title="Hear this line";s.onclick=()=>say(i,picks[i]||MODEL[i]);ch.append(s);
  d.append(ch);const fb=document.createElement("div");fb.className="fb";fb.setAttribute("role","status");d.append(fb);box.append(d)});
  const left=picks.filter(x=>!x).length;$("#toVoice").disabled=left>0;$("#leftNote").textContent=left?`Finish all 5 lines to continue (${left} left).`:"All set! Your lines are ready.";renderScript()}
