@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
-<title>Il Matrimonio · Scena 1</title>
+<title>Il Matrimonio</title>
+<script src="scenes.js"></script>
 <style>
 :root{--bg:#f6f1e6;--ink:#1c1915;--teal:#0f766e;--tealD:#0b5a54;--card:#fffdf8;--line:#d9cfbd;--soft:#efe6d3;--fs:18px}
 *{box-sizing:border-box}
@@ -40,6 +41,13 @@ main{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.6rem;padding:1.
 .ctl button{min-width:6.4em;font-size:.95em;padding:.55em .8em}
 .ctl #ctlPlay{min-width:7em}
 .ctime{width:100%;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.picker{max-width:1100px;margin:0 auto;padding:1.4rem 1.2rem 3rem}
+.picker h2{font-size:1.7em;margin:.2em 0}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin:1.2rem 0}
+.pgrid button{min-height:96px;text-align:left;display:flex;gap:.8rem;align-items:center;font-size:1.05em}
+.pgrid .num{flex:none;width:2.4em;height:2.4em;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+.pgrid small{display:block;font-weight:500}
+a{color:var(--teal);font-weight:700}
 .panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:1.3rem 1.5rem;min-width:0}
 .panel h2{margin:.1em 0 .4em;font-size:1.4em}
 .panel p{margin:.4em 0}
@@ -78,19 +86,26 @@ ol.script li.now{background:var(--teal);color:#fff}
 </head>
 <body>
 <header>
- <h1>Il Matrimonio · <span>Scena 1: L'arrivo</span></h1>
+ <h1>Il Matrimonio<span id="scTitle"></span></h1>
  <div class="tools">
+  <button id="homeBtn" class="hide">← All scenes</button>
   <button id="muteBtn" aria-pressed="false">🔊 Sound on</button>
   <button id="projBtn" aria-pressed="false">🖥️ Projector mode</button>
  </div>
 </header>
+<section id="picker" class="picker hide">
+ <h2>Il Matrimonio più pacchiano di Napoli</h2>
+ <p>A soap opera in 10 scenes at the <b>Palazzo delle Meraviglie</b>. Pick the scene your teacher gave you.</p>
+ <div class="pgrid" id="pgrid"></div>
+ <p class="small"><a href="teacher.html">Teacher screen: play the whole episode →</a></p>
+</section>
 <nav class="steps" id="steps"></nav>
-<main>
+<main id="mainUI">
  <div class="stage">
  <div class="phone" id="phone">
-  <video id="v0" src="clip1.mp4" muted playsinline preload="auto" class="show"></video>
-  <video id="v1" src="clip2.mp4" muted playsinline preload="auto"></video>
-  <video id="v2" src="clip3.mp4" muted playsinline preload="auto"></video>
+  <video id="v0" muted playsinline preload="auto" class="show"></video>
+  <video id="v1" muted playsinline preload="auto"></video>
+  <video id="v2" muted playsinline preload="auto"></video>
   <div class="rec" id="recTag">● REC</div>
   <div class="cap" id="cap"></div>
   <div class="count" id="count"></div>
@@ -105,7 +120,7 @@ ol.script li.now{background:var(--teal);color:#fff}
 
  <section class="panel" id="p0">
   <h2>1 · Watch the episode</h2>
-  <p>Welcome to the <b>Palazzo delle Meraviglie</b>, the most <b>pacchiano</b> (tacky) wedding palace in Naples. Don Ciro, <b>il Re dei Matrimoni</b>, is waiting for Sharon and Gennaro…</p>
+  <p id="intro"></p>
   <p>Watch the scene with the model dub. Tap <b>Show English</b> if you need it.</p>
   <div class="row">
    <button class="primary" id="watchBtn">▶ Play with model dub</button>
@@ -149,28 +164,20 @@ ol.script li.now{background:var(--teal);color:#fff}
    <button data-go="3">Redo recording</button>
   </div>
   <p>Your voice: <b id="voiceName"></b></p>
-  <div class="row"><button class="primary" id="dlBtn">⬇ Download scena-01</button></div>
+  <div class="row"><button class="primary" id="dlBtn">⬇ Download</button></div>
   <p class="small">The download is your normal voice (no filter, no name). Turn in the file where your teacher tells you.</p>
-  <div class="note"><b>Coming in the full version:</b> 10 scenes, one per student (the dress, the ring, a seagull, the late singer, the cake, the ex, Nonna's secret, the cat, the finale). Your teacher joins all 10 dubs into one episode for the class premiere.</div>
+  <div class="note" id="endNote"></div>
  </section>
 </main>
 
 <script>
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const TOTAL=28; // 3 clips x 8 s + 4 s hold on the last frame
-const LINES=[
- {pre:"Era sabato e il Palazzo",post:"di glitter.",en:"It was Saturday and the Palazzo sparkled with glitter.",t:[0.6,7.4],
-  chips:[["brillava",1,""],["ha brillato",0,"This describes the scene in the background, not one event. Use imperfetto: brillava."]]},
- {pre:"Don Ciro",post:"alla porta.",en:"Don Ciro was waiting at the door.",t:[8.6,15.4],
-  chips:[["ha aspettato",0,"He was in the middle of waiting when the story starts. That's background, so use imperfetto: aspettava."],["aspettava",1,""]]},
- {pre:"Gli sposi",post:"in una limousine rosa.",en:"The bride and groom arrived in a pink limousine.",t:[16.2,20],
-  chips:[["arrivavano",0,"They arrived once, at one moment. That's an event, so use passato prossimo: sono arrivati."],["sono arrivati",1,""],["sono arrivate",0,"Close! Gli sposi is a man and a woman, so the ending is masculine plural: arrivati."]]},
- {pre:"Poi Sharon",post:"!",en:"Then Sharon screamed!",t:[20.2,23.4],
-  chips:[["ha urlato",1,""],["urlava",0,"\"Poi\" (then) means a sudden event. Use passato prossimo: ha urlato."]]},
- {pre:"Mamma mia,",post:"",en:"Oh my gosh, …",t:[23.8,27.6],free:1,
-  chips:[["c'è un problema!",1,"","there's a problem!"],["che cosa succede?",1,"","what's happening?"],["non è possibile!",1,"","it's not possible!"]]}
-];
-const MODEL=["brillava","aspettava","sono arrivati","ha urlato","c'è un problema!"];
+const QS=new URLSearchParams(location.search);const SCN=Math.max(0,Math.min(10,parseInt(QS.get("scena"))||0));
+const SC=window.SCENES[(SCN||1)-1];const NN=String(SC.n).padStart(2,"0");
+const CLIPBASE=SC.n===1?"":"s"+SC.n+"/",AUDBASE=SC.n===1?"audio/":"audio/s"+SC.n+"/";
+const LINES=SC.lines.map((L,i)=>Object.assign({},L,{t:[[0.6,7.4],[8.6,15.4],[16.2,20],[20.2,23.4],[23.8,27.6]][i]}));
+const MODEL=SC.model;
 const picks=[null,null,null,null,null];
 const VOICES=[["Normale","🙂"],["Chipmunk","🐿️"],["Mostro","👹"],["Robot","🤖"]];
 let voice=LS.get("mat_voice")||"Normale", muted=LS.get("mat_mute")==="1", showEn=false;
@@ -189,8 +196,8 @@ function pickVoice(){const vs=speechSynthesis.getVoices();itVoice=vs.find(v=>/^i
 if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
 function ttsSay(txt){if(muted||!("speechSynthesis" in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang="it-IT";if(itVoice)u.voice=itVoice;u.rate=.95;speechSynthesis.speak(u)}
 const AUD=new Audio();AUD.preload="auto";
-const DUB=new Audio("audio/dub.mp3");DUB.preload="auto";let dubOK=true;DUB.onerror=()=>{dubOK=false};
-function lineFile(i,w){if(i<4)return "audio/l"+(i+1)+".mp3";const k=LINES[4].chips.findIndex(c=>c[0]===w);return "audio/l5"+"abc"[Math.max(0,k)]+".mp3"}
+const DUB=new Audio();DUB.preload="auto";if(SCN)DUB.src=AUDBASE+"dub.mp3";let dubOK=true;DUB.onerror=()=>{dubOK=false};
+function lineFile(i,w){if(i<4)return AUDBASE+"l"+(i+1)+".mp3";const k=LINES[4].chips.findIndex(c=>c[0]===w);return AUDBASE+"l5"+"abc"[Math.max(0,k)]+".mp3"}
 function stopAudio(){AUD.pause();DUB.pause();if("speechSynthesis" in window)speechSynthesis.cancel()}
 function say(i,w){if(muted)return;stopAudio();const txt=full(i,w);AUD.onerror=()=>ttsSay(txt);AUD.src=lineFile(i,w);AUD.currentTime=0;AUD.play().catch(()=>ttsSay(txt))}
 function full(i,w){const L=LINES[i];return (L.pre+" "+w+(L.post?" "+L.post:"")).replace(" !","!")}
@@ -272,7 +279,7 @@ function startSrc(t){stopSrc();const b=fxBuffer();if(!b)return;const c=ac();src=
 function playDub(){if(!fxBuffer()){$("#voiceName").textContent=voice+" (could not load audio on this browser)";return}
  play({mode:"dub",cue:i=>caption(i<0?null:full(i,picks[i])),media:(t,pl)=>{if(pl)startSrc(t);else stopSrc()},end:()=>caption(null)})}
 $("#playBtn").onclick=()=>{snd.go();setTimeout(playDub,250)};
-$("#dlBtn").onclick=()=>{if(!cleanBlob)return;const ext=/mp4/.test(cleanBlob.type)?"m4a":"webm";const a=document.createElement("a");a.href=URL.createObjectURL(cleanBlob);a.download="scena-01."+ext;document.body.append(a);a.click();a.remove()};
+$("#dlBtn").onclick=()=>{if(!cleanBlob)return;const ext=/mp4/.test(cleanBlob.type)?"m4a":"webm";const a=document.createElement("a");a.href=URL.createObjectURL(cleanBlob);a.download="scena-"+NN+"."+ext;document.body.append(a);a.click();a.remove()};
 // player controls
 $("#ctlPlay").onclick=()=>{const want=step===4?"dub":"watch";if(!T.opts||T.opts.mode!==want){want==="dub"?playDub():startWatch();return}T.playing?pauseTL():resume()};
 $("#ctlBack").onclick=()=>seekTL(tNow()-5);
@@ -291,6 +298,13 @@ function setMute(m){muted=m;LS.set("mat_mute",m?"1":"0");$("#muteBtn").setAttrib
 $("#muteBtn").onclick=()=>setMute(!muted);
 function setProj(p){document.body.classList.toggle("proj",p);LS.set("mat_proj",p?"1":"0");$("#projBtn").setAttribute("aria-pressed",p)}
 $("#projBtn").onclick=()=>setProj(!document.body.classList.contains("proj"));
+// scene setup / picker
+if(SCN){vids.forEach((v,i)=>{v.src=CLIPBASE+"clip"+(i+1)+".mp4"});$("#scTitle").textContent=" · Scena "+SC.n+": "+SC.title;document.title="Il Matrimonio · Scena "+SC.n;
+ $("#intro").innerHTML=SC.intro;$("#dlBtn").textContent="⬇ Download scena-"+NN;$("#homeBtn").classList.remove("hide");
+ $("#endNote").innerHTML=SC.n<10?"<b>Scene "+SC.n+" of 10.</b> Your teacher joins all 10 dubs, one per student, into one episode for the class premiere. Next up: Scene "+(SC.n+1)+", "+window.SCENES[SC.n].title+"…":"<b>Scene 10 of 10: the finale!</b> Your teacher joins all 10 dubs, one per student, into one episode for the class premiere.";
+}else{$("#steps").classList.add("hide");$("#mainUI").classList.add("hide");$("#picker").classList.remove("hide");
+ const g=$("#pgrid");window.SCENES.forEach(S=>{const b=document.createElement("button");b.innerHTML='<span class="num">'+S.n+'</span><span>Scena '+S.n+': '+S.title+'<small>'+S.en+'</small></span>';b.onclick=()=>{location.href="?scena="+S.n};g.append(b)})}
+$("#homeBtn").onclick=()=>{location.href="./"};
 setMute(muted);setProj(LS.get("mat_proj")==="1");renderLines();renderVoices();renderNav();
 </script>
 </body>
