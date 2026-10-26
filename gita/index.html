@@ -213,7 +213,8 @@ body.tv .panel{max-width:1100px;width:100%;margin:0 auto;box-sizing:border-box}
    <button data-go="3">Redo recording</button>
   </div>
   <p>Your voice: <b id="voiceName"></b></p>
-  <div class="row"><button class="primary" id="dlBtn">⬇ Download</button></div>
+  <p class="turnin-note"><b>Download your file, then open the folder and drop it in.</b></p>
+  <div class="row"><button class="primary" id="dlBtn">⬇ Download</button><button class="primary bigbtn" id="driveBtn" style="background:#0f766e;border-color:#0f766e;color:#fff">📁 Turn in on Google Drive</button></div>
   <p class="small">The download is your normal voice (no filter, no name). Turn in the file where your teacher tells you.</p>
   <div class="note" id="endNote"></div>
  </section>
@@ -377,5 +378,6 @@ $("#dirBtn").onclick=()=>showDirs($("#dirs").classList.contains("hide"));
 
 showDirs(true);setMute(muted);setProj(LS.get("gita_proj")==="1");renderLines();renderVoices();renderNav();
 </script>
+<script>document.getElementById("driveBtn").onclick=()=>window.open("https://drive.google.com/drive/folders/1qWZeaspi6fDIhjjqUuZs2Vl0kWlSlwbR","_blank","noopener");</script>
 </body>
 </html>
